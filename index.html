@@ -515,6 +515,63 @@
         transition: none;
       }
     }
+
+    /* ADDED: QUICK ACCESS MENU ITEM ANIMATIONS */
+    .brand-menu[open]:not(.is-closing) .brand-dropdown button {
+      animation: brandItemFade 0.25s ease both;
+    }
+
+    .brand-menu[open] .brand-dropdown button:nth-child(1) {
+      animation-delay: 0.03s;
+    }
+
+    .brand-menu[open] .brand-dropdown button:nth-child(2) {
+      animation-delay: 0.06s;
+    }
+
+    .brand-menu[open] .brand-dropdown button:nth-child(3) {
+      animation-delay: 0.09s;
+    }
+
+    .brand-menu[open] .brand-dropdown button:nth-child(4) {
+      animation-delay: 0.12s;
+    }
+
+    /* ADDED: QUICK ACCESS CLOSING ANIMATION */
+    .brand-menu.is-closing .brand-dropdown {
+      animation: brandMenuClose 0.22s ease both;
+      pointer-events: none;
+    }
+
+    @keyframes brandItemFade {
+      from {
+        opacity: 0;
+        transform: translateY(-5px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    @keyframes brandMenuClose {
+      from {
+        opacity: 1;
+        transform: translateY(0);
+      }
+      to {
+        opacity: 0;
+        transform: translateY(-7px);
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .brand-menu[open] .brand-dropdown button,
+      .brand-menu.is-closing .brand-dropdown {
+        animation-duration: 0.01ms;
+        animation-delay: 0ms;
+      }
+    }
   </style>
 </head>
 
@@ -761,17 +818,34 @@
     const brandMenu = document.querySelector(".brand-menu");
 
     if (brandMenu) {
+      // ADDED: Smoothly close the Quick Access Menu.
+      function closeBrandMenu() {
+        if (
+          !brandMenu.open ||
+          brandMenu.classList.contains("is-closing")
+        ) {
+          return;
+        }
+
+        brandMenu.classList.add("is-closing");
+
+        window.setTimeout(() => {
+          brandMenu.open = false;
+          brandMenu.classList.remove("is-closing");
+        }, 220);
+      }
+
       // Close the quick menu when clicking outside it.
       document.addEventListener("click", (event) => {
         if (!brandMenu.contains(event.target)) {
-          brandMenu.open = false;
+          closeBrandMenu();
         }
       });
 
       // Close the quick menu when Escape is pressed.
       document.addEventListener("keydown", (event) => {
         if (event.key === "Escape") {
-          brandMenu.open = false;
+          closeBrandMenu();
         }
       });
 
@@ -780,31 +854,34 @@
         button.addEventListener("click", () => {
           const feature = button.dataset.feature;
 
-          brandMenu.open = false;
+          // Allow the closing animation to finish before showing the action.
+          closeBrandMenu();
 
-          if (feature === "settings") {
-            alert(
-              "Settings\n\nTheme and display preferences will be added here in a future update."
-            );
-          }
+          window.setTimeout(() => {
+            if (feature === "settings") {
+              alert(
+                "Settings\n\nTheme and display preferences will be added here in a future update."
+              );
+            }
 
-          if (feature === "install") {
-            alert(
-              "Install App\n\nApp installation will be available once the website is configured as an installable web app."
-            );
-          }
+            if (feature === "install") {
+              alert(
+                "Install App\n\nApp installation will be available once the website is configured as an installable web app."
+              );
+            }
 
-          if (feature === "report") {
-            alert(
-              "Report a Problem\n\nA contact method needs to be configured before reports can be submitted."
-            );
-          }
+            if (feature === "report") {
+              alert(
+                "Report a Problem\n\nA contact method needs to be configured before reports can be submitted."
+              );
+            }
 
-          if (feature === "about") {
-            alert(
-              "CheckmaîtréX Chess Club\n\nOfficial Club Website\nCalculate. Conquer. Checkmate."
-            );
-          }
+            if (feature === "about") {
+              alert(
+                "CheckmaîtréX Chess Club\n\nOfficial Club Website\nCalculate. Conquer. Checkmate."
+              );
+            }
+          }, 220);
         });
       });
     }
