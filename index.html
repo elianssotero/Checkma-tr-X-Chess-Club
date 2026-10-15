@@ -316,6 +316,78 @@
         font-size: 2.4rem;
       }
     }
+
+    /* ADDED: SMOOTH DROPDOWN ANIMATION */
+    .main-nav details[open] > .dropdown {
+      animation: dropdownOpen 0.25s ease both;
+      transform-origin: top;
+    }
+
+    .main-nav details.is-closing > .dropdown {
+      animation: dropdownClose 0.22s ease both;
+      pointer-events: none;
+    }
+
+    @keyframes dropdownOpen {
+      from {
+        opacity: 0;
+        transform: translateY(-8px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    @keyframes dropdownClose {
+      from {
+        opacity: 1;
+        transform: translateY(0);
+      }
+      to {
+        opacity: 0;
+        transform: translateY(-8px);
+      }
+    }
+
+    .main-nav details[open]:not(.is-closing) .dropdown a {
+      animation: menuItemFade 0.25s ease both;
+    }
+
+    .main-nav details[open] .dropdown a:nth-child(1) {
+      animation-delay: 0.03s;
+    }
+
+    .main-nav details[open] .dropdown a:nth-child(2) {
+      animation-delay: 0.06s;
+    }
+
+    .main-nav details[open] .dropdown a:nth-child(3) {
+      animation-delay: 0.09s;
+    }
+
+    .main-nav details[open] .dropdown a:nth-child(4) {
+      animation-delay: 0.12s;
+    }
+
+    @keyframes menuItemFade {
+      from {
+        opacity: 0;
+        transform: translateY(-5px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .main-nav details[open] > .dropdown,
+      .main-nav details[open] .dropdown a,
+      .main-nav details.is-closing > .dropdown {
+        animation-duration: 0.01ms;
+      }
+    }
   </style>
 </head>
 
@@ -472,17 +544,60 @@
     document.getElementById("year").textContent =
       new Date().getFullYear();
 
-    // Close other dropdowns when one is opened.
-    document.querySelectorAll(".main-nav details").forEach((menu) => {
-      menu.addEventListener("toggle", () => {
-        if (menu.open) {
-          document.querySelectorAll(".main-nav details").forEach((other) => {
-            if (other !== menu) {
-              other.open = false;
-            }
-          });
+    const menus = [
+      ...document.querySelectorAll(".main-nav details")
+    ];
+
+    // Close a dropdown with animation.
+    function closeMenu(menu) {
+      if (!menu.open || menu.classList.contains("is-closing")) {
+        return;
+      }
+
+      menu.classList.add("is-closing");
+
+      window.setTimeout(() => {
+        menu.open = false;
+        menu.classList.remove("is-closing");
+      }, 230);
+    }
+
+    // Handle dropdown clicks.
+    menus.forEach((menu) => {
+      const summary = menu.querySelector("summary");
+
+      summary.addEventListener("click", (event) => {
+        event.preventDefault();
+
+        if (menu.classList.contains("is-closing")) {
+          return;
         }
+
+        if (menu.open) {
+          closeMenu(menu);
+          return;
+        }
+
+        // Close other dropdowns smoothly.
+        menus.forEach((other) => {
+          if (other !== menu && other.open) {
+            closeMenu(other);
+          }
+        });
+
+        menu.open = true;
       });
+    });
+
+    // Close dropdowns when clicking outside the menu.
+    document.addEventListener("click", (event) => {
+      if (!event.target.closest(".main-nav")) {
+        menus.forEach((menu) => {
+          if (menu.open) {
+            closeMenu(menu);
+          }
+        });
+      }
     });
   </script>
 
