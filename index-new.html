@@ -1,0 +1,325 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#0b0b0b">
+  <meta name="description" content="Welcome to CheckmaîtréX Chess Club, a community built around chess, strategy, and growth.">
+  <title>CheckmaîtréX Chess Club | Official Website</title>
+  <link rel="stylesheet" href="style.css">
+
+  <style>
+    .brand {
+      color: #d4af37;
+      font-size: 1.1rem;
+      font-weight: 800;
+      letter-spacing: 1px;
+      white-space: nowrap;
+    }
+
+    .brand span {
+      display: block;
+      color: #eee;
+      font-size: .65rem;
+      letter-spacing: 4px;
+    }
+
+    .main-nav {
+      display: flex;
+      align-items: center;
+      gap: 18px;
+    }
+
+    .main-nav details {
+      position: relative;
+    }
+
+    .main-nav summary {
+      color: #f5f5f5;
+      font-weight: 600;
+      cursor: pointer;
+      list-style: none;
+      white-space: nowrap;
+    }
+
+    .main-nav summary::after {
+      content: " ▾";
+      color: #d4af37;
+    }
+
+    .main-nav summary:hover,
+    .main-nav details[open] > summary {
+      color: #d4af37;
+    }
+
+    .dropdown {
+      position: absolute;
+      top: 100%;
+      left: 0;
+      min-width: 190px;
+      padding: 10px;
+      margin-top: 12px;
+      background: #171717;
+      border: 1px solid #8f752d;
+      border-radius: 8px;
+      box-shadow: 0 12px 25px #0008;
+    }
+
+    .dropdown a {
+      display: block;
+      padding: 10px;
+      border-radius: 5px;
+      color: #f5f5f5;
+    }
+
+    .dropdown a:hover {
+      color: #d4af37;
+      background: #292316;
+    }
+
+    .hero {
+      min-height: 75vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: flex-start;
+      background:
+        radial-gradient(ellipse at 80% 40%, #72591c33, transparent 45%),
+        #0b0b0b;
+    }
+
+    .eyebrow {
+      color: #d4af37;
+      letter-spacing: 4px;
+      text-transform: uppercase;
+      font-size: .8rem;
+      font-weight: bold;
+    }
+
+    .hero h1 {
+      max-width: 750px;
+      font-size: clamp(2.5rem, 7vw, 5rem);
+      margin: 16px 0;
+    }
+
+    .hero p {
+      max-width: 570px;
+      color: #c5c5c5;
+      font-size: 1.1rem;
+    }
+
+    .hero-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-top: 20px;
+    }
+
+    .outline-button {
+      background: transparent;
+      color: #d4af37;
+    }
+
+    .welcome {
+      text-align: center;
+      background: #141414;
+    }
+
+    .welcome p {
+      max-width: 700px;
+      margin: 16px auto;
+      color: #c5c5c5;
+    }
+
+    .preview-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 18px;
+      max-width: 1100px;
+      margin: 30px auto 0;
+      text-align: left;
+    }
+
+    .preview-grid h3 {
+      color: #d4af37;
+    }
+
+    .preview-grid p {
+      color: #c5c5c5;
+    }
+
+    .section-link {
+      display: inline-block;
+      margin-top: 10px;
+      font-weight: bold;
+    }
+
+    @media (max-width: 850px) {
+      header {
+        position: relative;
+      }
+
+      nav {
+        align-items: flex-start;
+        flex-direction: column;
+      }
+
+      .main-nav {
+        width: 100%;
+        align-items: stretch;
+        flex-direction: column;
+        gap: 0;
+      }
+
+      .main-nav > a,
+      .main-nav summary {
+        display: block;
+        padding: 12px 0;
+      }
+
+      .dropdown {
+        position: static;
+        margin: 0 0 8px;
+        box-shadow: none;
+      }
+
+      .preview-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .hero {
+        min-height: 60vh;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <header>
+    <nav aria-label="Main navigation">
+      <a class="brand" href="index.html">
+        CHECKMAÎTRÉX
+        <span>CHESS CLUB</span>
+      </a>
+
+      <div class="main-nav">
+        <a class="active" href="index.html">Home</a>
+
+        <details>
+          <summary>About Us</summary>
+          <div class="dropdown">
+            <a href="about.html">Our Story</a>
+            <a href="about.html#mission">Mission &amp; Vision</a>
+            <a href="about.html#leadership">Leadership</a>
+          </div>
+        </details>
+
+        <details>
+          <summary>Activities</summary>
+          <div class="dropdown">
+            <a href="activities.html">All Activities</a>
+            <a href="activities.html#events">Events</a>
+            <a href="activities.html#training">Training</a>
+            <a href="activities.html#tournaments">Tournaments</a>
+          </div>
+        </details>
+
+        <details>
+          <summary>Club Highlights</summary>
+          <div class="dropdown">
+            <a href="highlights.html">All Highlights</a>
+            <a href="highlights.html#achievements">Achievements</a>
+            <a href="highlights.html#gallery">Photo Gallery</a>
+            <a href="highlights.html#news">News &amp; Updates</a>
+          </div>
+        </details>
+
+        <details>
+          <summary>Join Us</summary>
+          <div class="dropdown">
+            <a href="join.html">Membership</a>
+            <a href="join.html#faq">FAQs</a>
+            <a href="join.html#contact">Contact Us</a>
+          </div>
+        </details>
+      </div>
+    </nav>
+  </header>
+
+  <main>
+    <section class="hero">
+      <div class="eyebrow">Official Club Website</div>
+      <h1>Think Beyond.<br>Move With Purpose.</h1>
+      <p>
+        Welcome to CheckmaîtréX Chess Club — a place to explore chess,
+        develop strategic thinking, and grow through every move.
+      </p>
+
+      <div class="hero-actions">
+        <a class="button" href="about.html">Discover Our Club</a>
+        <a class="button outline-button"
+           href="https://www.facebook.com/CheckmaitreXChessClub"
+           target="_blank" rel="noopener noreferrer">
+          Visit Our Facebook
+        </a>
+      </div>
+    </section>
+
+    <section class="welcome">
+      <div class="eyebrow">Welcome to CheckmaîtréX</div>
+      <h2>More Than Just a Game</h2>
+      <p>
+        Chess challenges us to think ahead, learn from experience,
+        and approach every position with purpose. Discover our club,
+        activities, and community through the pages of this website.
+      </p>
+
+      <div class="preview-grid">
+        <article class="card">
+          <h3>About Our Club</h3>
+          <p>Learn about our identity, values, and goals.</p>
+          <a class="section-link" href="about.html">Explore About Us →</a>
+        </article>
+
+        <article class="card">
+          <h3>Activities</h3>
+          <p>Discover club activities, events, and training.</p>
+          <a class="section-link" href="activities.html">Explore Activities →</a>
+        </article>
+
+        <article class="card">
+          <h3>Join Our Community</h3>
+          <p>Find out how to connect with CheckmaîtréX.</p>
+          <a class="section-link" href="join.html">Learn How to Join →</a>
+        </article>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <p>© <span id="year"></span> CheckmaîtréX Chess Club</p>
+    <p>Think Beyond. Move With Purpose.</p>
+    <a href="https://www.facebook.com/CheckmaitreXChessClub"
+       target="_blank" rel="noopener noreferrer">
+      Facebook
+    </a>
+  </footer>
+
+  <script>
+    document.getElementById("year").textContent =
+      new Date().getFullYear();
+
+    // Close other dropdowns when one is opened.
+    document.querySelectorAll(".main-nav details").forEach((menu) => {
+      menu.addEventListener("toggle", () => {
+        if (menu.open) {
+          document.querySelectorAll(".main-nav details").forEach((other) => {
+            if (other !== menu) other.open = false;
+          });
+        }
+      });
+    });
+  </script>
+</body>
+</html>
