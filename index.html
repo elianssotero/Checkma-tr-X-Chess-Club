@@ -1,4 +1,5 @@
 
+<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
@@ -752,6 +753,92 @@
     <p>Calculate. Conquer. Checkmate.</p>
   </footer>
 
+  <!-- ABOUT THIS WEBSITE MODAL -->
+  <div class="about-modal" id="aboutModal" hidden>
+    <section
+      class="about-modal-panel"
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="aboutModalTitle"
+      tabindex="-1"
+    >
+      <button
+        class="about-modal-close"
+        type="button"
+        aria-label="Close About This Website"
+      >×</button>
+
+      <div class="about-modal-brand">
+        <img
+          src="logo.png"
+          alt="CheckmaîtréX Chess Club logo"
+        >
+        <div>
+          <p class="about-modal-eyebrow">CHECKMAÎTRÉX CHESS CLUB</p>
+          <h2 id="aboutModalTitle">About This Website</h2>
+          <p class="about-modal-subtitle">Official Club Website</p>
+        </div>
+      </div>
+
+      <div class="about-modal-divider"></div>
+
+      <div class="about-modal-content">
+        <h3>Welcome to CheckmaîtréX</h3>
+        <p>
+          The official online home of CheckmaîtréX Chess Club,
+          created to showcase our club identity, share our activities,
+          and celebrate our chess community.
+        </p>
+
+        <div class="about-modal-details">
+          <div class="about-modal-detail">
+            <span class="about-modal-icon" aria-hidden="true">♞</span>
+            <div>
+              <span class="about-modal-label">WEBSITE NAME</span>
+              <p>CheckmaîtréX Chess Club</p>
+            </div>
+          </div>
+
+          <div class="about-modal-detail">
+            <span class="about-modal-icon" aria-hidden="true">◆</span>
+            <div>
+              <span class="about-modal-label">PLATFORM</span>
+              <p>Official Club Website</p>
+            </div>
+          </div>
+
+          <div class="about-modal-detail">
+            <span class="about-modal-icon" aria-hidden="true">✦</span>
+            <div>
+              <span class="about-modal-label">DESIGN THEME</span>
+              <p>Black &amp; Gold</p>
+            </div>
+          </div>
+        </div>
+
+        <h3 class="about-modal-credits-title">
+          Credits &amp; Acknowledgment
+        </h3>
+        <p class="about-modal-created">Website created by</p>
+        <p class="about-modal-creator">El.ians Sotero</p>
+        <p class="about-modal-acknowledgment">
+          Dedicated to the love of chess, strategic thinking,
+          and the CheckmaîtréX Chess Club community.
+        </p>
+      </div>
+
+      <div class="about-modal-divider"></div>
+
+      <footer class="about-modal-footer">
+        <p>Calculate. Conquer. Checkmate.</p>
+        <small>
+          © <span id="aboutModalYear"></span>
+          CheckmaîtréX Chess Club. All rights reserved.
+        </small>
+      </footer>
+    </section>
+  </div>
+
   <!-- JAVASCRIPT -->
   <script>
     // Automatically update the copyright year.
@@ -814,11 +901,111 @@
       }
     });
 
-    /* ADDED: QUICK ACCESS MENU BEHAVIOR */
+    /* ABOUT THIS WEBSITE MODAL */
+    const aboutModal = document.getElementById("aboutModal");
+    const aboutModalPanel = aboutModal.querySelector(
+      ".about-modal-panel"
+    );
+    const aboutModalClose = aboutModal.querySelector(
+      ".about-modal-close"
+    );
+    const aboutModalYear = document.getElementById(
+      "aboutModalYear"
+    );
+
+    let aboutModalTrigger = null;
+    let aboutModalCloseTimer = null;
+
+    // Automatically update the modal copyright year.
+    aboutModalYear.textContent = new Date().getFullYear();
+
+    function openAboutModal() {
+      window.clearTimeout(aboutModalCloseTimer);
+
+      aboutModalTrigger = document.querySelector(
+        '[data-feature="about"]'
+      );
+
+      aboutModal.hidden = false;
+      document.body.style.overflow = "hidden";
+
+      requestAnimationFrame(() => {
+        aboutModal.classList.add("is-visible");
+        aboutModalClose.focus();
+      });
+    }
+
+    function closeAboutModal() {
+      if (
+        aboutModal.hidden ||
+        aboutModalCloseTimer !== null
+      ) {
+        return;
+      }
+
+      aboutModal.classList.remove("is-visible");
+
+      aboutModalCloseTimer = window.setTimeout(() => {
+        aboutModal.hidden = true;
+        document.body.style.overflow = "";
+        aboutModalCloseTimer = null;
+
+        if (aboutModalTrigger) {
+          aboutModalTrigger.focus();
+        }
+      }, 220);
+    }
+
+    aboutModalClose.addEventListener(
+      "click",
+      closeAboutModal
+    );
+
+    // Close when clicking the backdrop.
+    aboutModal.addEventListener("click", (event) => {
+      if (event.target === aboutModal) {
+        closeAboutModal();
+      }
+    });
+
+    // Close the modal with Escape.
+    document.addEventListener("keydown", (event) => {
+      if (
+        event.key === "Escape" &&
+        !aboutModal.hidden
+      ) {
+        closeAboutModal();
+      }
+    });
+
+    // Keep keyboard focus inside the modal.
+    aboutModal.addEventListener("keydown", (event) => {
+      if (event.key !== "Tab") return;
+
+      const focusable = [aboutModalClose];
+      const first = focusable[0];
+      const last = focusable[focusable.length - 1];
+
+      if (
+        event.shiftKey &&
+        document.activeElement === first
+      ) {
+        event.preventDefault();
+        last.focus();
+      } else if (
+        !event.shiftKey &&
+        document.activeElement === last
+      ) {
+        event.preventDefault();
+        first.focus();
+      }
+    });
+
+    /* QUICK ACCESS MENU BEHAVIOR */
     const brandMenu = document.querySelector(".brand-menu");
 
     if (brandMenu) {
-      // ADDED: Smoothly close the Quick Access Menu.
+      // Smoothly close the Quick Access Menu.
       function closeBrandMenu() {
         if (
           !brandMenu.open ||
@@ -854,7 +1041,7 @@
         button.addEventListener("click", () => {
           const feature = button.dataset.feature;
 
-          // Allow the closing animation to finish before showing the action.
+          // Allow the closing animation to finish.
           closeBrandMenu();
 
           window.setTimeout(() => {
@@ -877,9 +1064,7 @@
             }
 
             if (feature === "about") {
-              alert(
-                "CheckmaîtréX Chess Club\n\nOfficial Club Website\nCalculate. Conquer. Checkmate."
-              );
+              openAboutModal();
             }
           }, 220);
         });
