@@ -622,7 +622,131 @@
               <span aria-hidden="true">ⓘ</span>
               About This Website
             </button>
-          </div>
+          </div>  <!-- REPORT A PROBLEM MODAL -->
+  <div class="report-modal" id="reportModal" hidden>
+    <section
+      class="report-modal-panel"
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="reportModalTitle"
+      tabindex="-1"
+    >
+      <button
+        class="report-modal-close"
+        type="button"
+        aria-label="Close Report a Problem"
+      >×</button>
+
+      <p class="report-eyebrow">CHECKMAÎTRÉX CHESS CLUB</p>
+      <h2 id="reportModalTitle">Report a Problem</h2>
+      <p class="report-intro">
+        Help us improve the website. Tell us what happened
+        and where you encountered the issue.
+      </p>
+
+      <div class="report-divider"></div>
+
+      <form
+        id="reportForm"
+        action="https://formspree.io/f/xvkzdbpa"
+        method="POST"
+      >
+        <label for="reportType">Problem Type <span>*</span></label>
+        <select id="reportType" name="Problem Type" required>
+          <option value="" disabled selected>Select a problem type</option>
+          <option>Bug / Error</option>
+          <option>Broken Link</option>
+          <option>Display / Layout Issue</option>
+          <option>Feature Not Working</option>
+          <option>Installation Issue</option>
+          <option>Suggestion / Improvement</option>
+          <option>Security / Privacy Concern</option>
+          <option>Other</option>
+        </select>
+
+        <label for="reportLocation">
+          Where did the problem occur? <span>*</span>
+        </label>
+        <select id="reportLocation" name="Problem Location" required>
+          <option value="" disabled selected>Select a location</option>
+          <option>Homepage</option>
+          <option>Header / Navigation</option>
+          <option>Quick Access Menu</option>
+          <option>About This Website</option>
+          <option>Settings</option>
+          <option>Install App</option>
+          <option>Report a Problem</option>
+          <option>Footer</option>
+          <option>Other / Not Sure</option>
+        </select>
+
+        <div id="reportExtraFields"></div>
+
+        <div
+          class="report-security-note"
+          id="reportSecurityNote"
+          hidden
+        >
+          Please do not include passwords, account credentials,
+          or other sensitive personal information in your report.
+        </div>
+
+        <label for="reportDescription">
+          Description <span>*</span>
+        </label>
+        <textarea
+          id="reportDescription"
+          name="Description"
+          rows="5"
+          placeholder="Describe the problem and what happened..."
+          required
+          maxlength="5000"
+        ></textarea>
+
+        <label for="reportEmail">
+          Email <small>(optional)</small>
+        </label>
+        <input
+          id="reportEmail"
+          type="email"
+          name="Email"
+          placeholder="you@example.com"
+          autocomplete="email"
+        >
+
+        <input
+          type="hidden"
+          name="_subject"
+          value="New Report - CheckmaîtréX Chess Club"
+        >
+
+        <p class="report-privacy">
+          Your email is optional. Please share only information
+          needed to explain the issue.
+        </p>
+
+        <div
+          class="report-status"
+          id="reportStatus"
+          role="status"
+          aria-live="polite"
+          hidden
+        ></div>
+
+        <div class="report-actions">
+          <button
+            type="button"
+            class="report-cancel"
+            id="reportCancel"
+          >Cancel</button>
+
+          <button type="submit" id="reportSubmit">
+            Submit Report
+          </button>
+        </div>
+      </form>
+    </section>
+  </div>
         </details>
       </div>
 
