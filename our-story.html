@@ -31,7 +31,20 @@
     </div>
   </details>
 
-  <details class="story-dropdown">
+  <details class="
+.story-dropdown summary {
+  cursor: pointer;
+  list-style: none;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.story-dropdown summary::-webkit-details-marker {
+  display: none;
+}
+
     <summary>Club Highlights <span aria-hidden="true">⌄</span></summary>
     <div class="story-dropdown-menu">
       <a href="highlights.html">All Highlights</a>
