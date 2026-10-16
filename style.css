@@ -896,3 +896,68 @@ button:active,
     transition-duration: 0.01ms !important;
   }
 }
+/* =====================================
+   VISIBLE WEBSITE ANIMATIONS
+   ===================================== */
+
+/* Page entrance */
+body {
+  opacity: 0;
+  transition: opacity 0.35s ease;
+}
+
+body.page-loaded {
+  opacity: 1;
+}
+
+body.page-leaving {
+  opacity: 0;
+}
+
+/* Gold glow */
+a:hover,
+button:hover,
+.button:hover {
+  text-shadow: 0 0 8px rgba(212, 175, 55, 0.45);
+  box-shadow: 0 0 14px rgba(212, 175, 55, 0.28);
+}
+
+/* Scroll reveal */
+.reveal {
+  opacity: 0;
+  transform: translateY(22px);
+  transition:
+    opacity 0.65s ease,
+    transform 0.65s ease;
+}
+
+.reveal.revealed {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Keep dropdown and modal layers visible */
+header,
+.about-modal,
+.report-modal {
+  opacity: 1;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  body,
+  .reveal,
+  a,
+  button,
+  .button {
+    transition: none !important;
+  }
+
+  body {
+    opacity: 1;
+  }
+
+  .reveal {
+    opacity: 1;
+    transform: none;
+  }
+}
