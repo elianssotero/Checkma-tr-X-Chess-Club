@@ -1,6 +1,8 @@
 /* CHECKMAÎTRÉX CHESS CLUB
 Luxury Black & Gold Theme */
-
+html {
+  scroll-behavior: smooth;
+}
 :root {
 --black: #0b0b0b;
 --dark: #151515;
@@ -1414,7 +1416,4 @@ body.story-page {
 .nav-dropdown[open] .dropdown-menu {
   display: flex;
   flex-direction: column;
-}
-html {
-  scroll-behavior: smooth;
 }
