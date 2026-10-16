@@ -633,7 +633,8 @@
         <details>
           <summary>About Us</summary>
           <div class="dropdown">
-            <a href="our-story.html">Our &amp; Story</a>
+            <!-- Naka-ayos na ang typo dito (Our Story na instead na Our & Story) -->
+            <a href="our-story.html">Our Story</a>
             <a href="mission-vision.html">Mission &amp; Vision</a>
             <a href="about.html#leadership">Leadership</a>
           </div>
@@ -673,20 +674,15 @@
   </header>
 
   <main>
-
     <!-- HERO SECTION -->
     <section class="hero">
       <div class="eyebrow">Official Club Website</div>
-
       <h1>Calculate. Conquer.<br>Checkmate.</h1>
-
       <p>
         Welcome to CheckmaîtréX Chess Club — where strategy sharpens the mind, discipline builds character, and every move brings new opportunities to excel.
       </p>
-
       <div class="hero-actions">
         <a class="button" href="about.html">Discover Our Club</a>
-
         <a
           class="button outline-button"
           href="https://www.facebook.com/CheckmaitreXChessClub"
@@ -701,9 +697,7 @@
     <!-- WELCOME SECTION -->
     <section class="welcome">
       <div class="eyebrow">Welcome to CheckmaîtréX</div>
-
       <h2>Where Strategy Meets Excellence</h2>
-
       <p>
         Chess is a game of vision, discipline, and decisive moves.
         Every match is an opportunity to learn, improve, and grow
@@ -711,793 +705,73 @@
         activities, and community through the pages of this website.
       </p>
 
-      <!-- HOMEPAGE PREVIEW CARDS -->
       <div class="preview-grid">
-
         <article class="card">
           <h3>About Our Club</h3>
           <p>Learn about our identity, values, and goals.</p>
-          <a class="section-link" href="about.html">
-            Explore About Us →
-          </a>
+          <a class="section-link" href="about.html">Explore About Us →</a>
         </article>
 
         <article class="card">
           <h3>Activities</h3>
           <p>Discover club activities, events, and chess developments.</p>
-          <a class="section-link" href="activities.html">
-            Explore Activities →
-          </a>
+          <a class="section-link" href="activities.html">Explore Activities →</a>
         </article>
 
         <article class="card">
           <h3>Join Our Community</h3>
           <p>Find out how to connect with CheckmaîtréX.</p>
-          <a class="section-link" href="join.html">
-            Learn How to Join →
-          </a>
+          <a class="section-link" href="join.html">Learn How to Join →</a>
         </article>
-
       </div>
     </section>
-
   </main>
 
   <!-- FOOTER -->
   <footer>
     <p>© <span id="year"></span> CheckmaîtréX Chess Club</p>
-
     <div class="footer-divider" aria-hidden="true"></div>
-
     <p>Calculate. Conquer. Checkmate.</p>
   </footer>
 
-  <!-- REPORT A PROBLEM MODAL -->
-  <div class="report-modal" id="reportModal" hidden>
-    <section
-      class="report-modal-panel"
-      role="dialog"
-      aria-modal="true"
-      aria-labelledby="reportModalTitle"
-      tabindex="-1"
-    >
-      <button
-        class="report-modal-close"
-        type="button"
-        aria-label="Close Report a Problem"
-      >×</button>
-
-      <p class="report-eyebrow">CHECKMAÎTRÉX CHESS CLUB</p>
-      <h2 id="reportModalTitle">Report a Problem</h2>
-      <p class="report-intro">
-        Help us improve the website. Tell us what happened
-        and where you encountered the issue.
-      </p>
-
-      <div class="report-divider"></div>
-
-      <form
-        id="reportForm"
-        action="https://formspree.io/f/xvkzdbpa"
-        method="POST"
-      >
-        <label for="reportType">Problem Type <span>*</span></label>
-        <select id="reportType" name="Problem Type" required>
-          <option value="" disabled selected>Select a problem type</option>
-          <option>Bug / Error</option>
-          <option>Broken Link</option>
-          <option>Display / Layout Issue</option>
-          <option>Feature Not Working</option>
-          <option>Installation Issue</option>
-          <option>Suggestion / Improvement</option>
-          <option>Security / Privacy Concern</option>
-          <option>Other</option>
-        </select>
-
-        <label for="reportLocation">
-          Where did the problem occur? <span>*</span>
-        </label>
-        <select id="reportLocation" name="Problem Location" required>
-          <option value="" disabled selected>Select a location</option>
-          <option>Homepage</option>
-          <option>Header / Navigation</option>
-          <option>Quick Access Menu</option>
-          <option>About This Website</option>
-          <option>Settings</option>
-          <option>Install App</option>
-          <option>Report a Problem</option>
-          <option>Footer</option>
-          <option>Other / Not Sure</option>
-        </select>
-
-        <div id="reportExtraFields"></div>
-
-        <div
-          class="report-security-note"
-          id="reportSecurityNote"
-          hidden
-        >
-          Please do not include passwords, account credentials,
-          or other sensitive personal information in your report.
-        </div>
-
-        <label for="reportDescription">
-          Description <span>*</span>
-        </label>
-        <textarea
-          id="reportDescription"
-          name="Description"
-          rows="5"
-          placeholder="Describe the problem and what happened..."
-          required
-          maxlength="5000"
-        ></textarea>
-
-        <label for="reportEmail">
-          Email <small>(optional)</small>
-        </label>
-        <input
-          id="reportEmail"
-          type="email"
-          name="Email"
-          placeholder="you@example.com"
-          autocomplete="email"
-        >
-
-        <input
-          type="hidden"
-          name="_subject"
-          value="New Report - CheckmaîtréX Chess Club"
-        >
-
-        <p class="report-privacy">
-          Your email is optional. Please share only information
-          needed to explain the issue.
-        </p>
-
-        <div
-          class="report-status"
-          id="reportStatus"
-          role="status"
-          aria-live="polite"
-          hidden
-        ></div>
-
-        <div class="report-actions">
-          <button
-            type="button"
-            class="report-cancel"
-            id="reportCancel"
-          >Cancel</button>
-
-          <button type="submit" id="reportSubmit">
-            Submit Report
-          </button>
-        </div>
-      </form>
-    </section>
-  </div>
-
-  <!-- ABOUT THIS WEBSITE MODAL -->
-  <div class="about-modal" id="aboutModal" hidden>
-    <section
-      class="about-modal-panel"
-      role="dialog"
-      aria-modal="true"
-      aria-labelledby="aboutModalTitle"
-      tabindex="-1"
-    >
-      <button
-        class="about-modal-close"
-        type="button"
-        aria-label="Close About This Website"
-      >×</button>
-
-      <div class="about-modal-brand">
-        <img
-          src="logo.png"
-          alt="CheckmaîtréX Chess Club logo"
-        >
-        <div>
-          <p class="about-modal-eyebrow">CHECKMAÎTRÉX CHESS CLUB</p>
-          <h2 id="aboutModalTitle">About This Website</h2>
-          <p class="about-modal-subtitle">Official Club Website</p>
-        </div>
-      </div>
-
-      <div class="about-modal-divider"></div>
-
-      <div class="about-modal-content">
-        <h3>Welcome to CheckmaîtréX Chess Club</h3>
-        <p>
-          The official website of CheckmaîtréX Chess Club,
-          created to showcase our club identity, share our activities,
-          and celebrate our chess community.
-        </p>
-
-        <div class="about-modal-details">
-          <div class="about-modal-detail">
-            <span class="about-modal-icon" aria-hidden="true">♞</span>
-            <div>
-              <span class="about-modal-label">WEBSITE NAME</span>
-              <p>CheckmaîtréX Chess Club</p>
-            </div>
-          </div>
-
-          <div class="about-modal-detail">
-            <span class="about-modal-icon" aria-hidden="true">◆</span>
-            <div>
-              <span class="about-modal-label">PLATFORM</span>
-              <p>Official Club Website</p>
-            </div>
-          </div>
-
-          <div class="about-modal-detail">
-            <span class="about-modal-icon" aria-hidden="true">✦</span>
-            <div>
-              <span class="about-modal-label">DESIGN THEME</span>
-              <p>Black &amp; Gold</p>
-            </div>
-          </div>
-        </div>
-
-        <h3 class="about-modal-credits-title">
-          Credits &amp; Acknowledgment
-        </h3>
-        <p class="about-modal-created">Website created by</p>
-        <p class="about-modal-creator">El.ians Sotero</p>
-        <p class="about-modal-acknowledgment">
-          Dedicated to the love of chess, strategic thinking,
-          and the CheckmaîtréX Chess Club community.
-        </p>
-      </div>
-
-      <div class="about-modal-divider"></div>
-
-      <footer class="about-modal-footer">
-        <p>Calculate. Conquer. Checkmate.</p>
-        <small>
-          © <span id="aboutModalYear"></span>
-          CheckmaîtréX Chess Club. All rights reserved.
-        </small>
-      </footer>
-    </section>
-  </div>
-
   <!-- JAVASCRIPT -->
   <script>
-    // Automatically update the copyright year.
-    document.getElementById("year").textContent =
-      new Date().getFullYear();
+    document.getElementById("year").textContent = new Date().getFullYear();
 
-    const menus = [
-      ...document.querySelectorAll(".main-nav details")
-    ];
+    const menus = [...document.querySelectorAll(".main-nav details")];
 
-    // Close a dropdown with animation.
     function closeMenu(menu) {
-      if (!menu.open || menu.classList.contains("is-closing")) {
-        return;
-      }
-
+      if (!menu.open || menu.classList.contains("is-closing")) return;
       menu.classList.add("is-closing");
-
       window.setTimeout(() => {
         menu.open = false;
         menu.classList.remove("is-closing");
       }, 230);
     }
 
-    // Handle dropdown clicks.
     menus.forEach((menu) => {
       const summary = menu.querySelector("summary");
-
       summary.addEventListener("click", (event) => {
         event.preventDefault();
-
-        if (menu.classList.contains("is-closing")) {
-          return;
-        }
-
+        if (menu.classList.contains("is-closing")) return;
         if (menu.open) {
           closeMenu(menu);
           return;
         }
-
-        // Close other dropdowns smoothly.
         menus.forEach((other) => {
-          if (other !== menu && other.open) {
-            closeMenu(other);
-          }
+          if (other !== menu && other.open) closeMenu(other);
         });
-
         menu.open = true;
       });
     });
 
-    // Close dropdowns when clicking outside the menu.
     document.addEventListener("click", (event) => {
       if (!event.target.closest(".main-nav")) {
         menus.forEach((menu) => {
-          if (menu.open) {
-            closeMenu(menu);
-          }
+          if (menu.open) closeMenu(menu);
         });
       }
     });
-
-    /* ABOUT THIS WEBSITE MODAL */
-    const aboutModal = document.getElementById("aboutModal");
-    const aboutModalPanel = aboutModal.querySelector(
-      ".about-modal-panel"
-    );
-    const aboutModalClose = aboutModal.querySelector(
-      ".about-modal-close"
-    );
-    const aboutModalYear = document.getElementById(
-      "aboutModalYear"
-    );
-
-    let aboutModalTrigger = null;
-    let aboutModalCloseTimer = null;
-
-    // Automatically update the modal copyright year.
-    aboutModalYear.textContent = new Date().getFullYear();
-
-    function openAboutModal() {
-      window.clearTimeout(aboutModalCloseTimer);
-
-      aboutModalTrigger = document.querySelector(
-        '[data-feature="about"]'
-      );
-
-      aboutModal.hidden = false;
-      document.body.style.overflow = "hidden";
-
-      requestAnimationFrame(() => {
-        aboutModal.classList.add("is-visible");
-        aboutModalClose.focus();
-      });
-    }
-
-    function closeAboutModal() {
-      if (
-        aboutModal.hidden ||
-        aboutModalCloseTimer !== null
-      ) {
-        return;
-      }
-
-      aboutModal.classList.remove("is-visible");
-
-      aboutModalCloseTimer = window.setTimeout(() => {
-        aboutModal.hidden = true;
-        document.body.style.overflow = "";
-        aboutModalCloseTimer = null;
-
-        if (aboutModalTrigger) {
-          aboutModalTrigger.focus();
-        }
-      }, 220);
-    }
-
-    aboutModalClose.addEventListener(
-      "click",
-      closeAboutModal
-    );
-
-    // Close when clicking the backdrop.
-    aboutModal.addEventListener("click", (event) => {
-      if (event.target === aboutModal) {
-        closeAboutModal();
-      }
-    });
-
-    // Close the modal with Escape.
-    document.addEventListener("keydown", (event) => {
-      if (
-        event.key === "Escape" &&
-        !aboutModal.hidden
-      ) {
-        closeAboutModal();
-      }
-    });
-
-    // Keep keyboard focus inside the modal.
-    aboutModal.addEventListener("keydown", (event) => {
-      if (event.key !== "Tab") return;
-
-      const focusable = [aboutModalClose];
-      const first = focusable[0];
-      const last = focusable[focusable.length - 1];
-
-      if (
-        event.shiftKey &&
-        document.activeElement === first
-      ) {
-        event.preventDefault();
-        last.focus();
-      } else if (
-        !event.shiftKey &&
-        document.activeElement === last
-      ) {
-        event.preventDefault();
-        first.focus();
-      }
-    });
-
-    /* REPORT A PROBLEM MODAL */
-    const reportModal = document.getElementById("reportModal");
-    const reportPanel = reportModal.querySelector(".report-modal-panel");
-    const reportClose = reportModal.querySelector(".report-modal-close");
-    const reportCancel = document.getElementById("reportCancel");
-    const reportForm = document.getElementById("reportForm");
-    const reportType = document.getElementById("reportType");
-    const reportDescription = document.getElementById("reportDescription");
-    const reportExtraFields = document.getElementById("reportExtraFields");
-    const reportSecurityNote = document.getElementById("reportSecurityNote");
-    const reportStatus = document.getElementById("reportStatus");
-    const reportSubmit = document.getElementById("reportSubmit");
-
-    let reportModalTrigger = null;
-    let reportCloseTimer = null;
-    let reportSubmitting = false;
-
-    function openReportModal() {
-      window.clearTimeout(reportCloseTimer);
-      reportCloseTimer = null;
-
-      reportModalTrigger = document.querySelector(
-        '[data-feature="report"]'
-      );
-
-      reportModal.hidden = false;
-      document.body.style.overflow = "hidden";
-
-      requestAnimationFrame(() => {
-        reportModal.classList.add("is-visible");
-        reportType.focus();
-      });
-    }
-
-    function closeReportModal() {
-      if (
-        reportModal.hidden ||
-        reportCloseTimer !== null ||
-        reportSubmitting
-      ) {
-        return;
-      }
-
-      reportModal.classList.remove("is-visible");
-
-      reportCloseTimer = window.setTimeout(() => {
-        reportModal.hidden = true;
-        document.body.style.overflow = "";
-        reportCloseTimer = null;
-
-        if (reportModalTrigger) {
-          reportModalTrigger.focus();
-        }
-      }, 220);
-    }
-
-    reportClose.addEventListener("click", closeReportModal);
-    reportCancel.addEventListener("click", closeReportModal);
-
-    reportModal.addEventListener("click", (event) => {
-      if (event.target === reportModal) {
-        closeReportModal();
-      }
-    });
-
-    document.addEventListener("keydown", (event) => {
-      if (event.key === "Escape" && !reportModal.hidden) {
-        closeReportModal();
-      }
-    });
-
-    // Keep keyboard focus inside the Report modal.
-    reportModal.addEventListener("keydown", (event) => {
-      if (event.key !== "Tab") return;
-
-      const focusable = [
-        ...reportPanel.querySelectorAll(
-          'button:not(:disabled), input:not(:disabled), ' +
-          'select:not(:disabled), textarea:not(:disabled)'
-        )
-      ].filter((element) => element.offsetParent !== null);
-
-      if (!focusable.length) return;
-
-      const first = focusable[0];
-      const last = focusable[focusable.length - 1];
-
-      if (
-        event.shiftKey &&
-        document.activeElement === first
-      ) {
-        event.preventDefault();
-        last.focus();
-      } else if (
-        !event.shiftKey &&
-        document.activeElement === last
-      ) {
-        event.preventDefault();
-        first.focus();
-      }
-    });
-
-    // Change the extra fields based on the selected problem type.
-    function updateReportFields() {
-      const type = reportType.value;
-
-      reportExtraFields.replaceChildren();
-      reportSecurityNote.hidden =
-        type !== "Security / Privacy Concern";
-
-      if (type === "Suggestion / Improvement") {
-        reportDescription.placeholder =
-          "Describe your suggestion.";
-      } else {
-        reportDescription.placeholder =
-          "Describe the problem and what happened...";
-      }
-
-      const extraOptions = {
-        "Broken Link": {
-          label: "Link or button name",
-          name: "Link or Button Name",
-          placeholder: "Name or URL of the broken link"
-        },
-        "Display / Layout Issue": {
-          label: "Device or browser",
-          name: "Device or Browser",
-          placeholder: "e.g. Android phone, Chrome"
-        },
-        "Installation Issue": {
-          label: "Device type",
-          name: "Device Type",
-          placeholder: "e.g. Android phone, iPhone, computer"
-        }
-      };
-
-      const extra = extraOptions[type];
-
-      if (!extra) return;
-
-      const label = document.createElement("label");
-      const input = document.createElement("input");
-      const id = "reportExtraInput";
-
-      label.htmlFor = id;
-      label.textContent = extra.label + " (optional)";
-
-      input.type = "text";
-      input.id = id;
-      input.name = extra.name;
-      input.placeholder = extra.placeholder;
-      input.maxLength = 300;
-
-      reportExtraFields.append(label, input);
-    }
-
-    reportType.addEventListener("change", updateReportFields);
-
-    // Submit the report through Formspree without leaving the website.
-    reportForm.addEventListener("submit", async (event) => {
-      event.preventDefault();
-
-      if (reportSubmitting || !reportForm.reportValidity()) {
-        return;
-      }
-
-      reportSubmitting = true;
-      reportSubmit.disabled = true;
-      reportCancel.disabled = true;
-      reportClose.disabled = true;
-      reportSubmit.textContent = "Submitting...";
-
-      reportStatus.hidden = true;
-      reportStatus.className = "report-status";
-      reportStatus.textContent = "";
-
-      try {
-        const response = await fetch(reportForm.action, {
-          method: "POST",
-          body: new FormData(reportForm),
-          headers: {
-            Accept: "application/json"
-          }
-        });
-
-        let result = {};
-
-        try {
-          result = await response.json();
-        } catch {
-          // A non-JSON response is handled as an unsuccessful submission.
-        }
-
-        if (!response.ok) {
-          throw new Error(
-            result.errors?.map((error) => error.message).join(" ") ||
-            "The report could not be submitted. Please try again."
-          );
-        }
-
-        reportStatus.textContent =
-          "Thank you! Your report was submitted successfully.";
-        reportStatus.classList.add("is-success");
-        reportStatus.hidden = false;
-
-        reportForm.reset();
-        updateReportFields();
-
-        reportSubmit.textContent = "Submitted";
-
-        window.setTimeout(() => {
-          if (!reportModal.hidden) {
-            closeReportModal();
-          }
-        }, 1800);
-      } catch (error) {
-        reportStatus.textContent =
-          error.message ||
-          "Unable to submit your report. Check your connection and try again.";
-
-        reportStatus.classList.add("is-error");
-        reportStatus.hidden = false;
-
-        reportSubmit.textContent = "Try Again";
-      } finally {
-        reportSubmitting = false;
-        reportSubmit.disabled = false;
-        reportCancel.disabled = false;
-        reportClose.disabled = false;
-
-        if (reportSubmit.textContent !== "Submitted") {
-          reportSubmit.textContent = "Submit Report";
-        }
-      }
-    });
-
-    /* QUICK ACCESS MENU BEHAVIOR */
-    const brandMenu = document.querySelector(".brand-menu");
-
-    if (brandMenu) {
-      // Smoothly close the Quick Access Menu.
-      function closeBrandMenu() {
-        if (
-          !brandMenu.open ||
-          brandMenu.classList.contains("is-closing")
-        ) {
-          return;
-        }
-
-        brandMenu.classList.add("is-closing");
-
-        window.setTimeout(() => {
-          brandMenu.open = false;
-          brandMenu.classList.remove("is-closing");
-        }, 220);
-      }
-
-      // Close the quick menu when clicking outside it.
-      document.addEventListener("click", (event) => {
-        if (!brandMenu.contains(event.target)) {
-          closeBrandMenu();
-        }
-      });
-
-      // Close the quick menu when Escape is pressed.
-      document.addEventListener("keydown", (event) => {
-        if (event.key === "Escape") {
-          closeBrandMenu();
-        }
-      });
-
-      // Quick Access feature actions.
-      brandMenu.querySelectorAll("[data-feature]").forEach((button) => {
-        button.addEventListener("click", () => {
-          const feature = button.dataset.feature;
-
-          // Allow the closing animation to finish.
-          closeBrandMenu();
-
-          window.setTimeout(() => {
-            if (feature === "settings") {
-              alert(
-                "Settings\n\nTheme and display preferences will be added here in a future update."
-              );
-            }
-
-            if (feature === "install") {
-              alert(
-                "Install App\n\nApp installation will be available once the website is configured as an installable web app."
-              );
-            }
-
-            if (feature === "report") {
-              openReportModal();
-            }
-
-            if (feature === "about") {
-              openAboutModal();
-            }
-          }, 220);
-        });
-      });
-    }
   </script>
-
-<script>
-document.addEventListener("DOMContentLoaded", () => {
-  // 1. Fade-in kapag binuksan ang page
-  document.body.classList.add("page-loaded");
-
-  // 2. Scroll reveal para sa sections at cards
-  const revealItems = document.querySelectorAll(
-    "main section, .hero, .welcome, .card, .preview-grid"
-  );
-
-  revealItems.forEach((item) => {
-    item.classList.add("reveal");
-  });
-
-  if ("IntersectionObserver" in window) {
-    const observer = new IntersectionObserver(
-      (entries, currentObserver) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting) {
-            entry.target.classList.add("revealed");
-            currentObserver.unobserve(entry.target);
-          }
-        });
-      },
-      { threshold: 0.12 }
-    );
-
-    revealItems.forEach((item) => observer.observe(item));
-  } else {
-    revealItems.forEach((item) => item.classList.add("revealed"));
-  }
-
-  // 3. Fade-out bago lumipat sa ibang HTML page
-  document.querySelectorAll("a[href]").forEach((link) => {
-    link.addEventListener("click", (event) => {
-      if (
-        event.defaultPrevented ||
-        event.button !== 0 ||
-        event.ctrlKey ||
-        event.metaKey ||
-        event.shiftKey ||
-        event.altKey ||
-        link.target === "_blank" ||
-        link.hasAttribute("download")
-      ) return;
-
-      const url = new URL(link.href, window.location.href);
-
-      if (
-        url.origin !== window.location.origin ||
-        url.pathname === window.location.pathname ||
-        url.hash ||
-        link.hasAttribute("data-no-transition")
-      ) return;
-
-      event.preventDefault();
-      document.body.classList.add("page-leaving");
-
-      setTimeout(() => {
-        window.location.href = url.href;
-      }, 220);
-    });
-  });
-});
-</script>
-</body>
-</html>
-
 </body>
 </html>
