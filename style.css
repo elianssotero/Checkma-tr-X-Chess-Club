@@ -473,3 +473,318 @@ animation-duration: 0.01ms;
     transition: none;
   }
 }
+/* =====================================
+   REPORT A PROBLEM MODAL
+   ===================================== */
+
+.report-modal[hidden],
+.report-status[hidden],
+.report-security-note[hidden] {
+  display: none;
+}
+
+.report-modal {
+  position: fixed;
+  inset: 0;
+  z-index: 2100;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  overflow-y: auto;
+  background: rgba(0, 0, 0, 0.82);
+  opacity: 0;
+  transition: opacity 0.22s ease;
+}
+
+.report-modal.is-visible {
+  opacity: 1;
+}
+
+.report-modal-panel {
+  position: relative;
+  width: 100%;
+  max-width: 560px;
+  max-height: calc(100vh - 40px);
+  overflow-y: auto;
+  padding: 28px;
+  background: #0b0b0b;
+  color: #f5f5f5;
+  border: 1px solid #b99750;
+  border-radius: 14px;
+  box-shadow: 0 20px 60px #000b;
+  transform: translateY(12px) scale(0.98);
+  transition: transform 0.22s ease;
+  outline: none;
+}
+
+.report-modal.is-visible .report-modal-panel {
+  transform: translateY(0) scale(1);
+}
+
+.report-modal-close {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  padding: 0;
+  border: 1px solid #80652f;
+  border-radius: 50%;
+  background: #171717;
+  color: #f1d77a;
+  font-size: 26px;
+  line-height: 1;
+  cursor: pointer;
+}
+
+.report-modal-close:hover {
+  background: #d4af37;
+  color: #0b0b0b;
+}
+
+.report-modal-close:focus-visible,
+.report-modal-panel button:focus-visible,
+.report-modal-panel input:focus-visible,
+.report-modal-panel select:focus-visible,
+.report-modal-panel textarea:focus-visible {
+  outline: 2px solid #f1d77a;
+  outline-offset: 3px;
+}
+
+.report-eyebrow {
+  margin: 0 45px 6px 0;
+  color: #d4af37;
+  font-size: 0.7rem;
+  font-weight: bold;
+  letter-spacing: 1.5px;
+}
+
+.report-modal-panel h2 {
+  margin: 0;
+  color: #f1d77a;
+  font-size: clamp(1.4rem, 4vw, 1.8rem);
+}
+
+.report-intro {
+  margin: 10px 0 0;
+  color: #b8b8b8;
+  font-size: 0.92rem;
+  line-height: 1.7;
+}
+
+.report-divider {
+  height: 1px;
+  margin: 20px 0;
+  background: linear-gradient(
+    to right,
+    transparent,
+    #b99750,
+    transparent
+  );
+}
+
+#reportForm {
+  display: flex;
+  flex-direction: column;
+  gap: 9px;
+}
+
+#reportForm label {
+  margin-top: 8px;
+  color: #f1d77a;
+  font-size: 0.9rem;
+  font-weight: bold;
+}
+
+#reportForm label span {
+  color: #f1d77a;
+}
+
+#reportForm label small {
+  color: #b8b8b8;
+  font-size: 0.8rem;
+  font-weight: normal;
+}
+
+#reportForm input,
+#reportForm select,
+#reportForm textarea {
+  box-sizing: border-box;
+  width: 100%;
+  min-width: 0;
+  padding: 12px 13px;
+  border: 1px solid #50452e;
+  border-radius: 7px;
+  background: #151515;
+  color: #f5f5f5;
+  font: inherit;
+  font-size: 0.92rem;
+  transition:
+    border-color 0.2s ease,
+    background 0.2s ease,
+    box-shadow 0.2s ease;
+}
+
+#reportForm input:focus,
+#reportForm select:focus,
+#reportForm textarea:focus {
+  border-color: #d4af37;
+  box-shadow: 0 0 0 3px rgba(212, 175, 55, 0.1);
+}
+
+#reportForm select {
+  cursor: pointer;
+}
+
+#reportForm select option {
+  background: #151515;
+  color: #f5f5f5;
+}
+
+#reportForm textarea {
+  min-height: 120px;
+  resize: vertical;
+}
+
+#reportForm input::placeholder,
+#reportForm textarea::placeholder {
+  color: #858585;
+}
+
+#reportForm select:invalid {
+  color: #858585;
+}
+
+#reportExtraFields {
+  display: flex;
+  flex-direction: column;
+  gap: 9px;
+  animation: reportFieldIn 0.22s ease both;
+}
+
+#reportExtraFields:empty {
+  display: none;
+}
+
+#reportExtraFields input {
+  margin-bottom: 2px;
+}
+
+@keyframes reportFieldIn {
+  from {
+    opacity: 0;
+    transform: translateY(-6px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.report-security-note {
+  margin-top: 8px;
+  padding: 12px;
+  border: 1px solid #80652f;
+  border-radius: 7px;
+  background: #211b0e;
+  color: #f1d77a;
+  font-size: 0.84rem;
+  line-height: 1.6;
+}
+
+.report-privacy {
+  margin: 3px 0 8px;
+  color: #a8a8a8;
+  font-size: 0.78rem;
+  line-height: 1.6;
+}
+
+.report-status {
+  padding: 12px;
+  border: 1px solid #50452e;
+  border-radius: 7px;
+  background: #171717;
+  color: #f5f5f5;
+  font-size: 0.88rem;
+  line-height: 1.6;
+  overflow-wrap: anywhere;
+}
+
+.report-status.is-success {
+  border-color: #668b54;
+  color: #c6e7b8;
+}
+
+.report-status.is-error {
+  border-color: #a45b52;
+  color: #ffb9b0;
+}
+
+.report-actions {
+  display: flex;
+  justify-content: flex-end;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 8px;
+}
+
+.report-actions button {
+  min-height: 44px;
+}
+
+.report-actions button:disabled {
+  cursor: wait;
+  opacity: 0.65;
+}
+
+#reportForm .report-cancel {
+  background: transparent;
+  color: #d4af37;
+}
+
+#reportForm .report-cancel:hover {
+  background: #292316;
+  color: #f1d77a;
+}
+
+@media (max-width: 480px) {
+  .report-modal {
+    padding: 12px;
+  }
+
+  .report-modal-panel {
+    max-height: calc(100vh - 24px);
+    padding: 22px 18px;
+    border-radius: 12px;
+  }
+
+  .report-divider {
+    margin: 16px 0;
+  }
+
+  .report-actions {
+    flex-direction: column-reverse;
+  }
+
+  .report-actions button {
+    width: 100%;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .report-modal,
+  .report-modal-panel,
+  #reportForm input,
+  #reportForm select,
+  #reportForm textarea {
+    transition: none;
+  }
+
+  #reportExtraFields {
+    animation: none;
+  }
+}
