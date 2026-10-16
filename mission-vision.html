@@ -1,0 +1,725 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#0b0b0b">
+  <meta name="description" content="Discover the mission, vision, and commitment of CheckmaîtréX Chess Club.">
+
+  <title>Mission &amp; Vision | CheckmaîtréX Chess Club</title>
+
+  <link rel="stylesheet" href="style.css">
+
+  <style>
+    /* HEADER */
+    .mv-header {
+      position: relative;
+      z-index: 20;
+      padding: 18px 5%;
+      background: #0b0b0b;
+      border-bottom: 1px solid #8f752d55;
+    }
+
+    .mv-header nav {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 24px;
+    }
+
+    .mv-brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      color: #d4af37;
+      text-decoration: none;
+      font-weight: 800;
+      letter-spacing: 1px;
+      white-space: nowrap;
+    }
+
+    .mv-logo {
+      width: 50px;
+      height: 50px;
+      object-fit: contain;
+    }
+
+    .mv-brand small {
+      display: block;
+      margin-top: 3px;
+      color: #eee;
+      font-size: .65rem;
+      letter-spacing: 4px;
+    }
+
+    .mv-nav {
+      display: flex;
+      align-items: center;
+      gap: 22px;
+    }
+
+    .mv-nav > a,
+    .mv-nav summary {
+      color: #f5f5f5;
+      text-decoration: none;
+      font-weight: 600;
+      cursor: pointer;
+      list-style: none;
+      padding: 10px 0;
+    }
+
+    .mv-nav summary::-webkit-details-marker {
+      display: none;
+    }
+
+    .mv-nav summary::after {
+      content: " ▾";
+      color: #d4af37;
+    }
+
+    .mv-nav a:hover,
+    .mv-nav summary:hover,
+    .mv-nav .current {
+      color: #d4af37;
+    }
+
+    .mv-nav details {
+      position: relative;
+    }
+
+    .mv-dropdown {
+      position: absolute;
+      top: 100%;
+      left: 0;
+      min-width: 200px;
+      padding: 10px;
+      background: #171717;
+      border: 1px solid #8f752d;
+      border-radius: 8px;
+      box-shadow: 0 12px 25px #0008;
+    }
+
+    .mv-dropdown a {
+      display: block;
+      padding: 11px;
+      color: #f5f5f5;
+      text-decoration: none;
+      border-radius: 5px;
+    }
+
+    .mv-dropdown a:hover {
+      color: #d4af37;
+      background: #292316;
+    }
+
+    /* CINEMATIC HERO */
+    .mv-hero {
+      position: relative;
+      isolation: isolate;
+      min-height: 78vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+      padding: 90px 24px;
+      text-align: center;
+      background: #0b0b0b;
+    }
+
+    .mv-hero::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      z-index: -2;
+      background-image: url("https://images.unsplash.com/photo-1586165368502-1bad197a6461?auto=format&fit=crop&w=2000&q=85");
+      background-size: cover;
+      background-position: center;
+      transform: scale(1.03);
+      animation: mvImageReveal 1.2s ease both;
+    }
+
+    .mv-hero::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      z-index: -1;
+      background:
+        linear-gradient(180deg, #050505a8, #050505d9 75%, #0b0b0b),
+        linear-gradient(90deg, #080808b8, #08080855, #080808b8);
+    }
+
+    .mv-eyebrow {
+      color: #e1c35b;
+      font-size: .78rem;
+      font-weight: 700;
+      letter-spacing: 5px;
+      text-transform: uppercase;
+    }
+
+    .mv-hero h1 {
+      max-width: 950px;
+      margin: 24px 0 18px;
+      color: #f8f2df;
+      font-family: Georgia, "Times New Roman", serif;
+      font-size: clamp(2.6rem, 7vw, 5.6rem);
+      font-weight: 500;
+      line-height: 1.12;
+      text-shadow: 0 4px 25px #000;
+    }
+
+    .mv-hero h1 span {
+      color: #e0bd50;
+    }
+
+    .mv-hero p {
+      max-width: 650px;
+      margin: 0;
+      color: #e0ded7;
+      font-size: 1.05rem;
+      line-height: 1.9;
+    }
+
+    .mv-ornament {
+      width: 100px;
+      height: 2px;
+      margin: 28px auto;
+      background: linear-gradient(90deg, transparent, #e0bd50, transparent);
+      box-shadow: 0 0 14px #d4af3766;
+    }
+
+    /* SHARED SECTIONS */
+    .mv-section {
+      position: relative;
+      padding: 100px 24px;
+      overflow: hidden;
+    }
+
+    .mv-container {
+      width: 100%;
+      max-width: 1000px;
+      margin: 0 auto;
+    }
+
+    .mv-section-label {
+      display: block;
+      margin-bottom: 18px;
+      color: #d4af37;
+      font-size: .76rem;
+      font-weight: 700;
+      letter-spacing: 4px;
+      text-transform: uppercase;
+    }
+
+    .mv-section h2 {
+      margin: 0 0 28px;
+      color: #f5f0df;
+      font-family: Georgia, "Times New Roman", serif;
+      font-size: clamp(2.1rem, 5vw, 3.5rem);
+      font-weight: 500;
+      line-height: 1.2;
+    }
+
+    .mv-quote {
+      margin: 0 0 28px;
+      padding-left: 24px;
+      border-left: 2px solid #d4af37;
+      color: #e2c45f;
+      font-family: Georgia, "Times New Roman", serif;
+      font-size: clamp(1.3rem, 3vw, 1.8rem);
+      line-height: 1.65;
+    }
+
+    .mv-copy {
+      max-width: 780px;
+      margin: 0;
+      color: #c8c5bd;
+      font-size: 1.02rem;
+      line-height: 2;
+    }
+
+    .mv-mission {
+      background:
+        radial-gradient(ellipse at 100% 50%, #80651b18, transparent 45%),
+        #101010;
+    }
+
+    .mv-vision {
+      background:
+        linear-gradient(#0b0b0bf2, #0b0b0bf2),
+        url("https://images.unsplash.com/photo-1529699211952-734e80c4d42b?auto=format&fit=crop&w=1800&q=80")
+        center / cover fixed;
+    }
+
+    .mv-vision .mv-container {
+      max-width: 1000px;
+    }
+
+    .mv-vision .mv-copy {
+      max-width: 780px;
+    }
+
+    /* DECORATIVE CHESS SYMBOL */
+    .mv-symbol {
+      margin-bottom: 20px;
+      color: #d4af37;
+      font-size: 2rem;
+      opacity: .9;
+      text-shadow: 0 0 22px #d4af3733;
+    }
+
+    /* COMMITMENT CLOSING */
+    .mv-commitment {
+      padding: 110px 24px 120px;
+      text-align: center;
+      background:
+        radial-gradient(ellipse at center, #8a6a2021, transparent 65%),
+        #111;
+      border-top: 1px solid #d4af3733;
+    }
+
+    .mv-commitment .mv-container {
+      max-width: 850px;
+    }
+
+    .mv-commitment h2 {
+      max-width: 760px;
+      margin: 0 auto 25px;
+      color: #e0bd50;
+      font-family: Georgia, "Times New Roman", serif;
+      font-size: clamp(2.2rem, 5vw, 3.8rem);
+      font-weight: 500;
+      line-height: 1.25;
+    }
+
+    .mv-commitment p {
+      margin: 0;
+      color: #ccc8be;
+      font-size: 1.03rem;
+      line-height: 2;
+    }
+
+    /* FOOTER */
+    .mv-footer {
+      padding: 28px 20px;
+      text-align: center;
+      background: #080808;
+      border-top: 1px solid #d4af3733;
+    }
+
+    .mv-footer p {
+      margin: 8px 0;
+      color: #ccc;
+    }
+
+    .mv-footer .mv-footer-tagline {
+      color: #d4af37;
+      font-family: Georgia, "Times New Roman", serif;
+      letter-spacing: 1px;
+    }
+
+    .mv-footer-divider {
+      width: 100%;
+      max-width: 400px;
+      height: 1px;
+      margin: 16px auto;
+      background: linear-gradient(90deg, transparent, #d4af37, transparent);
+    }
+
+    /* SUBTLE REVEAL ANIMATIONS */
+    .mv-reveal {
+      opacity: 0;
+      transform: translateY(22px);
+      transition:
+        opacity .8s ease,
+        transform .8s ease;
+    }
+
+    .mv-reveal.mv-visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    @keyframes mvImageReveal {
+      from {
+        opacity: .5;
+        transform: scale(1.08);
+      }
+      to {
+        opacity: 1;
+        transform: scale(1.03);
+      }
+    }
+
+    body {
+      opacity: 0;
+      transition: opacity .35s ease;
+    }
+
+    body.mv-loaded {
+      opacity: 1;
+    }
+
+    body.mv-leaving {
+      opacity: 0;
+    }
+
+    /* RESPONSIVE */
+    @media (max-width: 850px) {
+      .mv-header nav {
+        align-items: flex-start;
+        flex-direction: column;
+        gap: 12px;
+      }
+
+      .mv-logo {
+        width: 44px;
+        height: 44px;
+      }
+
+      .mv-nav {
+        width: 100%;
+        align-items: stretch;
+        flex-direction: column;
+        gap: 0;
+      }
+
+      .mv-nav > a,
+      .mv-nav summary {
+        display: block;
+        padding: 12px 0;
+      }
+
+      .mv-dropdown {
+        position: static;
+        margin: 0 0 8px;
+        box-shadow: none;
+      }
+
+      .mv-hero {
+        min-height: 65vh;
+      }
+
+      .mv-section {
+        padding: 75px 24px;
+      }
+
+      .mv-vision {
+        background-attachment: scroll;
+      }
+    }
+
+    @media (max-width: 400px) {
+      .mv-brand {
+        gap: 8px;
+        font-size: .95rem;
+      }
+
+      .mv-logo {
+        width: 38px;
+        height: 38px;
+      }
+
+      .mv-brand small {
+        font-size: .58rem;
+        letter-spacing: 3px;
+      }
+
+      .mv-hero {
+        padding: 75px 18px;
+      }
+
+      .mv-eyebrow {
+        letter-spacing: 3px;
+      }
+
+      .mv-section {
+        padding: 65px 20px;
+      }
+
+      .mv-quote {
+        padding-left: 16px;
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *,
+      *::before,
+      *::after {
+        scroll-behavior: auto !important;
+        animation-duration: .01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: .01ms !important;
+      }
+
+      .mv-reveal {
+        opacity: 1;
+        transform: none;
+      }
+
+      body {
+        opacity: 1;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <!-- HEADER -->
+  <header class="mv-header">
+    <nav aria-label="Main navigation">
+      <a class="mv-brand" href="index.html">
+        <img class="mv-logo" src="logo.png"
+             alt="CheckmaîtréX Chess Club logo">
+        <span>
+          CHECKMAÎTRÉX
+          <small>CHESS CLUB</small>
+        </span>
+      </a>
+
+      <div class="mv-nav">
+        <a href="index.html">Home</a>
+
+        <details>
+          <summary class="current">About Us</summary>
+          <div class="mv-dropdown">
+            <a href="our-story.html">Our Story</a>
+            <a href="mission-vision.html" aria-current="page">Mission &amp; Vision</a>
+            <a href="about.html#leadership">Leadership</a>
+          </div>
+        </details>
+
+        <details>
+          <summary>Activities</summary>
+          <div class="mv-dropdown">
+            <a href="activities.html">All Activities</a>
+            <a href="activities.html#events">Events</a>
+            <a href="activities.html#training">Chess Development</a>
+            <a href="activities.html#tournaments">Tournaments</a>
+          </div>
+        </details>
+
+        <details>
+          <summary>Club Highlights</summary>
+          <div class="mv-dropdown">
+            <a href="highlights.html">All Highlights</a>
+            <a href="highlights.html#achievements">Achievements</a>
+            <a href="highlights.html#gallery">Club Gallery</a>
+            <a href="highlights.html#news">News &amp; Updates</a>
+          </div>
+        </details>
+
+        <details>
+          <summary>Join Us</summary>
+          <div class="mv-dropdown">
+            <a href="join.html">Membership</a>
+            <a href="join.html#faq">FAQs</a>
+            <a href="join.html#contact">Contact Us</a>
+          </div>
+        </details>
+      </div>
+    </nav>
+  </header>
+
+  <main>
+    <!-- HERO -->
+    <section class="mv-hero">
+      <span class="mv-eyebrow mv-reveal">
+        The Purpose Behind Every Move
+      </span>
+
+      <h1 class="mv-reveal">
+        Our <span>Mission</span><br>&amp; Vision
+      </h1>
+
+      <div class="mv-ornament" aria-hidden="true"></div>
+
+      <p class="mv-reveal">
+        Guided by purpose, driven by passion, and united by chess.
+        Discover the principles that shape CheckmaîtréX Chess Club
+        and the community we aspire to build.
+      </p>
+    </section>
+
+    <!-- OUR MISSION -->
+    <section class="mv-section mv-mission">
+      <div class="mv-container mv-reveal">
+        <div class="mv-symbol" aria-hidden="true">♞</div>
+
+        <span class="mv-section-label">01 / Our Purpose</span>
+
+        <h2>Our Mission</h2>
+
+        <blockquote class="mv-quote">
+          “To inspire learning, cultivate strategic thinking, and unite
+          individuals through the game of chess.”
+        </blockquote>
+
+        <p class="mv-copy">
+          The mission of CheckmaîtréX Chess Club is to make chess more
+          accessible by encouraging individuals to learn, improve their
+          skills, and develop strategic thinking, patience, and discipline.
+          Through our growing online community, we aim to create a welcoming
+          space where chess enthusiasts can share knowledge, support one
+          another, and grow together. We remain open to opportunities that
+          will allow us to extend this mission beyond the digital space in
+          the future.
+        </p>
+      </div>
+    </section>
+
+    <!-- OUR VISION -->
+    <section class="mv-section mv-vision">
+      <div class="mv-container mv-reveal">
+        <div class="mv-symbol" aria-hidden="true">♛</div>
+
+        <span class="mv-section-label">02 / Our Aspiration</span>
+
+        <h2>Our Vision</h2>
+
+        <blockquote class="mv-quote">
+          “To inspire a new generation of chess enthusiasts and contribute
+          to a thriving chess community in the Philippines.”
+        </blockquote>
+
+        <p class="mv-copy">
+          Our vision is to build a welcoming and engaging chess community
+          that encourages more Filipinos to discover, learn, and appreciate
+          the game. We aspire to help individuals of different skill levels
+          develop their potential, connect through their shared passion,
+          and recognize the value of chess in personal growth. As
+          CheckmaîtréX Chess Club grows, we hope to create more opportunities
+          for learning, collaboration, and meaningful chess experiences
+          both online and beyond.
+        </p>
+      </div>
+    </section>
+
+    <!-- OUR COMMITMENT -->
+    <section class="mv-commitment">
+      <div class="mv-container mv-reveal">
+        <span class="mv-section-label">03 / Our Commitment</span>
+
+        <div class="mv-ornament" aria-hidden="true"></div>
+
+        <h2>Every Move Is an Opportunity to Grow</h2>
+
+        <p>
+          At CheckmaîtréX Chess Club, we believe that every move is an
+          opportunity to learn, every challenge is a chance to improve,
+          and every connection can help build a stronger chess community.
+          As we continue to grow, we remain committed to encouraging
+          curiosity, nurturing potential, and inspiring more people in
+          the Philippines to discover the value and beauty of chess.
+        </p>
+
+        <div class="mv-ornament" aria-hidden="true"></div>
+      </div>
+    </section>
+  </main>
+
+  <!-- FOOTER -->
+  <footer class="mv-footer">
+    <p class="mv-footer-tagline">Calculate. Conquer. Checkmate.</p>
+
+    <div class="mv-footer-divider" aria-hidden="true"></div>
+
+    <p>
+      &copy; <span id="mv-year"></span> CheckmaîtréX Chess Club
+    </p>
+  </footer>
+
+  <script>
+    // Copyright year
+    document.getElementById("mv-year").textContent =
+      new Date().getFullYear();
+
+    // Dropdown behavior
+    const dropdowns = [
+      ...document.querySelectorAll(".mv-nav details")
+    ];
+
+    dropdowns.forEach((menu) => {
+      menu.querySelector("summary").addEventListener("click", (event) => {
+        event.preventDefault();
+
+        const shouldOpen = !menu.open;
+
+        dropdowns.forEach((other) => {
+          other.open = false;
+        });
+
+        menu.open = shouldOpen;
+      });
+    });
+
+    document.addEventListener("click", (event) => {
+      if (!event.target.closest(".mv-nav")) {
+        dropdowns.forEach((menu) => {
+          menu.open = false;
+        });
+      }
+    });
+
+    // Page entrance and scroll reveal
+    document.addEventListener("DOMContentLoaded", () => {
+      document.body.classList.add("mv-loaded");
+
+      const items = document.querySelectorAll(".mv-reveal");
+
+      if (
+        window.matchMedia("(prefers-reduced-motion: reduce)").matches ||
+        !("IntersectionObserver" in window)
+      ) {
+        items.forEach((item) => item.classList.add("mv-visible"));
+      } else {
+        const observer = new IntersectionObserver(
+          (entries, currentObserver) => {
+            entries.forEach((entry) => {
+              if (entry.isIntersecting) {
+                entry.target.classList.add("mv-visible");
+                currentObserver.unobserve(entry.target);
+              }
+            });
+          },
+          { threshold: 0.12 }
+        );
+
+        items.forEach((item) => observer.observe(item));
+      }
+    });
+
+    // Fade out before navigating to another local page
+    document.querySelectorAll('a[href]').forEach((link) => {
+      link.addEventListener("click", (event) => {
+        if (
+          event.defaultPrevented ||
+          event.button !== 0 ||
+          event.ctrlKey ||
+          event.metaKey ||
+          event.shiftKey ||
+          event.altKey ||
+          link.target === "_blank" ||
+          link.hasAttribute("download")
+        ) return;
+
+        const url = new URL(link.href, window.location.href);
+
+        if (
+          url.origin !== window.location.origin ||
+          url.pathname === window.location.pathname ||
+          url.hash
+        ) return;
+
+        event.preventDefault();
+        document.body.classList.add("mv-leaving");
+
+        window.setTimeout(() => {
+          window.location.href = url.href;
+        }, 220);
+      });
+    });
+  </script>
+</body>
+</html>
