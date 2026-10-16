@@ -1389,3 +1389,29 @@ body.story-page {
     animation: none;
   }
 }
+.nav-dropdown {
+  position: relative;
+}
+
+.nav-dropdown summary {
+  cursor: pointer;
+  list-style: none;
+}
+
+.nav-dropdown summary::-webkit-details-marker {
+  display: none;
+}
+
+.nav-dropdown .dropdown-menu {
+  display: none;
+  position: absolute;
+  top: 100%;
+  left: 0;
+  min-width: 200px;
+  z-index: 1000;
+}
+
+.nav-dropdown[open] .dropdown-menu {
+  display: flex;
+  flex-direction: column;
+}
