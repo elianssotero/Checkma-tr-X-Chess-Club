@@ -1,354 +1,338 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<!DOCTYPE html>  <html lang="en">  
+<head>  
+  <meta charset="UTF-8">  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">    <meta name="theme-color" content="#0B0B0B">  
+  <meta name="description" content="Discover the story, identity, values, and vision of CheckmaîtréX Chess Club.">    <title>Our Story | CheckmaîtréX Chess Club</title>    <link rel="icon" href="logo.png">  
+  <link rel="stylesheet" href="style.css">  
+</head>  <body class="story-page">    <!-- Navigation -->    <header class="story-header">  
+    <a href="index.html" class="story-brand" aria-label="CheckmaîtréX Chess Club Home">  
+      <img src="logo.png" alt="" class="story-logo">  
+      <span>Checkmaîtré<span class="story-gold">X</span></span>  
+    </a>  <nav class="story-nav" aria-label="Main navigation">  
+  <a href="index.html">Home</a>  
 
-  <meta name="theme-color" content="#0B0B0B">
-  <meta name="description" content="Discover the story, identity, values, and vision of CheckmaîtréX Chess Club.">
+  <details class="story-dropdown">  
+    <summary>About Us <span aria-hidden="true">⌄</span></summary>  
+    <div class="story-dropdown-menu">  
+      <a href="our-story.html" aria-current="page">Our Story</a>  
+      <a href="about.html#mission">Mission &amp; Vision</a>  
+      <a href="about.html#leadership">Leadership</a>  
+    </div>  
+  </details>  
+</nav>
 
-  <title>Our Story | CheckmaîtréX Chess Club</title>
+  </header>    <main>  <!-- Hero -->  
+<section class="story-hero">  
+  <div class="story-hero-overlay"></div>  
 
-  <link rel="icon" href="logo.png">
-  <link rel="stylesheet" href="style.css">
+  <div class="story-hero-content story-reveal">  
+    <p class="story-eyebrow">THE STORY BEHIND THE MOVES</p>  
 
-  <style>
-    /* HEADER */
-    .site-header {
-      position: relative;
-      z-index: 100;
-      padding: 18px 5%;
-      background: #0b0b0b;
-      border-bottom: 1px solid #8f752d;
-    }
+    <h1>  
+      Every Great Move<br>  
+      Begins With a <span class="story-gold">Story.</span>  
+    </h1>  
 
-    .site-header-inner {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 24px;
-      max-width: 1400px;
-      margin: 0 auto;
-    }
+    <p class="story-hero-description">  
+      A simple idea. A passion for chess. A vision to inspire  
+      more people to discover the game.  
+    </p>  
 
-    .site-header .brand {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      flex-shrink: 0;
-      color: #d4af37;
-      font-size: 1.1rem;
-      font-weight: 800;
-      letter-spacing: 1px;
-      text-decoration: none;
-      white-space: nowrap;
-    }
+    <a href="#the-beginning" class="story-button">  
+      Discover Our Story <span aria-hidden="true">↓</span>  
+    </a>  
+  </div>  
 
-    .site-header .brand-logo {
-      width: 52px;
-      height: 52px;
-      object-fit: contain;
-    }
+  <div class="story-hero-mark" aria-hidden="true">♟</div>  
+</section>  
 
-    .site-header .brand-text {
-      display: flex;
-      flex-direction: column;
-    }
+<!-- The Beginning -->  
+<section class="story-section" id="the-beginning">  
+  <div class="story-image story-image-beginning story-reveal">  
+    <div class="story-image-caption">  
+      <span>01 / THE BEGINNING</span>  
+    </div>  
+  </div>  
 
-    .site-header .brand-text small {
-      margin-top: 3px;
-      color: #eee;
-      font-size: .65rem;
-      letter-spacing: 4px;
-    }
+  <div class="story-copy story-reveal">  
+    <p class="story-eyebrow">WHERE IT ALL STARTED</p>  
 
-    /* FIVE MAIN OPTIONS */
-    .site-header .main-nav {
-      display: flex;
-      align-items: center;
-      gap: 22px;
-    }
+    <h2>A Simple Idea.<br><span class="story-gold">A Purpose Worth Pursuing.</span></h2>  
 
-    .site-header .main-nav > a,
-    .site-header .main-nav summary {
-      position: relative;
-      display: inline-block;
-      padding: 10px 0;
-      color: #f5f5f5;
-      font: inherit;
-      font-weight: 600;
-      cursor: pointer;
-      list-style: none;
-      white-space: nowrap;
-      text-decoration: none;
-    }
+    <p>  
+      Every meaningful journey begins with an idea—and sometimes,  
+      that idea starts with just one person.  
+    </p>  
 
-    .site-header .main-nav summary::-webkit-details-marker {
-      display: none;
-    }
+    <p>  
+      CheckmaîtréX Chess Club began as a simple, unexpected idea:  
+      to create a space that could encourage more people to discover  
+      chess, learn its principles, and improve their skills.  
+      Without an established club or a large team at the beginning,  
+      the project started with a vision and the willingness to bring  
+      it to life.  
+    </p>  
 
-    .site-header .main-nav summary::after {
-      content: " ▾";
-      color: #d4af37;
-    }
+    <p>  
+      What began as a personal initiative took shape through the  
+      creation of its website and its developing identity. The purpose  
+      was clear: to help make chess more approachable and inspire  
+      others to appreciate the game beyond the board.  
+    </p>  
 
-    .site-header .main-nav > a::before,
-    .site-header .main-nav summary::before {
-      content: "";
-      position: absolute;
-      left: 0;
-      right: 0;
-      bottom: 2px;
-      height: 2px;
-      background: #d4af37;
-      transform: scaleX(0);
-      transform-origin: left;
-      transition: transform .25s ease;
-    }
+    <p>  
+      CheckmaîtréX is built on the belief that a great beginning  
+      does not require everything to be in place. It starts with  
+      a reason to begin, a willingness to learn, and a vision worth pursuing.  
+    </p>  
+  </div>  
+</section>  
 
-    .site-header .main-nav > a:hover,
-    .site-header .main-nav summary:hover,
-    .site-header .main-nav details[open] > summary {
-      color: #d4af37;
-    }
+<!-- Meaning Behind the Name -->  
+<section class="story-section story-section-reverse" id="name-meaning">  
+  <div class="story-image story-image-identity story-reveal">  
+    <div class="story-image-caption">  
+      <span>02 / OUR IDENTITY</span>  
+    </div>  
+  </div>  
 
-    .site-header .main-nav > a:hover::before,
-    .site-header .main-nav > a[aria-current="page"]::before,
-    .site-header .main-nav summary:hover::before,
-    .site-header .main-nav details[open] > summary::before {
-      transform: scaleX(1);
-    }
+  <div class="story-copy story-reveal">  
+    <p class="story-eyebrow">A NAME WITH CHARACTER</p>  
 
-    /* DROPDOWN MENUS */
-    .site-header .main-nav details {
-      position: relative;
-    }
+    <h2>The Meaning Behind<br><span class="story-gold">the Name.</span></h2>  
 
-    .site-header .main-nav .dropdown {
-      position: absolute;
-      top: 100%;
-      left: 0;
-      min-width: 190px;
-      padding: 10px;
-      margin-top: 12px;
-      background: #171717;
-      border: 1px solid #8f752d;
-      border-radius: 8px;
-      box-shadow: 0 12px 25px #0008;
-      z-index: 110;
-    }
+    <p>  
+      The name CheckmaîtréX takes inspiration from one of the most  
+      recognizable concepts in chess: checkmate.  
+    </p>  
 
-    .site-header .main-nav .dropdown a {
-      display: block;
-      padding: 10px;
-      border-radius: 5px;
-      color: #f5f5f5;
-      text-decoration: none;
-    }
+    <p>  
+      Its spelling gives the familiar word a distinctive identity.  
+      Inspired by the French word <em>maître</em>, associated with  
+      mastery, the name incorporates the letter X for a modern,  
+      bold, and stylish finish. The accented “é” adds another visual  
+      detail, helping the name stand apart.  
+    </p>  
 
-    .site-header .main-nav .dropdown a:hover {
-      color: #d4af37;
-      background: #292316;
-    }
+    <p>  
+      Together, these elements reflect two sides of the CheckmaîtréX  
+      identity: the pursuit of skill and improvement in chess, and  
+      a refined visual style that makes the club recognizable.  
+    </p>  
 
-    /* SMALLER SCREENS */
-    @media (max-width: 1000px) {
-      .site-header-inner {
-        align-items: flex-start;
-        flex-direction: column;
-        gap: 12px;
-      }
+    <p>  
+      Its black-and-gold aesthetic completes this identity, bringing  
+      together elegance, confidence, and the strategic spirit of the game.  
+    </p>  
 
-      .site-header .main-nav {
-        width: 100%;
-        flex-wrap: wrap;
-        gap: 8px 22px;
-      }
+    <p>  
+      More than a name created to stand out, CheckmaîtréX represents  
+      a chess project with a clear purpose: to encourage people to  
+      explore the game, develop their abilities, and discover the  
+      value of every move.  
+    </p>  
+  </div>  
+</section>  
 
-      .site-header .brand-logo {
-        width: 44px;
-        height: 44px;
-      }
-    }
+<!-- More Than a Game -->  
+<section class="story-values-section" id="more-than-a-game">  
+  <div class="story-section-heading story-reveal">  
+    <p class="story-eyebrow">WHAT WE BELIEVE</p>  
+    <h2>More Than <span class="story-gold">a Game.</span></h2>  
 
-    @media (max-width: 500px) {
-      .site-header {
-        padding: 14px 5%;
-      }
+    <p>  
+      Chess offers more than a contest of pieces and positions.  
+      It creates opportunities to think, learn, and grow.  
+    </p>  
+  </div>  
 
-      .site-header .main-nav {
-        gap: 4px 16px;
-      }
+  <div class="story-values-grid">  
 
-      .site-header .main-nav > a,
-      .site-header .main-nav summary {
-        padding: 8px 0;
-        font-size: .9rem;
-      }
+    <article class="story-value-card story-reveal">  
+      <span class="story-value-number">01</span>  
+      <div class="story-value-icon" aria-hidden="true">♟</div>  
+      <h3>Strategy</h3>  
+      <p>  
+        Consider possibilities, plan ahead, and learn to approach  
+        challenges with thoughtful decisions.  
+      </p>  
+    </article>  
 
-      .site-header .main-nav .dropdown {
-        position: absolute;
-        max-width: 90vw;
-      }
-    }
-  </style>
-</head>
+    <article class="story-value-card story-reveal">  
+      <span class="story-value-number">02</span>  
+      <div class="story-value-icon" aria-hidden="true">✦</div>  
+      <h3>Patience</h3>  
+      <p>  
+        Understand that progress takes time and that each move  
+        deserves care and attention.  
+      </p>  
+    </article>  
 
-<body class="story-page">
+    <article class="story-value-card story-reveal">  
+      <span class="story-value-number">03</span>  
+      <div class="story-value-icon" aria-hidden="true">◇</div>  
+      <h3>Growth</h3>  
+      <p>  
+        Learn from mistakes, build skills, and see every game  
+        as another opportunity to improve.  
+      </p>  
+    </article>  
 
-  <!-- SHARED MAIN NAVIGATION -->
-  <header class="site-header">
-    <nav class="site-header-inner" aria-label="Main navigation">
+    <article class="story-value-card story-reveal">  
+      <span class="story-value-number">04</span>  
+      <div class="story-value-icon" aria-hidden="true">♔</div>  
+      <h3>Sportsmanship</h3>  
+      <p>  
+        Appreciate the challenge, respect your opponent, and  
+        value the learning experience beyond the result.  
+      </p>  
+    </article>  
 
-      <a class="brand" href="index.html" aria-label="CheckmaîtréX Chess Club Home">
-        <img class="brand-logo" src="logo.png" alt="CheckmaîtréX Chess Club logo">
+  </div>  
 
-        <span class="brand-text">
-          CHECKMAÎTRÉX
-          <small>CHESS CLUB</small>
-        </span>
-      </a>
+  <p class="story-values-closing story-reveal">  
+    Every move is an opportunity to learn.  
+    Every game is a chance to grow.  
+  </p>  
+</section>  
 
-      <div class="main-nav">
+<!-- Journey Ahead -->  
+<section class="story-section" id="journey-ahead">  
+  <div class="story-image story-image-future story-reveal">  
+    <div class="story-image-caption">  
+      <span>03 / THE JOURNEY AHEAD</span>  
+    </div>  
+  </div>  
 
-        <a href="index.html">Home</a>
+  <div class="story-copy story-reveal">  
+    <p class="story-eyebrow">A VISION FOR THE FUTURE</p>  
 
-        <details>
-          <summary>About Us</summary>
-          <div class="dropdown">
-            <a href="our-story.html" aria-current="page">Our Story</a>
-            <a href="mission-vision.html">Mission &amp; Vision</a>
-            <a href="about.html#leadership">Leadership</a>
-          </div>
-        </details>
+    <h2>A Bigger Board.<br><span class="story-gold">A Growing Community.</span></h2>  
 
-        <details>
-          <summary>Activities</summary>
-          <div class="dropdown">
-            <a href="activities.html">All Activities</a>
-            <a href="activities.html#events">Events</a>
-            <a href="activities.html#training">Chess Development</a>
-            <a href="activities.html#tournaments">Tournaments</a>
-          </div>
-        </details>
+    <p>  
+      The vision of CheckmaîtréX Chess Club reaches beyond building  
+      a recognizable name. It is about helping more people in the  
+      Philippines discover chess, learn to play, and find reasons  
+      to keep improving.  
+    </p>  
 
-        <details>
-          <summary>Club Highlights</summary>
-          <div class="dropdown">
-            <a href="highlights.html">All Highlights</a>
-            <a href="highlights.html#achievements">Achievements</a>
-            <a href="highlights.html#gallery">Club Gallery</a>
-            <a href="highlights.html#news">News &amp; Updates</a>
-          </div>
-        </details>
+    <p>  
+      While many people are more familiar with widely followed sports,  
+      chess deserves opportunities to reach new audiences too.  
+      CheckmaîtréX hopes to encourage greater interest in the game  
+      and contribute, in its own way, to a growing and welcoming  
+      chess community.  
+    </p>  
 
-        <details>
-          <summary>Join Us</summary>
-          <div class="dropdown">
-            <a href="join.html">Membership</a>
-            <a href="join.html#faq">FAQs</a>
-            <a href="join.html#contact">Contact Us</a>
-          </div>
-        </details>
+    <p>  
+      The journey ahead is an opportunity to make chess more approachable,  
+      share the value of learning, and inspire people to experience  
+      the game for themselves. Every new person who becomes interested  
+      in chess is a meaningful step toward that vision.  
+    </p>  
 
-      </div>
-    </nav>
-  </header>
+    <p>  
+      The club is still developing, and its future will be shaped over  
+      time. What remains at the heart of its ambition is a simple belief:  
+      chess should be something more people have the chance to discover,  
+      enjoy, and grow through.  
+    </p>  
 
-  <main>
-    <!-- Hero -->
-    <section class="story-hero">
-      <div class="story-hero-overlay"></div>
+    <p class="story-gold story-final-line">  
+      One board. One move. One growing community at a time.  
+    </p>  
+  </div>  
+</section>  
 
-      <div class="story-hero-content story-reveal">
-        <p class="story-eyebrow">THE STORY BEHIND THE MOVES</p>
+<!-- Closing -->  
+<section class="story-closing story-reveal">  
+  <div class="story-closing-symbol" aria-hidden="true">♔</div>  
 
-        <h1>
-          Every Great Move<br>
-          Begins With a <span class="story-gold">Story.</span>
-        </h1>
+  <p class="story-eyebrow">THE NEXT CHAPTER IS YOURS</p>  
 
-        <p class="story-hero-description">
-          A simple idea. A passion for chess. A vision to inspire
-          more people to discover the game.
-        </p>
+  <h2>Your Next Move<br><span class="story-gold">Starts Here.</span></h2>  
 
-        <a href="#the-beginning" class="story-button">
-          Discover Our Story <span aria-hidden="true">↓</span>
-        </a>
-      </div>
+  <p>  
+    Every journey begins with a move. CheckmaîtréX Chess Club invites  
+    more people to discover the game, embrace the challenge, and become  
+    part of a future where chess can reach more minds and communities.  
+  </p>  
 
-      <div class="story-hero-mark" aria-hidden="true">♟</div>
-    </section>
+  <a class="story-button" href="mission-vision.html">
 
-    <!-- The Beginning -->
-    <section class="story-section" id="the-beginning">
-      <div class="story-image story-image-beginning story-reveal">
-        <div class="story-image-caption">
-          <span>01 / THE BEGINNING</span>
-        </div>
-      </div>
+Explore Our Mission & Vision <span aria-hidden="true">→</span>
+</a>
+</section>
 
-      <div class="story-copy story-reveal">
-        <p class="story-eyebrow">WHERE IT ALL STARTED</p>
-
-        <h2>A Simple Idea.<br><span class="story-gold">A Purpose Worth Pursuing.</span></h2>
-
-        <p>
-          Every meaningful journey begins with an idea—and sometimes,
-          that idea starts with just one person.
-        </p>
-
-        <p>
-          CheckmaîtréX Chess Club began as a simple, unexpected idea:
-          to create a space that could encourage more people to discover
-          chess, learn its principles, and improve their skills.
-        </p>
-      </div>
-    </section>
-  </main>
-
-  <!-- Footer -->
-  <footer class="story-footer">
-    <a href="index.html" class="story-footer-brand">Checkmaîtré<span class="story-gold">X</span></a>
-    <p>Every move has meaning.</p>
-    <a href="index.html">Back to Home ↑</a>
-    <small>© <span id="story-year"></span> CheckmaîtréX Chess Club</small>
-  </footer>
-
-  <script>
-    document.addEventListener("DOMContentLoaded", () => {
-      document.body.classList.add("page-loaded");
-
-      document.getElementById("story-year").textContent =
-        new Date().getFullYear();
-
-      // Allow only one main navigation dropdown to stay open.
-      const navMenus = document.querySelectorAll(
-        ".site-header .main-nav details"
-      );
-
-      navMenus.forEach(menu => {
-        menu.addEventListener("toggle", () => {
-          if (menu.open) {
-            navMenus.forEach(other => {
-              if (other !== menu) {
-                other.open = false;
-              }
-            });
-          }
-        });
-      });
-
-      // Close navigation dropdowns when clicking outside.
-      document.addEventListener("click", event => {
-        if (!event.target.closest(".site-header .main-nav")) {
-          navMenus.forEach(menu => {
-            menu.open = false;
-          });
-        }
-      });
-    });
-  </script>
-</body>
+  </main>    <!-- Footer -->    <footer class="story-footer">  
+    <a href="index.html" class="story-footer-brand">Checkmaîtré<span class="story-gold">X</span></a>  
+    <p>Every move has meaning.</p>  
+    <a href="index.html">Back to Home ↑</a>  
+    <small>© <span id="story-year"></span> CheckmaîtréX Chess Club</small>  
+  </footer>    <script>  
+    document.addEventListener("DOMContentLoaded", () => {  
+      // Reveal the page after it loads.  
+      document.body.classList.add("page-loaded");  
+  
+      // Automatically update the footer year.  
+      document.getElementById("story-year").textContent =  
+        new Date().getFullYear();  
+  
+      // Scroll-reveal animation.  
+      const revealItems = document.querySelectorAll(".story-reveal");  
+  
+      if ("IntersectionObserver" in window &&  
+          !window.matchMedia("(prefers-reduced-motion: reduce)").matches) {  
+        const revealObserver = new IntersectionObserver((entries, observer) => {  
+          entries.forEach(entry => {  
+            if (entry.isIntersecting) {  
+              entry.target.classList.add("story-visible");  
+              observer.unobserve(entry.target);  
+            }  
+          });  
+        }, { threshold: 0.12 });  
+  
+        revealItems.forEach(item => revealObserver.observe(item));  
+      } else {  
+        revealItems.forEach(item => item.classList.add("story-visible"));  
+      }  
+  
+      // Close the About Us dropdown when clicking elsewhere.  
+      const dropdown = document.querySelector(".story-dropdown");  
+  
+      document.addEventListener("click", event => {  
+        if (dropdown && !dropdown.contains(event.target)) {  
+          dropdown.open = false;  
+        }  
+      });  
+  
+      // Fade out when navigating to another page.  
+      if (!window.matchMedia("(prefers-reduced-motion: reduce)").matches) {  
+        document.querySelectorAll('a[href$=".html"]').forEach(link => {  
+          link.addEventListener("click", event => {  
+            if (  
+              event.button !== 0 ||  
+              event.ctrlKey ||  
+              event.metaKey ||  
+              event.shiftKey ||  
+              event.altKey ||  
+              link.target === "_blank"  
+            ) return;  
+  
+            const url = new URL(link.href, window.location.href);  
+  
+            if (url.origin !== window.location.origin ||  
+                url.pathname === window.location.pathname) return;  
+  
+            event.preventDefault();  
+            document.body.classList.add("page-leaving");  
+  
+            window.setTimeout(() => {  
+              window.location.href = url.href;  
+            }, 250);  
+          });  
+        });  
+      }  
+    });  
+  </script>  </body>  
 </html>
