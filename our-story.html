@@ -378,5 +378,15 @@ Explore Our Mission & Vision <span aria-hidden="true">→</span>
         });  
       }  
     });  
-  </script>  </body>  
+  </script> 
+<script>
+  document.addEventListener("click", function (event) {
+    document.querySelectorAll(".story-dropdown[open]").forEach(function (dropdown) {
+      if (!dropdown.contains(event.target)) {
+        dropdown.removeAttribute("open");
+      }
+    });
+  });
+</script>
+ </body>  
 </html>
