@@ -1431,5 +1431,73 @@
     }
   </script>
 
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+  // 1. Fade-in kapag binuksan ang page
+  document.body.classList.add("page-loaded");
+
+  // 2. Scroll reveal para sa sections at cards
+  const revealItems = document.querySelectorAll(
+    "main section, .hero, .welcome, .card, .preview-grid"
+  );
+
+  revealItems.forEach((item) => {
+    item.classList.add("reveal");
+  });
+
+  if ("IntersectionObserver" in window) {
+    const observer = new IntersectionObserver(
+      (entries, currentObserver) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add("revealed");
+            currentObserver.unobserve(entry.target);
+          }
+        });
+      },
+      { threshold: 0.12 }
+    );
+
+    revealItems.forEach((item) => observer.observe(item));
+  } else {
+    revealItems.forEach((item) => item.classList.add("revealed"));
+  }
+
+  // 3. Fade-out bago lumipat sa ibang HTML page
+  document.querySelectorAll("a[href]").forEach((link) => {
+    link.addEventListener("click", (event) => {
+      if (
+        event.defaultPrevented ||
+        event.button !== 0 ||
+        event.ctrlKey ||
+        event.metaKey ||
+        event.shiftKey ||
+        event.altKey ||
+        link.target === "_blank" ||
+        link.hasAttribute("download")
+      ) return;
+
+      const url = new URL(link.href, window.location.href);
+
+      if (
+        url.origin !== window.location.origin ||
+        url.pathname === window.location.pathname ||
+        url.hash ||
+        link.hasAttribute("data-no-transition")
+      ) return;
+
+      event.preventDefault();
+      document.body.classList.add("page-leaving");
+
+      setTimeout(() => {
+        window.location.href = url.href;
+      }, 220);
+    });
+  });
+});
+</script>
+</body>
+</html>
+
 </body>
 </html>
