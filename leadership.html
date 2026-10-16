@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -698,5 +697,43 @@
     © 2026 CheckmaîtréX Chess Club
   </footer>
 
+  <!-- SCRIPT FOR PAGE LOAD ANIMATION & FADE TRANSITION -->
+  <script>
+    document.addEventListener("DOMContentLoaded", () => {
+      // 1. Pagpapalabas ng page kapag nabuksan na
+      document.body.classList.add("page-loaded");
+
+      // 2. Smooth fade-out kapag nag-navigate papuntang ibang page
+      document.querySelectorAll("a[href]").forEach((link) => {
+        link.addEventListener("click", (event) => {
+          if (
+            event.defaultPrevented ||
+            event.button !== 0 ||
+            event.ctrlKey ||
+            event.metaKey ||
+            event.shiftKey ||
+            event.altKey ||
+            link.target === "_blank" ||
+            link.hasAttribute("download")
+          ) return;
+
+          const url = new URL(link.href, window.location.href);
+
+          if (
+            url.origin !== window.location.origin ||
+            url.pathname === window.location.pathname ||
+            url.hash
+          ) return;
+
+          event.preventDefault();
+          document.body.classList.add("page-leaving");
+
+          setTimeout(() => {
+            window.location.href = url.href;
+          }, 220);
+        });
+      });
+    });
+  </script>
 </body>
 </html>
