@@ -788,3 +788,111 @@ animation-duration: 0.01ms;
     animation: none;
   }
 }
+/* =====================================
+   CHECKMAÎTRÉX ANIMATION PACKAGE
+   ===================================== */
+
+/* 1. Smooth page transitions */
+@view-transition {
+  navigation: auto;
+}
+
+::view-transition-old(root) {
+  animation: pageFadeOut 0.2s ease both;
+}
+
+::view-transition-new(root) {
+  animation: pageFadeIn 0.35s ease both;
+}
+
+@keyframes pageFadeOut {
+  to {
+    opacity: 0;
+    transform: translateY(-5px);
+  }
+}
+
+@keyframes pageFadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* 2. Gold glow for links and buttons */
+a,
+button,
+.button {
+  transition:
+    color 0.25s ease,
+    background-color 0.25s ease,
+    border-color 0.25s ease,
+    box-shadow 0.25s ease,
+    transform 0.2s ease;
+}
+
+button:hover,
+.button:hover,
+a.button:hover {
+  box-shadow: 0 0 14px rgba(212, 175, 55, 0.3);
+}
+
+button:active,
+.button:active {
+  transform: scale(0.97);
+}
+
+/* 3. Improve card hover animations */
+.card {
+  transition:
+    transform 0.3s ease,
+    border-color 0.3s ease,
+    box-shadow 0.3s ease;
+}
+
+.card:hover {
+  transform: translateY(-5px);
+  border-color: var(--gold);
+  box-shadow: 0 8px 24px rgba(212, 175, 55, 0.12);
+}
+
+/* 4. Scroll reveal for homepage content */
+@supports (animation-timeline: view()) {
+  .welcome > .eyebrow,
+  .welcome > h2,
+  .welcome > p,
+  .preview-grid .card {
+    animation: scrollReveal linear both;
+    animation-timeline: view();
+    animation-range: entry 0% entry 35%;
+  }
+}
+
+@keyframes scrollReveal {
+  from {
+    opacity: 0.25;
+    transform: translateY(22px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Accessibility: respect reduced-motion settings */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    scroll-behavior: auto !important;
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
