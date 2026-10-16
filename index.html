@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -622,131 +621,7 @@
               <span aria-hidden="true">ⓘ</span>
               About This Website
             </button>
-          </div>  <!-- REPORT A PROBLEM MODAL -->
-  <div class="report-modal" id="reportModal" hidden>
-    <section
-      class="report-modal-panel"
-      role="dialog"
-      aria-modal="true"
-      aria-labelledby="reportModalTitle"
-      tabindex="-1"
-    >
-      <button
-        class="report-modal-close"
-        type="button"
-        aria-label="Close Report a Problem"
-      >×</button>
-
-      <p class="report-eyebrow">CHECKMAÎTRÉX CHESS CLUB</p>
-      <h2 id="reportModalTitle">Report a Problem</h2>
-      <p class="report-intro">
-        Help us improve the website. Tell us what happened
-        and where you encountered the issue.
-      </p>
-
-      <div class="report-divider"></div>
-
-      <form
-        id="reportForm"
-        action="https://formspree.io/f/xvkzdbpa"
-        method="POST"
-      >
-        <label for="reportType">Problem Type <span>*</span></label>
-        <select id="reportType" name="Problem Type" required>
-          <option value="" disabled selected>Select a problem type</option>
-          <option>Bug / Error</option>
-          <option>Broken Link</option>
-          <option>Display / Layout Issue</option>
-          <option>Feature Not Working</option>
-          <option>Installation Issue</option>
-          <option>Suggestion / Improvement</option>
-          <option>Security / Privacy Concern</option>
-          <option>Other</option>
-        </select>
-
-        <label for="reportLocation">
-          Where did the problem occur? <span>*</span>
-        </label>
-        <select id="reportLocation" name="Problem Location" required>
-          <option value="" disabled selected>Select a location</option>
-          <option>Homepage</option>
-          <option>Header / Navigation</option>
-          <option>Quick Access Menu</option>
-          <option>About This Website</option>
-          <option>Settings</option>
-          <option>Install App</option>
-          <option>Report a Problem</option>
-          <option>Footer</option>
-          <option>Other / Not Sure</option>
-        </select>
-
-        <div id="reportExtraFields"></div>
-
-        <div
-          class="report-security-note"
-          id="reportSecurityNote"
-          hidden
-        >
-          Please do not include passwords, account credentials,
-          or other sensitive personal information in your report.
-        </div>
-
-        <label for="reportDescription">
-          Description <span>*</span>
-        </label>
-        <textarea
-          id="reportDescription"
-          name="Description"
-          rows="5"
-          placeholder="Describe the problem and what happened..."
-          required
-          maxlength="5000"
-        ></textarea>
-
-        <label for="reportEmail">
-          Email <small>(optional)</small>
-        </label>
-        <input
-          id="reportEmail"
-          type="email"
-          name="Email"
-          placeholder="you@example.com"
-          autocomplete="email"
-        >
-
-        <input
-          type="hidden"
-          name="_subject"
-          value="New Report - CheckmaîtréX Chess Club"
-        >
-
-        <p class="report-privacy">
-          Your email is optional. Please share only information
-          needed to explain the issue.
-        </p>
-
-        <div
-          class="report-status"
-          id="reportStatus"
-          role="status"
-          aria-live="polite"
-          hidden
-        ></div>
-
-        <div class="report-actions">
-          <button
-            type="button"
-            class="report-cancel"
-            id="reportCancel"
-          >Cancel</button>
-
-          <button type="submit" id="reportSubmit">
-            Submit Report
-          </button>
-        </div>
-      </form>
-    </section>
-  </div>
+          </div>
         </details>
       </div>
 
@@ -876,6 +751,132 @@
 
     <p>Calculate. Conquer. Checkmate.</p>
   </footer>
+
+  <!-- REPORT A PROBLEM MODAL -->
+  <div class="report-modal" id="reportModal" hidden>
+    <section
+      class="report-modal-panel"
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="reportModalTitle"
+      tabindex="-1"
+    >
+      <button
+        class="report-modal-close"
+        type="button"
+        aria-label="Close Report a Problem"
+      >×</button>
+
+      <p class="report-eyebrow">CHECKMAÎTRÉX CHESS CLUB</p>
+      <h2 id="reportModalTitle">Report a Problem</h2>
+      <p class="report-intro">
+        Help us improve the website. Tell us what happened
+        and where you encountered the issue.
+      </p>
+
+      <div class="report-divider"></div>
+
+      <form
+        id="reportForm"
+        action="https://formspree.io/f/xvkzdbpa"
+        method="POST"
+      >
+        <label for="reportType">Problem Type <span>*</span></label>
+        <select id="reportType" name="Problem Type" required>
+          <option value="" disabled selected>Select a problem type</option>
+          <option>Bug / Error</option>
+          <option>Broken Link</option>
+          <option>Display / Layout Issue</option>
+          <option>Feature Not Working</option>
+          <option>Installation Issue</option>
+          <option>Suggestion / Improvement</option>
+          <option>Security / Privacy Concern</option>
+          <option>Other</option>
+        </select>
+
+        <label for="reportLocation">
+          Where did the problem occur? <span>*</span>
+        </label>
+        <select id="reportLocation" name="Problem Location" required>
+          <option value="" disabled selected>Select a location</option>
+          <option>Homepage</option>
+          <option>Header / Navigation</option>
+          <option>Quick Access Menu</option>
+          <option>About This Website</option>
+          <option>Settings</option>
+          <option>Install App</option>
+          <option>Report a Problem</option>
+          <option>Footer</option>
+          <option>Other / Not Sure</option>
+        </select>
+
+        <div id="reportExtraFields"></div>
+
+        <div
+          class="report-security-note"
+          id="reportSecurityNote"
+          hidden
+        >
+          Please do not include passwords, account credentials,
+          or other sensitive personal information in your report.
+        </div>
+
+        <label for="reportDescription">
+          Description <span>*</span>
+        </label>
+        <textarea
+          id="reportDescription"
+          name="Description"
+          rows="5"
+          placeholder="Describe the problem and what happened..."
+          required
+          maxlength="5000"
+        ></textarea>
+
+        <label for="reportEmail">
+          Email <small>(optional)</small>
+        </label>
+        <input
+          id="reportEmail"
+          type="email"
+          name="Email"
+          placeholder="you@example.com"
+          autocomplete="email"
+        >
+
+        <input
+          type="hidden"
+          name="_subject"
+          value="New Report - CheckmaîtréX Chess Club"
+        >
+
+        <p class="report-privacy">
+          Your email is optional. Please share only information
+          needed to explain the issue.
+        </p>
+
+        <div
+          class="report-status"
+          id="reportStatus"
+          role="status"
+          aria-live="polite"
+          hidden
+        ></div>
+
+        <div class="report-actions">
+          <button
+            type="button"
+            class="report-cancel"
+            id="reportCancel"
+          >Cancel</button>
+
+          <button type="submit" id="reportSubmit">
+            Submit Report
+          </button>
+        </div>
+      </form>
+    </section>
+  </div>
 
   <!-- ABOUT THIS WEBSITE MODAL -->
   <div class="about-modal" id="aboutModal" hidden>
@@ -1125,6 +1126,242 @@
       }
     });
 
+    /* REPORT A PROBLEM MODAL */
+    const reportModal = document.getElementById("reportModal");
+    const reportPanel = reportModal.querySelector(".report-modal-panel");
+    const reportClose = reportModal.querySelector(".report-modal-close");
+    const reportCancel = document.getElementById("reportCancel");
+    const reportForm = document.getElementById("reportForm");
+    const reportType = document.getElementById("reportType");
+    const reportDescription = document.getElementById("reportDescription");
+    const reportExtraFields = document.getElementById("reportExtraFields");
+    const reportSecurityNote = document.getElementById("reportSecurityNote");
+    const reportStatus = document.getElementById("reportStatus");
+    const reportSubmit = document.getElementById("reportSubmit");
+
+    let reportModalTrigger = null;
+    let reportCloseTimer = null;
+    let reportSubmitting = false;
+
+    function openReportModal() {
+      window.clearTimeout(reportCloseTimer);
+      reportCloseTimer = null;
+
+      reportModalTrigger = document.querySelector(
+        '[data-feature="report"]'
+      );
+
+      reportModal.hidden = false;
+      document.body.style.overflow = "hidden";
+
+      requestAnimationFrame(() => {
+        reportModal.classList.add("is-visible");
+        reportType.focus();
+      });
+    }
+
+    function closeReportModal() {
+      if (
+        reportModal.hidden ||
+        reportCloseTimer !== null ||
+        reportSubmitting
+      ) {
+        return;
+      }
+
+      reportModal.classList.remove("is-visible");
+
+      reportCloseTimer = window.setTimeout(() => {
+        reportModal.hidden = true;
+        document.body.style.overflow = "";
+        reportCloseTimer = null;
+
+        if (reportModalTrigger) {
+          reportModalTrigger.focus();
+        }
+      }, 220);
+    }
+
+    reportClose.addEventListener("click", closeReportModal);
+    reportCancel.addEventListener("click", closeReportModal);
+
+    reportModal.addEventListener("click", (event) => {
+      if (event.target === reportModal) {
+        closeReportModal();
+      }
+    });
+
+    document.addEventListener("keydown", (event) => {
+      if (event.key === "Escape" && !reportModal.hidden) {
+        closeReportModal();
+      }
+    });
+
+    // Keep keyboard focus inside the Report modal.
+    reportModal.addEventListener("keydown", (event) => {
+      if (event.key !== "Tab") return;
+
+      const focusable = [
+        ...reportPanel.querySelectorAll(
+          'button:not(:disabled), input:not(:disabled), ' +
+          'select:not(:disabled), textarea:not(:disabled)'
+        )
+      ].filter((element) => element.offsetParent !== null);
+
+      if (!focusable.length) return;
+
+      const first = focusable[0];
+      const last = focusable[focusable.length - 1];
+
+      if (
+        event.shiftKey &&
+        document.activeElement === first
+      ) {
+        event.preventDefault();
+        last.focus();
+      } else if (
+        !event.shiftKey &&
+        document.activeElement === last
+      ) {
+        event.preventDefault();
+        first.focus();
+      }
+    });
+
+    // Change the extra fields based on the selected problem type.
+    function updateReportFields() {
+      const type = reportType.value;
+
+      reportExtraFields.replaceChildren();
+      reportSecurityNote.hidden =
+        type !== "Security / Privacy Concern";
+
+      if (type === "Suggestion / Improvement") {
+        reportDescription.placeholder =
+          "Describe your suggestion.";
+      } else {
+        reportDescription.placeholder =
+          "Describe the problem and what happened...";
+      }
+
+      const extraOptions = {
+        "Broken Link": {
+          label: "Link or button name",
+          name: "Link or Button Name",
+          placeholder: "Name or URL of the broken link"
+        },
+        "Display / Layout Issue": {
+          label: "Device or browser",
+          name: "Device or Browser",
+          placeholder: "e.g. Android phone, Chrome"
+        },
+        "Installation Issue": {
+          label: "Device type",
+          name: "Device Type",
+          placeholder: "e.g. Android phone, iPhone, computer"
+        }
+      };
+
+      const extra = extraOptions[type];
+
+      if (!extra) return;
+
+      const label = document.createElement("label");
+      const input = document.createElement("input");
+      const id = "reportExtraInput";
+
+      label.htmlFor = id;
+      label.textContent = extra.label + " (optional)";
+
+      input.type = "text";
+      input.id = id;
+      input.name = extra.name;
+      input.placeholder = extra.placeholder;
+      input.maxLength = 300;
+
+      reportExtraFields.append(label, input);
+    }
+
+    reportType.addEventListener("change", updateReportFields);
+
+    // Submit the report through Formspree without leaving the website.
+    reportForm.addEventListener("submit", async (event) => {
+      event.preventDefault();
+
+      if (reportSubmitting || !reportForm.reportValidity()) {
+        return;
+      }
+
+      reportSubmitting = true;
+      reportSubmit.disabled = true;
+      reportCancel.disabled = true;
+      reportClose.disabled = true;
+      reportSubmit.textContent = "Submitting...";
+
+      reportStatus.hidden = true;
+      reportStatus.className = "report-status";
+      reportStatus.textContent = "";
+
+      try {
+        const response = await fetch(reportForm.action, {
+          method: "POST",
+          body: new FormData(reportForm),
+          headers: {
+            Accept: "application/json"
+          }
+        });
+
+        let result = {};
+
+        try {
+          result = await response.json();
+        } catch {
+          // A non-JSON response is handled as an unsuccessful submission.
+        }
+
+        if (!response.ok) {
+          throw new Error(
+            result.errors?.map((error) => error.message).join(" ") ||
+            "The report could not be submitted. Please try again."
+          );
+        }
+
+        reportStatus.textContent =
+          "Thank you! Your report was submitted successfully.";
+        reportStatus.classList.add("is-success");
+        reportStatus.hidden = false;
+
+        reportForm.reset();
+        updateReportFields();
+
+        reportSubmit.textContent = "Submitted";
+
+        window.setTimeout(() => {
+          if (!reportModal.hidden) {
+            closeReportModal();
+          }
+        }, 1800);
+      } catch (error) {
+        reportStatus.textContent =
+          error.message ||
+          "Unable to submit your report. Check your connection and try again.";
+
+        reportStatus.classList.add("is-error");
+        reportStatus.hidden = false;
+
+        reportSubmit.textContent = "Try Again";
+      } finally {
+        reportSubmitting = false;
+        reportSubmit.disabled = false;
+        reportCancel.disabled = false;
+        reportClose.disabled = false;
+
+        if (reportSubmit.textContent !== "Submitted") {
+          reportSubmit.textContent = "Submit Report";
+        }
+      }
+    });
+
     /* QUICK ACCESS MENU BEHAVIOR */
     const brandMenu = document.querySelector(".brand-menu");
 
@@ -1182,9 +1419,7 @@
             }
 
             if (feature === "report") {
-              alert(
-                "Report a Problem\n\nA contact method needs to be configured before reports can be submitted."
-              );
+              openReportModal();
             }
 
             if (feature === "about") {
