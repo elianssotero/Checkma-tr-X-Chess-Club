@@ -902,9 +902,9 @@ button:active,
    VISIBLE WEBSITE ANIMATIONS
    ===================================== */
 
-/* Page entrance */
+/* Page entrance — safe fallback */
 body {
-  opacity: 0;
+  opacity: 1;
   transition: opacity 0.35s ease;
 }
 
