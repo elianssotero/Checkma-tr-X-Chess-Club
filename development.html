@@ -1,0 +1,658 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#0b0b0b">
+  <meta name="description" content="Explore chess learning, strategy, and continuous improvement with CheckmaîtréX Chess Club.">
+  <title>Chess Development | CheckmaîtréX Chess Club</title>
+
+  <link rel="stylesheet" href="style.css">
+
+  <style>
+    :root {
+      --black: #0b0b0b;
+      --panel: #151515;
+      --gold: #d4af37;
+      --gold-light: #f0d878;
+      --white: #f5f5f5;
+      --muted: #b7b7b7;
+      --border: rgba(212, 175, 55, 0.3);
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      margin: 0;
+      background: var(--black);
+      color: var(--white);
+      font-family: Arial, Helvetica, sans-serif;
+      line-height: 1.7;
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    .site-header {
+      position: relative;
+      z-index: 10;
+      background: #101010;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .header-inner {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 16px 5%;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 24px;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      flex-shrink: 0;
+    }
+
+    .brand img {
+      width: 48px;
+      height: 48px;
+      object-fit: contain;
+    }
+
+    .brand-name {
+      display: block;
+      color: var(--gold);
+      font-size: 15px;
+      font-weight: 800;
+      letter-spacing: 1.2px;
+    }
+
+    .brand-subtitle {
+      display: block;
+      color: #ddd;
+      font-size: 10px;
+      letter-spacing: 3px;
+    }
+
+    .main-nav {
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+      gap: 18px;
+      flex-wrap: wrap;
+    }
+
+    .main-nav > a,
+    .main-nav summary {
+      position: relative;
+      padding: 8px 0;
+      color: #eee;
+      font-size: 13px;
+      cursor: pointer;
+      list-style: none;
+    }
+
+    .main-nav summary::-webkit-details-marker {
+      display: none;
+    }
+
+    .main-nav > a::after,
+    .main-nav summary::after {
+      content: "";
+      position: absolute;
+      left: 0;
+      bottom: 0;
+      width: 0;
+      height: 2px;
+      background: var(--gold);
+      transition: width 0.2s ease;
+    }
+
+    .main-nav > a:hover::after,
+    .main-nav summary:hover::after,
+    .main-nav > a.active::after {
+      width: 100%;
+    }
+
+    .main-nav > a.active {
+      color: var(--gold);
+    }
+
+    .main-nav details {
+      position: relative;
+    }
+
+    .dropdown {
+      position: absolute;
+      top: 100%;
+      left: -12px;
+      min-width: 190px;
+      padding: 8px;
+      background: #171717;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      box-shadow: 0 12px 28px #0008;
+    }
+
+    .dropdown a {
+      display: block;
+      padding: 9px 10px;
+      border-radius: 5px;
+      color: #ddd;
+      font-size: 13px;
+    }
+
+    .dropdown a:hover {
+      background: #292313;
+      color: var(--gold-light);
+    }
+
+    .hero {
+      position: relative;
+      overflow: hidden;
+      padding: 86px 5% 78px;
+      text-align: center;
+      background:
+        radial-gradient(ellipse at 50% 0%, #72591c33, transparent 65%),
+        var(--black);
+      border-bottom: 1px solid #ffffff0d;
+    }
+
+    .hero-inner,
+    .content-inner {
+      width: 100%;
+      max-width: 1050px;
+      margin: 0 auto;
+    }
+
+    .eyebrow {
+      margin: 0 0 12px;
+      color: var(--gold);
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+    }
+
+    h1 {
+      margin: 0 auto 18px;
+      max-width: 850px;
+      color: var(--white);
+      font-family: Georgia, "Times New Roman", serif;
+      font-size: clamp(36px, 6vw, 62px);
+      line-height: 1.15;
+    }
+
+    h1 span,
+    .gold-text {
+      color: var(--gold);
+    }
+
+    .hero-description {
+      max-width: 700px;
+      margin: 0 auto;
+      color: var(--muted);
+      font-size: 16px;
+    }
+
+    .hero-actions {
+      display: flex;
+      justify-content: center;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-top: 28px;
+    }
+
+    .button {
+      display: inline-block;
+      padding: 12px 21px;
+      border: 1px solid var(--gold);
+      border-radius: 5px;
+      font-size: 13px;
+      font-weight: 700;
+      transition: background 0.2s ease, color 0.2s ease;
+    }
+
+    .button-primary {
+      background: var(--gold);
+      color: #111;
+    }
+
+    .button-primary:hover {
+      background: var(--gold-light);
+    }
+
+    .button-outline {
+      color: var(--gold);
+    }
+
+    .button-outline:hover {
+      background: #d4af3717;
+    }
+
+    section.content-section {
+      padding: 65px 5%;
+    }
+
+    .section-heading {
+      margin: 0 0 12px;
+      color: var(--gold);
+      font-family: Georgia, "Times New Roman", serif;
+      font-size: clamp(27px, 4vw, 38px);
+      line-height: 1.25;
+    }
+
+    .section-intro {
+      max-width: 760px;
+      margin: 0 0 30px;
+      color: var(--muted);
+    }
+
+    .topic-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 20px;
+    }
+
+    .topic-card {
+      padding: 25px;
+      background: linear-gradient(145deg, #191919, #101010);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      transition: transform 0.2s ease, border-color 0.2s ease;
+    }
+
+    .topic-card:hover {
+      transform: translateY(-4px);
+      border-color: var(--gold);
+    }
+
+    .topic-number {
+      display: inline-flex;
+      width: 42px;
+      height: 42px;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 15px;
+      border: 1px solid var(--gold);
+      border-radius: 50%;
+      color: var(--gold);
+      font-family: Georgia, "Times New Roman", serif;
+      font-size: 18px;
+    }
+
+    .topic-card h3 {
+      margin: 0 0 10px;
+      color: var(--white);
+      font-size: 19px;
+    }
+
+    .topic-card p {
+      margin: 0;
+      color: var(--muted);
+      font-size: 14px;
+    }
+
+    .principles-section {
+      background: #111;
+      border-top: 1px solid #ffffff0d;
+      border-bottom: 1px solid #ffffff0d;
+    }
+
+    .principles-list {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 14px;
+      padding: 0;
+      margin: 28px 0 0;
+      list-style: none;
+    }
+
+    .principles-list li {
+      padding: 17px 18px;
+      background: #181818;
+      border-left: 3px solid var(--gold);
+      border-radius: 0 6px 6px 0;
+      color: #ddd;
+    }
+
+    .principles-list strong {
+      color: var(--gold-light);
+    }
+
+    .growth-panel {
+      padding: 30px;
+      background: #15130d;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+    }
+
+    .growth-panel p {
+      margin-bottom: 0;
+      color: var(--muted);
+    }
+
+    .site-footer {
+      padding: 28px 5%;
+      background: #080808;
+      border-top: 1px solid var(--border);
+      text-align: center;
+    }
+
+    .footer-motto {
+      margin: 0 0 8px;
+      color: var(--gold);
+      font-family: Georgia, "Times New Roman", serif;
+      font-size: 18px;
+      letter-spacing: 1px;
+    }
+
+    .footer-copy {
+      margin: 0;
+      color: #888;
+      font-size: 12px;
+    }
+
+    @media (max-width: 850px) {
+      .header-inner {
+        flex-direction: column;
+        gap: 12px;
+      }
+
+      .main-nav {
+        justify-content: center;
+        gap: 10px 18px;
+      }
+
+      .topic-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+    }
+
+    @media (max-width: 560px) {
+      .header-inner {
+        padding: 14px 4%;
+      }
+
+      .brand img {
+        width: 40px;
+        height: 40px;
+      }
+
+      .brand-name {
+        font-size: 13px;
+      }
+
+      .main-nav {
+        width: 100%;
+        gap: 4px 14px;
+      }
+
+      .main-nav > a,
+      .main-nav summary {
+        font-size: 12px;
+      }
+
+      .main-nav details {
+        position: static;
+      }
+
+      .dropdown {
+        left: 4%;
+        right: 4%;
+        top: auto;
+        z-index: 20;
+      }
+
+      .hero {
+        padding: 65px 6% 58px;
+      }
+
+      .hero-description {
+        font-size: 14px;
+      }
+
+      section.content-section {
+        padding: 48px 6%;
+      }
+
+      .topic-grid,
+      .principles-list {
+        grid-template-columns: 1fr;
+      }
+
+      .topic-card {
+        padding: 22px;
+      }
+
+      .growth-panel {
+        padding: 22px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <header class="site-header">
+    <div class="header-inner">
+      <a class="brand" href="index.html" aria-label="CheckmaîtréX Chess Club Home">
+        <img src="logo.png" alt="CheckmaîtréX Chess Club logo">
+        <span>
+          <span class="brand-name">CHECKMAÎTRÉX</span>
+          <span class="brand-subtitle">CHESS CLUB</span>
+        </span>
+      </a>
+
+      <nav class="main-nav" aria-label="Main navigation">
+        <a href="index.html">Home</a>
+
+        <details>
+          <summary>About Us ▾</summary>
+          <div class="dropdown">
+            <a href="our-story.html">Our Story</a>
+            <a href="mission-vision.html">Mission &amp; Vision</a>
+            <a href="leadership.html">Leadership</a>
+          </div>
+        </details>
+
+        <details open>
+          <summary>Activities ▾</summary>
+          <div class="dropdown">
+            <a href="activities.html">All Activities</a>
+            <a href="events.html">Events</a>
+            <a href="development.html" aria-current="page">Chess Development</a>
+            <a href="tournaments.html">Tournaments</a>
+          </div>
+        </details>
+
+        <details>
+          <summary>Club Highlights ▾</summary>
+          <div class="dropdown">
+            <a href="highlights.html">All Highlights</a>
+            <a href="achievements.html">Achievements</a>
+            <a href="gallery.html">Club Gallery</a>
+            <a href="news.html">News &amp; Updates</a>
+          </div>
+        </details>
+
+        <details>
+          <summary>Join Us ▾</summary>
+          <div class="dropdown">
+            <a href="join.html">Membership</a>
+            <a href="join.html#faq">FAQs</a>
+            <a href="join.html#contact">Contact Us</a>
+          </div>
+        </details>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <section class="hero">
+      <div class="hero-inner">
+        <p class="eyebrow">Learn • Practice • Improve</p>
+        <h1>Develop Your Game.<br><span>Elevate Your Thinking.</span></h1>
+        <p class="hero-description">
+          Chess development is a continuous journey of learning, patience,
+          strategic thinking, and thoughtful decision-making. Discover the
+          skills and principles that can help players grow with every move.
+        </p>
+
+        <div class="hero-actions">
+          <a class="button button-primary" href="#learning-areas">
+            Explore Learning Areas
+          </a>
+          <a class="button button-outline" href="activities.html">
+            Back to Activities
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <section class="content-section" id="learning-areas">
+      <div class="content-inner">
+        <p class="eyebrow">Build Your Foundation</p>
+        <h2 class="section-heading">Explore the Art of Chess</h2>
+        <p class="section-intro">
+          Improving at chess involves more than moving pieces. It means
+          understanding positions, recognizing possibilities, and learning
+          to make considered decisions. These are key areas players can
+          explore as part of their chess journey.
+        </p>
+
+        <div class="topic-grid">
+          <article class="topic-card">
+            <span class="topic-number">01</span>
+            <h3>Opening Principles</h3>
+            <p>
+              Learn about developing pieces, controlling the center,
+              and preparing for the middlegame.
+            </p>
+          </article>
+
+          <article class="topic-card">
+            <span class="topic-number">02</span>
+            <h3>Tactical Awareness</h3>
+            <p>
+              Practice recognizing combinations, forks, pins, discovered
+              attacks, and other tactical possibilities.
+            </p>
+          </article>
+
+          <article class="topic-card">
+            <span class="topic-number">03</span>
+            <h3>Positional Understanding</h3>
+            <p>
+              Explore piece activity, pawn structure, king safety,
+              space, and long-term plans.
+            </p>
+          </article>
+
+          <article class="topic-card">
+            <span class="topic-number">04</span>
+            <h3>Endgame Knowledge</h3>
+            <p>
+              Understand fundamental endgame ideas, king activity,
+              pawn promotion, and precise technique.
+            </p>
+          </article>
+
+          <article class="topic-card">
+            <span class="topic-number">05</span>
+            <h3>Game Analysis</h3>
+            <p>
+              Review completed games, identify turning points,
+              and learn from strong moves and missed opportunities.
+            </p>
+          </article>
+
+          <article class="topic-card">
+            <span class="topic-number">06</span>
+            <h3>Calculation &amp; Planning</h3>
+            <p>
+              Consider candidate moves, calculate variations,
+              and think ahead before making a decision.
+            </p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="content-section principles-section">
+      <div class="content-inner">
+        <p class="eyebrow">Beyond the Board</p>
+        <h2 class="section-heading">Habits That Help Players Grow</h2>
+        <p class="section-intro">
+          Chess improvement takes time. Consistent practice and a willingness
+          to learn can help players develop both their game and their mindset.
+        </p>
+
+        <ul class="principles-list">
+          <li><strong>Patience:</strong> Take time to evaluate positions.</li>
+          <li><strong>Discipline:</strong> Practice consistently and thoughtfully.</li>
+          <li><strong>Reflection:</strong> Learn from both wins and losses.</li>
+          <li><strong>Sportsmanship:</strong> Respect opponents and the game.</li>
+          <li><strong>Curiosity:</strong> Ask questions and explore new ideas.</li>
+          <li><strong>Persistence:</strong> Treat challenges as opportunities to learn.</li>
+        </ul>
+      </div>
+    </section>
+
+    <section class="content-section">
+      <div class="content-inner">
+        <div class="growth-panel">
+          <p class="eyebrow">The CheckmaîtréX Journey</p>
+          <h2 class="section-heading">Every Move Is an Opportunity</h2>
+          <p>
+            At CheckmaîtréX Chess Club, chess represents an opportunity
+            to learn, think critically, and grow together as a community.
+            This page serves as a starting point for exploring chess
+            knowledge and personal improvement. Official learning
+            activities, schedules, and program details can be added
+            when they are confirmed by the club.
+          </p>
+          <div class="hero-actions" style="justify-content:flex-start;">
+            <a class="button button-primary" href="activities.html">
+              Explore Club Activities
+            </a>
+            <a class="button button-outline" href="tournaments.html">
+              Explore Tournaments
+            </a>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <p class="footer-motto">Calculate. Conquer. Checkmate.</p>
+    <p class="footer-copy">
+      &copy; <span id="current-year">2026</span> CheckmaîtréX Chess Club.
+      All rights reserved.
+    </p>
+  </footer>
+
+  <script>
+    document.getElementById("current-year").textContent =
+      new Date().getFullYear();
+
+    // Keep navigation dropdowns closed when the page first loads.
+    document.querySelectorAll(".main-nav details").forEach(function (menu) {
+      menu.removeAttribute("open");
+    });
+  </script>
+</body>
+</html>
