@@ -1,0 +1,692 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#0b0b0b">
+
+  <title>Tournaments | CheckmaîtréX Chess Club</title>
+
+  <meta
+    name="description"
+    content="Explore tournament announcements, competitive chess, and tournament achievements at CheckmaîtréX Chess Club."
+  >
+
+  <link rel="stylesheet" href="style.css">
+
+  <style>
+    /* ========================================
+       TOURNAMENTS PAGE
+    ======================================== */
+
+    .tournaments-hero {
+      position: relative;
+      overflow: hidden;
+      padding: 100px 24px 90px;
+      text-align: center;
+      background:
+        radial-gradient(
+          ellipse at 50% 0%,
+          rgba(212, 175, 55, 0.16),
+          transparent 65%
+        ),
+        #0b0b0b;
+      border-bottom: 1px solid rgba(212, 175, 55, 0.25);
+    }
+
+    .tournaments-hero::before {
+      content: "♔";
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -45%);
+      font-size: clamp(180px, 35vw, 360px);
+      color: rgba(212, 175, 55, 0.035);
+      pointer-events: none;
+    }
+
+    .tournaments-hero-content {
+      position: relative;
+      z-index: 1;
+      max-width: 850px;
+      margin: 0 auto;
+    }
+
+    .tournaments-eyebrow {
+      display: inline-block;
+      margin-bottom: 18px;
+      color: #d4af37;
+      font-size: 0.78rem;
+      font-weight: 700;
+      letter-spacing: 4px;
+      text-transform: uppercase;
+    }
+
+    .tournaments-hero h1 {
+      margin: 0 0 22px;
+      color: #f5f0df;
+      font-size: clamp(2.5rem, 7vw, 5rem);
+      line-height: 1.08;
+      letter-spacing: 1px;
+    }
+
+    .tournaments-hero h1 span {
+      display: block;
+      color: #d4af37;
+    }
+
+    .tournaments-hero p {
+      max-width: 680px;
+      margin: 0 auto;
+      color: #c3c0b6;
+      font-size: 1.05rem;
+      line-height: 1.9;
+    }
+
+    .tournaments-hero-actions {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 14px;
+      margin-top: 32px;
+    }
+
+    .tournament-button {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 48px;
+      padding: 13px 24px;
+      border: 1px solid #d4af37;
+      border-radius: 4px;
+      background: #d4af37;
+      color: #0b0b0b;
+      font-weight: 700;
+      text-decoration: none;
+      transition:
+        background 0.25s ease,
+        color 0.25s ease,
+        transform 0.25s ease;
+    }
+
+    .tournament-button:hover {
+      background: #f0d878;
+      transform: translateY(-2px);
+    }
+
+    .tournament-button.outline {
+      background: transparent;
+      color: #d4af37;
+    }
+
+    .tournament-button.outline:hover {
+      background: #d4af37;
+      color: #0b0b0b;
+    }
+
+    .tournaments-section {
+      width: min(1120px, calc(100% - 40px));
+      margin: 0 auto;
+      padding: 76px 0;
+    }
+
+    .tournaments-section + .tournaments-section {
+      border-top: 1px solid rgba(212, 175, 55, 0.16);
+    }
+
+    .tournaments-section-heading {
+      max-width: 720px;
+      margin: 0 auto 38px;
+      text-align: center;
+    }
+
+    .tournaments-section-heading .eyebrow {
+      display: block;
+      margin-bottom: 12px;
+      color: #d4af37;
+      font-size: 0.75rem;
+      font-weight: 700;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+    }
+
+    .tournaments-section-heading h2 {
+      margin: 0 0 16px;
+      color: #f5f0df;
+      font-size: clamp(1.8rem, 4vw, 2.7rem);
+    }
+
+    .tournaments-section-heading p {
+      margin: 0;
+      color: #aaa79e;
+      line-height: 1.85;
+    }
+
+    .tournament-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 22px;
+    }
+
+    .tournament-card {
+      position: relative;
+      padding: 30px 26px;
+      overflow: hidden;
+      background: linear-gradient(
+        145deg,
+        #171717,
+        #101010
+      );
+      border: 1px solid rgba(212, 175, 55, 0.25);
+      border-radius: 8px;
+      transition:
+        transform 0.25s ease,
+        border-color 0.25s ease;
+    }
+
+    .tournament-card:hover {
+      transform: translateY(-5px);
+      border-color: rgba(212, 175, 55, 0.7);
+    }
+
+    .tournament-card-icon {
+      display: grid;
+      place-items: center;
+      width: 52px;
+      height: 52px;
+      margin-bottom: 22px;
+      border: 1px solid rgba(212, 175, 55, 0.45);
+      border-radius: 50%;
+      color: #d4af37;
+      font-size: 1.6rem;
+    }
+
+    .tournament-card h3 {
+      margin: 0 0 13px;
+      color: #f5f0df;
+      font-size: 1.18rem;
+    }
+
+    .tournament-card p {
+      margin: 0;
+      color: #aaa79e;
+      font-size: 0.95rem;
+      line-height: 1.8;
+    }
+
+    .tournament-status {
+      display: inline-block;
+      margin-top: 22px;
+      padding: 7px 10px;
+      border: 1px solid rgba(212, 175, 55, 0.3);
+      border-radius: 3px;
+      color: #d4af37;
+      font-size: 0.72rem;
+      font-weight: 700;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+    }
+
+    .tournament-notice {
+      padding: 32px;
+      border: 1px solid rgba(212, 175, 55, 0.3);
+      border-left: 3px solid #d4af37;
+      border-radius: 5px;
+      background: #141414;
+    }
+
+    .tournament-notice h3 {
+      margin: 0 0 12px;
+      color: #d4af37;
+      font-size: 1.25rem;
+    }
+
+    .tournament-notice p {
+      margin: 0;
+      color: #c0bdb4;
+      line-height: 1.9;
+    }
+
+    .tournament-notice p + p {
+      margin-top: 12px;
+    }
+
+    .tournament-values {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 20px;
+    }
+
+    .tournament-value {
+      padding: 26px;
+      border: 1px solid rgba(212, 175, 55, 0.2);
+      border-radius: 6px;
+      background: rgba(255, 255, 255, 0.02);
+    }
+
+    .tournament-value h3 {
+      margin: 0 0 10px;
+      color: #d4af37;
+      font-size: 1.1rem;
+    }
+
+    .tournament-value p {
+      margin: 0;
+      color: #aaa79e;
+      line-height: 1.8;
+    }
+
+    .tournaments-closing {
+      padding: 72px 24px;
+      text-align: center;
+      background:
+        radial-gradient(
+          ellipse at center,
+          rgba(212, 175, 55, 0.1),
+          transparent 70%
+        ),
+        #101010;
+      border-top: 1px solid rgba(212, 175, 55, 0.22);
+    }
+
+    .tournaments-closing h2 {
+      margin: 0 0 18px;
+      color: #d4af37;
+      font-size: clamp(1.8rem, 5vw, 3rem);
+      letter-spacing: 1px;
+    }
+
+    .tournaments-closing p {
+      max-width: 650px;
+      margin: 0 auto;
+      color: #c0bdb4;
+      line-height: 1.9;
+    }
+
+    .tournaments-closing .tournaments-hero-actions {
+      margin-top: 28px;
+    }
+
+    @media (max-width: 800px) {
+      .tournaments-hero {
+        padding: 78px 20px 70px;
+      }
+
+      .tournament-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+    }
+
+    @media (max-width: 560px) {
+      .tournaments-section {
+        width: calc(100% - 32px);
+        padding: 56px 0;
+      }
+
+      .tournament-grid,
+      .tournament-values {
+        grid-template-columns: 1fr;
+      }
+
+      .tournament-card {
+        padding: 25px 22px;
+      }
+
+      .tournament-notice {
+        padding: 24px 20px;
+      }
+
+      .tournaments-hero p {
+        font-size: 0.97rem;
+      }
+
+      .tournaments-hero-actions {
+        flex-direction: column;
+        align-items: stretch;
+      }
+
+      .tournament-button {
+        width: 100%;
+        box-sizing: border-box;
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .tournament-card,
+      .tournament-button {
+        transition: none;
+      }
+
+      .tournament-card:hover,
+      .tournament-button:hover {
+        transform: none;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- HEADER -->
+  <header class="site-header">
+    <div class="container nav-container">
+
+      <a class="brand" href="index.html">
+        <img
+          src="logo.png"
+          alt="CheckmaîtréX Chess Club logo"
+          class="brand-logo"
+        >
+
+        <span class="brand-text">
+          <strong>CHECKMAÎTRÉX</strong>
+          <small>CHESS CLUB</small>
+        </span>
+      </a>
+
+      <nav class="main-nav" aria-label="Main navigation">
+        <a href="index.html">Home</a>
+
+        <details>
+          <summary>About Us</summary>
+          <div class="dropdown">
+            <a href="our-story.html">Our Story</a>
+            <a href="mission-vision.html">Mission &amp; Vision</a>
+            <a href="leadership.html">Leadership</a>
+          </div>
+        </details>
+
+        <details open>
+          <summary>Activities</summary>
+          <div class="dropdown">
+            <a href="activities.html">All Activities</a>
+            <a href="events.html">Events</a>
+            <a href="development.html">Chess Development</a>
+            <a href="tournaments.html" aria-current="page">Tournaments</a>
+          </div>
+        </details>
+
+        <details>
+          <summary>Club Highlights</summary>
+          <div class="dropdown">
+            <a href="highlights.html">All Highlights</a>
+            <a href="achievements.html">Achievements</a>
+            <a href="gallery.html">Club Gallery</a>
+            <a href="news.html">News &amp; Updates</a>
+          </div>
+        </details>
+
+        <details>
+          <summary>Join Us</summary>
+          <div class="dropdown">
+            <a href="join.html">Membership</a>
+            <a href="join.html#faq">FAQs</a>
+            <a href="join.html#contact">Contact Us</a>
+          </div>
+        </details>
+      </nav>
+
+    </div>
+  </header>
+
+  <main>
+
+    <!-- HERO -->
+    <section class="tournaments-hero">
+      <div class="tournaments-hero-content">
+
+        <span class="tournaments-eyebrow">
+          Competitive Chess
+        </span>
+
+        <h1>
+          Every Move
+          <span>Matters.</span>
+        </h1>
+
+        <p>
+          Chess tournaments challenge players to think critically,
+          make purposeful decisions, and demonstrate discipline
+          across the board. Discover the competitive side of
+          CheckmaîtréX Chess Club.
+        </p>
+
+        <div class="tournaments-hero-actions">
+          <a class="tournament-button" href="#announcements">
+            Tournament Updates
+          </a>
+
+          <a
+            class="tournament-button outline"
+            href="development.html"
+          >
+            Explore Chess Development
+          </a>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- TOURNAMENT ANNOUNCEMENTS -->
+    <section
+      class="tournaments-section"
+      id="announcements"
+    >
+      <div class="tournaments-section-heading">
+        <span class="eyebrow">Stay Informed</span>
+        <h2>Tournament Announcements</h2>
+        <p>
+          Keep an eye on this section for official tournament
+          announcements, participation details, and other
+          important updates from the club.
+        </p>
+      </div>
+
+      <div class="tournament-notice">
+        <h3>Upcoming Tournament Updates</h3>
+
+        <p>
+          Official tournament announcements will be published
+          here when details are confirmed.
+        </p>
+
+        <p>
+          Please check the club's official announcements for
+          verified schedules, venues, eligibility requirements,
+          and registration instructions.
+        </p>
+      </div>
+    </section>
+
+    <!-- TOURNAMENT FORMATS -->
+    <section class="tournaments-section" id="formats">
+      <div class="tournaments-section-heading">
+        <span class="eyebrow">The Game Beyond the Board</span>
+        <h2>Explore Tournament Formats</h2>
+        <p>
+          Competitive chess can take different forms, each
+          requiring thoughtful preparation, time management,
+          and sound decision-making.
+        </p>
+      </div>
+
+      <div class="tournament-grid">
+
+        <article class="tournament-card">
+          <div class="tournament-card-icon" aria-hidden="true">
+            ♟
+          </div>
+
+          <h3>Classical Chess</h3>
+
+          <p>
+            A longer time format that gives players more room
+            to calculate variations, evaluate positions, and
+            develop carefully considered plans.
+          </p>
+        </article>
+
+        <article class="tournament-card">
+          <div class="tournament-card-icon" aria-hidden="true">
+            ♞
+          </div>
+
+          <h3>Rapid Chess</h3>
+
+          <p>
+            A faster format that combines strategic thinking
+            with practical decision-making under time pressure.
+          </p>
+        </article>
+
+        <article class="tournament-card">
+          <div class="tournament-card-icon" aria-hidden="true">
+            ♜
+          </div>
+
+          <h3>Blitz Chess</h3>
+
+          <p>
+            A quick-paced format that tests pattern recognition,
+            time management, and the ability to respond to
+            changing positions.
+          </p>
+        </article>
+
+      </div>
+
+      <p
+        style="
+          margin: 22px 0 0;
+          color: #89867e;
+          font-size: 0.88rem;
+          line-height: 1.8;
+          text-align: center;
+        "
+      >
+        These are general chess formats, not a confirmation
+        that the club currently organizes each format.
+      </p>
+    </section>
+
+    <!-- RESULTS AND ACHIEVEMENTS -->
+    <section class="tournaments-section" id="results">
+      <div class="tournaments-section-heading">
+        <span class="eyebrow">Recognition &amp; Progress</span>
+        <h2>Results &amp; Achievements</h2>
+        <p>
+          Every tournament provides an opportunity to learn
+          from experience, recognize progress, and celebrate
+          the dedication of chess players.
+        </p>
+      </div>
+
+      <div class="tournament-notice">
+        <h3>Official Results and Recognition</h3>
+
+        <p>
+          Verified tournament results, player achievements,
+          and competition highlights will be added here when
+          official information becomes available.
+        </p>
+
+        <p>
+          All results and achievements published on this page
+          will be based on confirmed information.
+        </p>
+
+        <div class="tournaments-hero-actions">
+          <a class="tournament-button outline" href="achievements.html">
+            View Club Achievements
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <!-- VALUES -->
+    <section class="tournaments-section" id="values">
+      <div class="tournaments-section-heading">
+        <span class="eyebrow">Beyond Competition</span>
+        <h2>What Every Match Can Teach</h2>
+        <p>
+          Competitive chess is about more than the final score.
+          Each game can offer lessons that players carry into
+          their next challenge.
+        </p>
+      </div>
+
+      <div class="tournament-values">
+
+        <article class="tournament-value">
+          <h3>Discipline &amp; Focus</h3>
+          <p>
+            Practice concentration, manage your time, and
+            approach each position with patience and purpose.
+          </p>
+        </article>
+
+        <article class="tournament-value">
+          <h3>Strategy &amp; Calculation</h3>
+          <p>
+            Evaluate possible moves, anticipate responses,
+            and build plans based on the position on the board.
+          </p>
+        </article>
+
+        <article class="tournament-value">
+          <h3>Sportsmanship &amp; Respect</h3>
+          <p>
+            Respect opponents, follow the rules, and appreciate
+            the value of fair and thoughtful competition.
+          </p>
+        </article>
+
+        <article class="tournament-value">
+          <h3>Learning Through Experience</h3>
+          <p>
+            Review your games, recognize mistakes, and use
+            every experience as an opportunity to improve.
+          </p>
+        </article>
+
+      </div>
+    </section>
+
+    <!-- CLOSING -->
+    <section class="tournaments-closing">
+      <h2>Calculate. Conquer. Checkmate.</h2>
+
+      <p>
+        Every position presents a challenge. Every decision
+        shapes the game. Continue developing your skills and
+        discover more of what CheckmaîtréX Chess Club has to offer.
+      </p>
+
+      <div class="tournaments-hero-actions">
+        <a class="tournament-button" href="activities.html">
+          Explore Our Activities
+        </a>
+
+        <a class="tournament-button outline" href="index.html">
+          Back to Home
+        </a>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- FOOTER -->
+  <footer class="site-footer" id="page-bottom">
+    <div class="container">
+      <p>
+        &copy; 2026 CheckmaîtréX Chess Club.
+        All rights reserved.
+      </p>
+
+      <p>Calculate. Conquer. Checkmate.</p>
+    </div>
+  </footer>
+
+</body>
+</html>
