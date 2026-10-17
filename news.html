@@ -1,1 +1,121 @@
 
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#0b0b0b">
+  <title>News &amp; Updates | CheckmaîtréX Chess Club</title>
+  <style>
+    * { box-sizing: border-box; }
+    body { margin: 0; background: #0b0b0b; color: #f5f0e3; font: 16px/1.7 Arial, Helvetica, sans-serif; }
+    a { color: inherit; }
+    .topbar { padding: 17px 20px; border-bottom: 1px solid #493d20; background: #101010; }
+    .topbar-inner { max-width: 1100px; margin: auto; display: flex; justify-content: space-between; align-items: center; gap: 15px; flex-wrap: wrap; }
+    .brand { color: #d4af37; font-weight: bold; letter-spacing: 1px; text-decoration: none; }
+    .home-link, .tabs a { text-decoration: none; border: 1px solid #8f752d; padding: 8px 13px; border-radius: 4px; }
+    .home-link:hover, .tabs a:hover, .tabs a.active { background: #d4af37; color: #0b0b0b; }
+    main { max-width: 1100px; margin: auto; padding: 35px 20px 70px; }
+    .hero { text-align: center; padding: 35px 0 25px; }
+    .eyebrow { color: #d4af37; text-transform: uppercase; letter-spacing: 3px; font-size: 12px; font-weight: bold; }
+    h1 { color: #d4af37; font-size: clamp(32px, 7vw, 55px); line-height: 1.2; margin: 12px 0; }
+    .hero p { max-width: 650px; margin: auto; color: #ccc5b7; }
+    .tabs { display: flex; flex-wrap: wrap; justify-content: center; gap: 10px; margin: 25px 0 45px; }
+    .tabs a { color: #d4af37; }
+    h2 { color: #d4af37; font-size: 29px; margin-bottom: 4px; }
+    .intro { color: #bbb4a6; }
+    .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 260px), 1fr)); gap: 20px; margin-top: 22px; }
+    .card { min-width: 0; overflow: hidden; border: 1px solid #493d20; border-radius: 7px; background: #141414; }
+    .card img { display: block; width: 100%; aspect-ratio: 16/10; object-fit: cover; background: #202020; }
+    .card-content { padding: 18px; }
+    .category { color: #d4af37; font-size: 11px; font-weight: bold; text-transform: uppercase; letter-spacing: 1.5px; }
+    h3 { color: #fff3cf; font-size: 21px; line-height: 1.4; overflow-wrap: anywhere; }
+    .date { color: #aaa394; font-size: 13px; }
+    .description { color: #d0cbc0; overflow-wrap: anywhere; white-space: pre-wrap; }
+    .notice { padding: 17px; border: 1px solid #493d20; border-radius: 5px; color: #c8c1b3; background: #141414; }
+    footer { text-align: center; padding: 25px 15px; border-top: 1px solid #493d20; color: #aaa394; font-size: 13px; }
+    @media (max-width: 500px) { main { padding: 25px 15px 50px; } h2 { font-size: 25px; } }
+  </style>
+</head>
+<body data-category="News &amp; Updates">
+  <header class="topbar"><div class="topbar-inner">
+    <a class="brand" href="index.html">CHECKMAÎTRÉX CHESS CLUB</a>
+    <a class="home-link" href="index.html">← Back to Home</a>
+  </div></header>
+  <main>
+    <section class="hero">
+      <div class="eyebrow">Official Club Website</div>
+      <h1>News &amp; Updates</h1>
+      <p>Announcements, important information, and the latest updates from our chess community.</p>
+    </section>
+    <nav class="tabs" aria-label="Highlight categories">
+      <a href="highlights.html">All Highlights</a>
+      <a href="achievements.html">Achievements</a>
+      <a href="gallery.html">Club Gallery</a>
+      <a class="active" href="news.html">News &amp; Updates</a>
+    </nav>
+    <section>
+      <h2>Latest News</h2>
+      <p class="intro">Keep up with what's happening at CheckmaîtréX Chess Club.</p>
+      <div class="grid" id="posts"><p class="notice">Loading news...</p></div>
+    </section>
+  </main>
+  <footer><p>Calculate. Conquer. Checkmate.</p><p>&copy; 2026 CheckmaîtréX Chess Club</p></footer>
+  <script>
+    (async function () {
+      const owner = "elianssotero", repo = "Checkma-tr-X-Chess-Club";
+      const folder = "content/highlights", categoryFilter = document.body.dataset.category;
+      const target = document.getElementById("posts");
+      function message(text) {
+        target.replaceChildren();
+        const p = document.createElement("p");
+        p.className = "notice"; p.textContent = text; target.appendChild(p);
+      }
+      function makeCard(post) {
+        const card = document.createElement("article"); card.className = "card";
+        let path = post.image;
+        if (path && typeof path === "object") path = path.url || path.src || "";
+        if (typeof path === "string" && path.trim()) {
+          const base = "https://" + owner + ".github.io/" + repo + "/";
+          const img = document.createElement("img");
+          img.src = /^https?:\/\//i.test(path) ? path : new URL(path.trim().replace(/^\/+/, ""), base).href;
+          img.alt = post.title || "Club highlight"; img.loading = "lazy";
+          img.onerror = () => img.remove(); card.appendChild(img);
+        }
+        const content = document.createElement("div"); content.className = "card-content";
+        const category = document.createElement("div"); category.className = "category"; category.textContent = post.category || "Club Highlight";
+        const title = document.createElement("h3"); title.textContent = post.title || "Untitled Highlight";
+        const date = document.createElement("p"); date.className = "date";
+        if (post.date) {
+          const parsed = new Date(post.date + "T00:00:00");
+          date.textContent = Number.isNaN(parsed.getTime()) ? post.date : parsed.toLocaleDateString("en", { year: "numeric", month: "long", day: "numeric" });
+        }
+        const body = document.createElement("div"); body.className = "description";
+        body.textContent = typeof post.body === "string" ? post.body : post.body ? JSON.stringify(post.body) : "";
+        content.append(category, title, date, body); card.appendChild(content); return card;
+      }
+      try {
+        const response = await fetch("https://api.github.com/repos/" + owner + "/" + repo + "/contents/" + folder + "?ref=main");
+        if (response.status === 404) { message("No news posts have been published yet."); return; }
+        if (!response.ok) throw new Error("Could not retrieve posts.");
+        const files = await response.json();
+        const jsonFiles = files.filter(file => file.type === "file" && file.name.toLowerCase().endsWith(".json"));
+        const results = await Promise.allSettled(jsonFiles.map(async file => {
+          const r = await fetch(file.download_url);
+          if (!r.ok) throw new Error("Could not load " + file.name);
+          return r.json();
+        }));
+        const posts = results.filter(r => r.status === "fulfilled").map(r => r.value)
+          .filter(post => post && typeof post === "object" && post.category === categoryFilter)
+          .sort((a, b) => new Date(b.date || 0) - new Date(a.date || 0));
+        target.replaceChildren();
+        if (!posts.length) { message("No news and updates have been published yet."); return; }
+        posts.forEach(post => target.appendChild(makeCard(post)));
+      } catch (error) {
+        console.error(error); message("News could not be loaded. Please check the content folder and try again.");
+      }
+    })();
+  </script>
+</body>
+</html>
+
