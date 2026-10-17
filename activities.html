@@ -1,0 +1,506 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#0b0b0b">
+
+  <meta name="description" content="Explore the activities and future plans of CheckmaîtréX Chess Club.">
+
+  <title>Activities | CheckmaîtréX Chess Club</title>
+
+  <link rel="stylesheet" href="style.css">
+
+  <style>
+    :root {
+      --activities-gold: #d4af37;
+      --activities-gold-dark: #8f752d;
+      --activities-black: #0b0b0b;
+      --activities-panel: #121212;
+      --activities-muted: #bcbcbc;
+    }
+
+    .activities-page {
+      background: var(--activities-black);
+      color: #f5f5f5;
+      min-height: 100vh;
+    }
+
+    .activities-page * {
+      box-sizing: border-box;
+    }
+
+    .activities-page a {
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    .activities-hero {
+      position: relative;
+      overflow: hidden;
+      padding: 100px 22px 90px;
+      text-align: center;
+      background:
+        radial-gradient(
+          ellipse at 50% 20%,
+          rgba(212, 175, 55, 0.19),
+          transparent 60%
+        ),
+        linear-gradient(145deg, #17140b, #0b0b0b 65%);
+      border-bottom: 1px solid rgba(212, 175, 55, 0.3);
+    }
+
+    .activities-hero::before {
+      content: "♟";
+      position: absolute;
+      top: 5px;
+      right: 7%;
+      color: rgba(212, 175, 55, 0.06);
+      font-size: clamp(150px, 25vw, 290px);
+      line-height: 1;
+      pointer-events: none;
+    }
+
+    .activities-hero-content {
+      position: relative;
+      z-index: 1;
+      max-width: 850px;
+      margin: 0 auto;
+    }
+
+    .activities-eyebrow {
+      color: var(--activities-gold);
+      font-size: 0.78rem;
+      font-weight: 700;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      margin: 0 0 18px;
+    }
+
+    .activities-hero h1 {
+      color: #fff;
+      font-size: clamp(2.3rem, 7vw, 4.7rem);
+      line-height: 1.1;
+      margin: 0 auto 22px;
+      letter-spacing: -0.035em;
+    }
+
+    .activities-hero h1 span {
+      color: var(--activities-gold);
+    }
+
+    .activities-hero p {
+      color: var(--activities-muted);
+      font-size: 1.02rem;
+      line-height: 1.9;
+      max-width: 680px;
+      margin: 0 auto;
+    }
+
+    .activities-section {
+      max-width: 1120px;
+      margin: 0 auto;
+      padding: 76px 22px;
+    }
+
+    .activities-section-heading {
+      text-align: center;
+      max-width: 720px;
+      margin: 0 auto 42px;
+    }
+
+    .activities-section-heading .eyebrow {
+      color: var(--activities-gold);
+      text-transform: uppercase;
+      letter-spacing: 0.16em;
+      font-size: 0.75rem;
+      font-weight: 700;
+      margin-bottom: 12px;
+    }
+
+    .activities-section-heading h2 {
+      color: #fff;
+      font-size: clamp(1.8rem, 4vw, 2.7rem);
+      line-height: 1.25;
+      margin: 0 0 16px;
+    }
+
+    .activities-section-heading p {
+      color: var(--activities-muted);
+      line-height: 1.8;
+      margin: 0;
+    }
+
+    .activities-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 22px;
+    }
+
+    .activity-card {
+      display: flex;
+      flex-direction: column;
+      min-width: 0;
+      padding: 28px 24px;
+      background:
+        linear-gradient(
+          155deg,
+          rgba(212, 175, 55, 0.055),
+          transparent 55%
+        ),
+        var(--activities-panel);
+      border: 1px solid rgba(212, 175, 55, 0.22);
+      border-radius: 14px;
+      transition:
+        transform 0.25s ease,
+        border-color 0.25s ease,
+        background 0.25s ease;
+    }
+
+    .activity-card:hover {
+      transform: translateY(-5px);
+      border-color: var(--activities-gold);
+      background-color: #17150f;
+    }
+
+    .activity-icon {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 54px;
+      height: 54px;
+      margin-bottom: 24px;
+      border: 1px solid var(--activities-gold-dark);
+      border-radius: 12px;
+      background: rgba(212, 175, 55, 0.08);
+      color: var(--activities-gold);
+      font-size: 1.8rem;
+    }
+
+    .activity-card h3 {
+      color: #fff;
+      font-size: 1.3rem;
+      line-height: 1.4;
+      margin: 0 0 13px;
+    }
+
+    .activity-card p {
+      color: var(--activities-muted);
+      line-height: 1.8;
+      font-size: 0.94rem;
+      margin: 0 0 24px;
+      flex-grow: 1;
+    }
+
+    .activity-card-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 9px;
+      width: fit-content;
+      color: var(--activities-gold);
+      font-size: 0.9rem;
+      font-weight: 700;
+      text-decoration: none;
+    }
+
+    .activity-card-link:hover {
+      color: #f4d879;
+    }
+
+    .activity-card-link:focus-visible {
+      outline: 2px solid var(--activities-gold);
+      outline-offset: 5px;
+    }
+
+    .activities-future {
+      max-width: 1000px;
+      margin: 0 auto 80px;
+      padding: 0 22px;
+    }
+
+    .activities-future-panel {
+      padding: 38px 30px;
+      text-align: center;
+      background:
+        radial-gradient(
+          ellipse at top,
+          rgba(212, 175, 55, 0.1),
+          transparent 75%
+        ),
+        #101010;
+      border: 1px solid rgba(212, 175, 55, 0.25);
+      border-radius: 16px;
+    }
+
+    .activities-future-panel .future-symbol {
+      display: block;
+      color: var(--activities-gold);
+      font-size: 2rem;
+      margin-bottom: 15px;
+    }
+
+    .activities-future-panel h2 {
+      color: #fff;
+      font-size: clamp(1.5rem, 4vw, 2rem);
+      margin: 0 0 14px;
+    }
+
+    .activities-future-panel p {
+      max-width: 680px;
+      margin: 0 auto;
+      color: var(--activities-muted);
+      line-height: 1.9;
+    }
+
+    .activities-page-footer {
+      border-top: 1px solid rgba(212, 175, 55, 0.25);
+      padding: 26px 20px;
+      text-align: center;
+      color: var(--activities-muted);
+      font-size: 0.88rem;
+      line-height: 1.8;
+    }
+
+    .activities-page-footer strong {
+      color: var(--activities-gold);
+    }
+
+    @media (max-width: 850px) {
+      .activities-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+
+      .activities-hero {
+        padding: 80px 22px 70px;
+      }
+    }
+
+    @media (max-width: 560px) {
+      .activities-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .activities-section {
+        padding: 58px 18px;
+      }
+
+      .activities-hero {
+        padding: 70px 20px 60px;
+      }
+
+      .activities-future {
+        padding: 0 18px;
+        margin-bottom: 58px;
+      }
+
+      .activities-future-panel {
+        padding: 30px 22px;
+      }
+
+      .activity-card {
+        padding: 25px 22px;
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .activity-card {
+        transition: none;
+      }
+
+      .activity-card:hover {
+        transform: none;
+      }
+    }
+  </style>
+</head>
+
+<body class="activities-page">
+
+  <!-- MAIN NAVIGATION -->
+  <header>
+    <nav aria-label="Main navigation">
+      <a href="index.html" class="brand">
+        <img
+          src="logo.png"
+          alt="CheckmaîtréX Chess Club logo"
+          class="brand-logo"
+        >
+        <span>
+          <strong>CHECKMAÎTRÉX</strong>
+          <small>CHESS CLUB</small>
+        </span>
+      </a>
+
+      <div class="nav-links">
+        <a href="index.html">Home</a>
+
+        <details>
+          <summary>About Us</summary>
+          <div class="dropdown">
+            <a href="our-story.html">Our Story</a>
+            <a href="mission-vision.html">Mission &amp; Vision</a>
+            <a href="leadership.html">Leadership</a>
+          </div>
+        </details>
+
+        <details open>
+          <summary>Activities</summary>
+          <div class="dropdown">
+            <a href="activities.html" aria-current="page">All Activities</a>
+            <a href="events.html">Events</a>
+            <a href="development.html">Chess Development</a>
+            <a href="tournaments.html">Tournaments</a>
+          </div>
+        </details>
+
+        <details>
+          <summary>Club Highlights</summary>
+          <div class="dropdown">
+            <a href="highlights.html">All Highlights</a>
+            <a href="achievements.html">Achievements</a>
+            <a href="gallery.html">Club Gallery</a>
+            <a href="news.html">News &amp; Updates</a>
+          </div>
+        </details>
+
+        <details>
+          <summary>Join Us</summary>
+          <div class="dropdown">
+            <a href="join.html">Join Our Club</a>
+            <a href="join.html#faq">FAQs</a>
+            <a href="join.html#contact">Contact</a>
+          </div>
+        </details>
+      </div>
+    </nav>
+  </header>
+
+  <main>
+    <!-- HERO SECTION -->
+    <section class="activities-hero">
+      <div class="activities-hero-content">
+        <p class="activities-eyebrow">CheckmaîtréX Chess Club</p>
+
+        <h1>
+          More Than a Game.<br>
+          <span>A Journey of Growth.</span>
+        </h1>
+
+        <p>
+          Chess is a journey of learning, strategy, and discovery.
+          Explore the activity categories of CheckmaîtréX Chess Club
+          and discover the opportunities we aim to build for our chess
+          community.
+        </p>
+      </div>
+    </section>
+
+    <!-- ACTIVITY CATEGORIES -->
+    <section class="activities-section">
+      <div class="activities-section-heading">
+        <p class="eyebrow">Explore Our Activities</p>
+
+        <h2>Discover What Lies Ahead</h2>
+
+        <p>
+          From community events to chess development and tournaments,
+          each category has its own place in our club's journey.
+          Choose a section below to explore it.
+        </p>
+      </div>
+
+      <div class="activities-grid">
+
+        <!-- EVENTS -->
+        <article class="activity-card">
+          <div class="activity-icon" aria-hidden="true">♟</div>
+
+          <h3>Events</h3>
+
+          <p>
+            A dedicated space for future club gatherings, special
+            occasions, and community activities. Announcements and
+            confirmed details will be shared here when available.
+          </p>
+
+          <a class="activity-card-link" href="events.html">
+            Explore Events <span aria-hidden="true">→</span>
+          </a>
+        </article>
+
+        <!-- CHESS DEVELOPMENT -->
+        <article class="activity-card">
+          <div class="activity-icon" aria-hidden="true">♞</div>
+
+          <h3>Chess Development</h3>
+
+          <p>
+            Explore our future focus on chess learning, strategic
+            thinking, practice, and continuous improvement as players
+            develop their understanding of the game.
+          </p>
+
+          <a class="activity-card-link" href="development.html">
+            Explore Chess Development
+            <span aria-hidden="true">→</span>
+          </a>
+        </article>
+
+        <!-- TOURNAMENTS -->
+        <article class="activity-card">
+          <div class="activity-icon" aria-hidden="true">♜</div>
+
+          <h3>Tournaments</h3>
+
+          <p>
+            A future home for tournament announcements, confirmed
+            results, standings, and player achievements, with details
+            added when official information becomes available.
+          </p>
+
+          <a class="activity-card-link" href="tournaments.html">
+            Explore Tournaments <span aria-hidden="true">→</span>
+          </a>
+        </article>
+
+      </div>
+    </section>
+
+    <!-- FUTURE ACTIVITIES MESSAGE -->
+    <section class="activities-future">
+      <div class="activities-future-panel">
+        <span class="future-symbol" aria-hidden="true">♔</span>
+
+        <h2>Every Move Begins with an Opportunity</h2>
+
+        <p>
+          This page will grow alongside CheckmaîtréX Chess Club.
+          As activities, events, and tournaments take shape, this
+          website will become a place to share announcements,
+          experiences, and milestones with our community.
+        </p>
+      </div>
+    </section>
+  </main>
+
+  <!-- FOOTER -->
+  <footer class="activities-page-footer">
+    <p>
+      <strong>CHECKMAÎTRÉX CHESS CLUB</strong>
+    </p>
+
+    <p>Calculate. Conquer. Checkmate.</p>
+
+    <p>
+      &copy; <span id="activities-year">2026</span>
+      CheckmaîtréX Chess Club. All rights reserved.
+    </p>
+  </footer>
+
+  <script>
+    document.getElementById("activities-year").textContent =
+      new Date().getFullYear();
+  </script>
+
+</body>
+</html>
