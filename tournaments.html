@@ -611,6 +611,30 @@ header nav {
         transform: none;
       }
     }
+
+/* Gold dropdown arrows in navigation */
+.main-nav details > summary {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+}
+
+.main-nav details > summary::before {
+  content: "";
+  display: inline-block;
+  flex-shrink: 0;
+  width: 7px;
+  height: 7px;
+  border-right: 1.5px solid #d4af37;
+  border-bottom: 1.5px solid #d4af37;
+  transform: translateY(-2px) rotate(45deg);
+  transition: transform 0.25s ease;
+}
+
+.main-nav details[open] > summary::before {
+  transform: translateY(2px) rotate(225deg);
+}
+
   </style>
 </head>
 
