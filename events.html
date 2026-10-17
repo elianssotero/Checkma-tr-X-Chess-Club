@@ -1,0 +1,732 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#0b0b0b">
+  <meta name="description" content="Discover events, gatherings, and community activities from CheckmaîtréX Chess Club.">
+  <title>Events | CheckmaîtréX Chess Club</title>
+  <link rel="stylesheet" href="style.css">
+
+  <style>
+    :root {
+      --gold: #d4af37;
+      --gold-dark: #8f752d;
+      --black: #0b0b0b;
+      --panel: #121212;
+      --muted: #bcbcbc;
+    }
+
+    .events-page {
+      min-height: 100vh;
+      background: var(--black);
+      color: #f5f5f5;
+    }
+
+    .events-page * {
+      box-sizing: border-box;
+    }
+
+    /* HEADER */
+    header {
+      position: relative;
+      z-index: 100;
+    }
+
+    header nav {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 24px;
+    }
+
+    .brand-container {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex-shrink: 0;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      color: var(--gold);
+      font-size: 1.1rem;
+      font-weight: 800;
+      letter-spacing: 1px;
+      white-space: nowrap;
+      text-decoration: none;
+      flex-shrink: 0;
+    }
+
+    .brand-logo {
+      width: 52px;
+      height: 52px;
+      object-fit: contain;
+    }
+
+    .brand-text {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .brand-text small {
+      display: block;
+      margin-top: 3px;
+      color: #eee;
+      font-size: .65rem;
+      letter-spacing: 4px;
+    }
+
+    .brand-menu,
+    .main-nav details {
+      position: relative;
+    }
+
+    .brand-menu > summary {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 30px;
+      height: 30px;
+      padding: 0;
+      list-style: none;
+      cursor: pointer;
+      color: var(--gold);
+      border: 1px solid rgba(212,175,55,.55);
+      border-radius: 50%;
+    }
+
+    .brand-menu > summary::-webkit-details-marker,
+    .main-nav summary::-webkit-details-marker {
+      display: none;
+    }
+
+    .brand-menu > summary:hover,
+    .brand-menu[open] > summary {
+      background: var(--gold);
+      color: var(--black);
+    }
+
+    .brand-dropdown {
+      position: absolute;
+      top: calc(100% + 10px);
+      left: 0;
+      width: 225px;
+      padding: 8px;
+      background: #171717;
+      border: 1px solid var(--gold-dark);
+      border-radius: 8px;
+      box-shadow: 0 12px 25px #0008;
+      z-index: 120;
+    }
+
+    .brand-dropdown button {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      width: 100%;
+      padding: 11px 12px;
+      border: 0;
+      border-radius: 5px;
+      background: transparent;
+      color: #f5f5f5;
+      text-align: left;
+      font: inherit;
+      font-size: .9rem;
+      cursor: pointer;
+    }
+
+    .brand-dropdown button span {
+      width: 18px;
+      color: var(--gold);
+      text-align: center;
+    }
+
+    .brand-dropdown button:hover {
+      background: #292316;
+      color: var(--gold);
+    }
+
+    .main-nav {
+      display: flex;
+      align-items: center;
+      gap: 22px;
+    }
+
+    .main-nav > a,
+    .main-nav summary {
+      position: relative;
+      display: inline-block;
+      padding: 10px 0;
+      color: #f5f5f5;
+      font-weight: 600;
+      cursor: pointer;
+      list-style: none;
+      white-space: nowrap;
+      text-decoration: none;
+    }
+
+    .main-nav summary::after {
+      content: " ▾";
+      color: var(--gold);
+    }
+
+    .main-nav > a::before,
+    .main-nav summary::before {
+      content: "";
+      position: absolute;
+      left: 0;
+      right: 0;
+      bottom: 2px;
+      height: 2px;
+      background: var(--gold);
+      transform: scaleX(0);
+      transform-origin: left;
+      transition: transform .25s ease;
+    }
+
+    .main-nav > a:hover,
+    .main-nav summary:hover,
+    .main-nav details[open] > summary {
+      color: var(--gold);
+    }
+
+    .main-nav > a:hover::before,
+    .main-nav summary:hover::before,
+    .main-nav details[open] > summary::before {
+      transform: scaleX(1);
+    }
+
+    .dropdown {
+      position: absolute;
+      top: 100%;
+      left: 0;
+      min-width: 190px;
+      padding: 10px;
+      margin-top: 12px;
+      background: #171717;
+      border: 1px solid var(--gold-dark);
+      border-radius: 8px;
+      box-shadow: 0 12px 25px #0008;
+      z-index: 110;
+    }
+
+    .dropdown a {
+      display: block;
+      padding: 10px;
+      border-radius: 5px;
+      color: #f5f5f5;
+      text-decoration: none;
+    }
+
+    .dropdown a:hover {
+      color: var(--gold);
+      background: #292316;
+    }
+
+    /* HERO */
+    .events-hero {
+      position: relative;
+      overflow: hidden;
+      padding: 100px 22px 90px;
+      text-align: center;
+      background:
+        radial-gradient(ellipse at 50% 20%, rgba(212,175,55,.19), transparent 60%),
+        linear-gradient(145deg, #17140b, #0b0b0b 65%);
+      border-bottom: 1px solid rgba(212,175,55,.3);
+    }
+
+    .events-hero::before {
+      content: "♟";
+      position: absolute;
+      top: 5px;
+      right: 7%;
+      color: rgba(212,175,55,.06);
+      font-size: clamp(150px, 25vw, 290px);
+      line-height: 1;
+      pointer-events: none;
+    }
+
+    .events-hero-content {
+      position: relative;
+      z-index: 1;
+      max-width: 850px;
+      margin: 0 auto;
+    }
+
+    .events-eyebrow {
+      margin: 0 0 18px;
+      color: var(--gold);
+      font-size: .78rem;
+      font-weight: 700;
+      letter-spacing: .22em;
+      text-transform: uppercase;
+    }
+
+    .events-hero h1 {
+      margin: 0 auto 22px;
+      color: #fff;
+      font-size: clamp(2.3rem, 7vw, 4.7rem);
+      line-height: 1.1;
+      letter-spacing: -.035em;
+    }
+
+    .events-hero h1 span {
+      color: var(--gold);
+    }
+
+    .events-hero-content > p:last-child {
+      max-width: 680px;
+      margin: 0 auto;
+      color: var(--muted);
+      font-size: 1.02rem;
+      line-height: 1.9;
+    }
+
+    /* PAGE SECTIONS */
+    .events-section {
+      max-width: 1120px;
+      margin: 0 auto;
+      padding: 76px 22px;
+    }
+
+    .events-heading {
+      max-width: 720px;
+      margin: 0 auto 42px;
+      text-align: center;
+    }
+
+    .events-heading .eyebrow {
+      color: var(--gold);
+      font-size: .75rem;
+      font-weight: 700;
+      letter-spacing: .16em;
+      text-transform: uppercase;
+    }
+
+    .events-heading h2 {
+      margin: 12px 0 16px;
+      color: #fff;
+      font-size: clamp(1.8rem, 4vw, 2.7rem);
+      line-height: 1.25;
+    }
+
+    .events-heading p {
+      margin: 0;
+      color: var(--muted);
+      line-height: 1.8;
+    }
+
+    .events-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 22px;
+    }
+
+    .event-card {
+      display: flex;
+      flex-direction: column;
+      min-width: 0;
+      padding: 30px 26px;
+      background:
+        linear-gradient(155deg, rgba(212,175,55,.055), transparent 55%),
+        var(--panel);
+      border: 1px solid rgba(212,175,55,.22);
+      border-radius: 14px;
+      transition: transform .25s ease, border-color .25s ease;
+    }
+
+    .event-card:hover {
+      transform: translateY(-4px);
+      border-color: var(--gold);
+    }
+
+    .event-icon {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 54px;
+      height: 54px;
+      margin-bottom: 22px;
+      border: 1px solid var(--gold-dark);
+      border-radius: 12px;
+      background: rgba(212,175,55,.08);
+      color: var(--gold);
+      font-size: 1.8rem;
+    }
+
+    .event-card h3 {
+      margin: 0 0 12px;
+      color: #fff;
+      font-size: 1.3rem;
+      line-height: 1.4;
+    }
+
+    .event-card p {
+      margin: 0;
+      color: var(--muted);
+      font-size: .95rem;
+      line-height: 1.85;
+    }
+
+    .event-status {
+      display: inline-block;
+      align-self: flex-start;
+      margin-top: 20px;
+      padding: 6px 10px;
+      border: 1px solid rgba(212,175,55,.35);
+      border-radius: 5px;
+      color: var(--gold);
+      font-size: .78rem;
+      letter-spacing: .04em;
+    }
+
+    /* COMMUNITY MESSAGE */
+    .events-community {
+      max-width: 1000px;
+      margin: 0 auto 80px;
+      padding: 0 22px;
+    }
+
+    .events-community-panel {
+      padding: 40px 30px;
+      text-align: center;
+      background:
+        radial-gradient(ellipse at top, rgba(212,175,55,.1), transparent 75%),
+        #101010;
+      border: 1px solid rgba(212,175,55,.25);
+      border-radius: 16px;
+    }
+
+    .events-community-panel .symbol {
+      display: block;
+      margin-bottom: 15px;
+      color: var(--gold);
+      font-size: 2rem;
+    }
+
+    .events-community-panel h2 {
+      margin: 0 0 14px;
+      color: #fff;
+      font-size: clamp(1.5rem, 4vw, 2rem);
+    }
+
+    .events-community-panel p {
+      max-width: 680px;
+      margin: 0 auto;
+      color: var(--muted);
+      line-height: 1.9;
+    }
+
+    /* FOOTER */
+    .events-footer {
+      padding: 26px 20px;
+      border-top: 1px solid rgba(212,175,55,.25);
+      color: var(--muted);
+      font-size: .88rem;
+      line-height: 1.8;
+      text-align: center;
+    }
+
+    .events-footer strong {
+      color: var(--gold);
+    }
+
+    /* RESPONSIVE */
+    @media (max-width: 850px) {
+      header nav {
+        align-items: flex-start;
+        flex-direction: column;
+        gap: 12px;
+      }
+
+      .brand-logo {
+        width: 44px;
+        height: 44px;
+      }
+
+      .main-nav {
+        width: 100%;
+        align-items: stretch;
+        flex-direction: column;
+        gap: 0;
+      }
+
+      .main-nav > a,
+      .main-nav summary {
+        display: block;
+        padding: 12px 0;
+      }
+
+      .main-nav > a::before,
+      .main-nav summary::before {
+        right: auto;
+        bottom: 4px;
+        width: 100%;
+        max-width: 180px;
+      }
+
+      .dropdown {
+        position: static;
+        margin: 0 0 8px;
+        box-shadow: none;
+      }
+
+      .events-hero {
+        padding: 80px 22px 70px;
+      }
+    }
+
+    @media (max-width: 560px) {
+      .events-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .events-section {
+        padding: 58px 18px;
+      }
+
+      .events-hero {
+        padding: 70px 20px 60px;
+      }
+
+      .events-community {
+        padding: 0 18px;
+        margin-bottom: 58px;
+      }
+
+      .events-community-panel {
+        padding: 30px 22px;
+      }
+
+      .event-card {
+        padding: 25px 22px;
+      }
+    }
+
+    @media (max-width: 400px) {
+      .brand {
+        gap: 8px;
+        font-size: .95rem;
+      }
+
+      .brand-logo {
+        width: 38px;
+        height: 38px;
+      }
+
+      .brand-text small {
+        font-size: .58rem;
+        letter-spacing: 3px;
+      }
+
+      .brand-dropdown {
+        width: 205px;
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .event-card {
+        transition: none;
+      }
+
+      .event-card:hover {
+        transform: none;
+      }
+    }
+  </style>
+</head>
+
+<body class="events-page">
+
+  <!-- HEADER -->
+  <header>
+    <nav aria-label="Main navigation">
+      <div class="brand-container">
+        <a class="brand" href="index.html" aria-label="CheckmaîtréX Chess Club Home">
+          <img class="brand-logo" src="logo.png" alt="CheckmaîtréX Chess Club logo">
+          <span class="brand-text">
+            CHECKMAÎTRÉX
+            <small>CHESS CLUB</small>
+          </span>
+        </a>
+
+        <details class="brand-menu">
+          <summary aria-label="Open quick access menu" title="Quick Access">
+            <span>▾</span>
+          </summary>
+          <div class="brand-dropdown">
+            <button type="button" data-feature="settings"><span>⚙</span> Settings</button>
+            <button type="button" data-feature="install"><span>↓</span> Install App</button>
+            <button type="button" data-feature="report"><span>⚑</span> Report a Problem</button>
+            <button type="button" data-feature="about"><span>ⓘ</span> About This Website</button>
+          </div>
+        </details>
+      </div>
+
+      <div class="main-nav">
+        <a href="index.html">Home</a>
+
+        <details>
+          <summary>About Us</summary>
+          <div class="dropdown">
+            <a href="our-story.html">Our Story</a>
+            <a href="mission-vision.html">Mission &amp; Vision</a>
+            <a href="leadership.html">Leadership</a>
+          </div>
+        </details>
+
+        <!-- Closed by default -->
+        <details>
+          <summary>Activities</summary>
+          <div class="dropdown">
+            <a href="activities.html">All Activities</a>
+            <a href="events.html" aria-current="page">Events</a>
+            <a href="development.html">Chess Development</a>
+            <a href="tournaments.html">Tournaments</a>
+          </div>
+        </details>
+
+        <details>
+          <summary>Club Highlights</summary>
+          <div class="dropdown">
+            <a href="highlights.html">All Highlights</a>
+            <a href="achievements.html">Achievements</a>
+            <a href="gallery.html">Club Gallery</a>
+            <a href="news.html">News &amp; Updates</a>
+          </div>
+        </details>
+
+        <details>
+          <summary>Join Us</summary>
+          <div class="dropdown">
+            <a href="join.html">Membership</a>
+            <a href="join.html#faq">FAQs</a>
+            <a href="join.html#contact">Contact Us</a>
+          </div>
+        </details>
+      </div>
+    </nav>
+  </header>
+
+  <main>
+    <!-- HERO -->
+    <section class="events-hero">
+      <div class="events-hero-content">
+        <p class="events-eyebrow">CheckmaîtréX Chess Club</p>
+        <h1>
+          Where Every Move<br>
+          <span>Brings Us Together.</span>
+        </h1>
+        <p>
+          Discover the events and community activities of
+          CheckmaîtréX Chess Club. This page will share official
+          announcements and confirmed details as they become available.
+        </p>
+      </div>
+    </section>
+
+    <!-- UPCOMING EVENTS -->
+    <section class="events-section">
+      <div class="events-heading">
+        <p class="eyebrow">Mark the Moment</p>
+        <h2>Upcoming Events</h2>
+        <p>
+          A place for club gatherings, chess activities, and special
+          occasions. Official schedules and details will be posted here
+          once confirmed by the club.
+        </p>
+      </div>
+
+      <div class="events-grid">
+        <article class="event-card">
+          <div class="event-icon" aria-hidden="true">♟</div>
+          <h3>Club Gatherings</h3>
+          <p>
+            Updates about future club meetups, community gatherings,
+            and opportunities for members to connect through chess.
+            Dates and venues will be announced when confirmed.
+          </p>
+          <span class="event-status">Details to be announced</span>
+        </article>
+
+        <article class="event-card">
+          <div class="event-icon" aria-hidden="true">♞</div>
+          <h3>Chess Activities</h3>
+          <p>
+            Information about planned chess sessions, friendly games,
+            and learning activities designed to encourage participation
+            and continuous improvement.
+          </p>
+          <span class="event-status">Details to be announced</span>
+        </article>
+
+        <article class="event-card">
+          <div class="event-icon" aria-hidden="true">♜</div>
+          <h3>Special Club Occasions</h3>
+          <p>
+            Announcements for future celebrations, club milestones,
+            and other special occasions shared by the CheckmaîtréX
+            Chess Club community.
+          </p>
+          <span class="event-status">Details to be announced</span>
+        </article>
+
+        <article class="event-card">
+          <div class="event-icon" aria-hidden="true">♛</div>
+          <h3>Community Initiatives</h3>
+          <p>
+            A space for future chess-related outreach and community
+            initiatives that bring people together through learning,
+            sportsmanship, and a shared love of chess.
+          </p>
+          <span class="event-status">Details to be announced</span>
+        </article>
+      </div>
+    </section>
+
+    <!-- PAST EVENTS -->
+    <section class="events-section">
+      <div class="events-heading">
+        <p class="eyebrow">Our Shared Journey</p>
+        <h2>Past Events &amp; Memories</h2>
+        <p>
+          As club activities take place, this section can become a
+          record of meaningful moments, event recaps, photographs,
+          and community achievements.
+        </p>
+      </div>
+
+      <div class="events-community">
+        <div class="events-community-panel">
+          <span class="symbol" aria-hidden="true">♔</span>
+          <h2>Every Event Adds to Our Story</h2>
+          <p>
+            Official recaps and photographs will be featured here
+            when available. We look forward to documenting the
+            experiences and milestones of our chess community.
+          </p>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="events-footer">
+    <p><strong>CHECKMAÎTRÉX CHESS CLUB</strong></p>
+    <p>Calculate. Conquer. Checkmate.</p>
+    <p>
+      &copy; <span id="events-year">2026</span>
+      CheckmaîtréX Chess Club. All rights reserved.
+    </p>
+  </footer>
+
+  <script>
+    document.getElementById("events-year").textContent =
+      new Date().getFullYear();
+  </script>
+
+</body>
+</html>
