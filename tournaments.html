@@ -16,6 +16,254 @@
   <link rel="stylesheet" href="style.css">
 
   <style>
+    /* HEADER AND LOGO FIX */
+header {
+  position: relative;
+  z-index: 100;
+  background: #0b0b0b;
+  border-bottom: 1px solid rgba(212, 175, 55, 0.25);
+}
+
+header nav {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24px;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 14px 24px;
+  box-sizing: border-box;
+}
+
+.brand-container {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-shrink: 0;
+}
+
+.brand {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  color: #d4af37;
+  text-decoration: none;
+}
+
+.brand-logo {
+  display: block;
+  width: 52px !important;
+  height: 52px !important;
+  max-width: 52px !important;
+  max-height: 52px !important;
+  object-fit: contain;
+  flex: 0 0 52px;
+}
+
+.brand-text {
+  display: flex;
+  flex-direction: column;
+  color: #f5f0df;
+  font-size: 1rem;
+  font-weight: 800;
+  letter-spacing: 1px;
+  line-height: 1.3;
+}
+
+.brand-text small {
+  margin-top: 3px;
+  color: #d4af37;
+  font-size: 0.65rem;
+  letter-spacing: 3px;
+}
+
+.main-nav {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 20px;
+}
+
+.main-nav > a,
+.main-nav summary {
+  position: relative;
+  display: inline-block;
+  padding: 10px 0;
+  color: #f5f0df;
+  font-size: 0.88rem;
+  font-weight: 600;
+  text-decoration: none;
+  white-space: nowrap;
+  cursor: pointer;
+}
+
+.main-nav summary {
+  list-style: none;
+}
+
+.main-nav summary::-webkit-details-marker {
+  display: none;
+}
+
+.main-nav summary::after,
+.main-nav > a::after {
+  content: "";
+  position: absolute;
+  right: 0;
+  bottom: 3px;
+  left: 0;
+  height: 2px;
+  background: #d4af37;
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 0.25s ease;
+}
+
+.main-nav > a:hover::after,
+.main-nav details:hover > summary::after,
+.main-nav details[open] > summary::after,
+.main-nav > a[aria-current="page"]::after {
+  transform: scaleX(1);
+}
+
+.main-nav details {
+  position: relative;
+}
+
+.dropdown {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  z-index: 200;
+  min-width: 190px;
+  padding: 8px;
+  background: #171717;
+  border: 1px solid #8f752d;
+  border-radius: 5px;
+  box-shadow: 0 12px 28px rgba(0, 0, 0, 0.4);
+}
+
+.dropdown a {
+  display: block;
+  padding: 11px 12px;
+  border-radius: 3px;
+  color: #f5f0df;
+  font-size: 0.85rem;
+  text-decoration: none;
+}
+
+.dropdown a:hover,
+.dropdown a[aria-current="page"] {
+  background: rgba(212, 175, 55, 0.12);
+  color: #d4af37;
+}
+
+.brand-menu {
+  position: relative;
+}
+
+.brand-menu > summary {
+  display: grid;
+  place-items: center;
+  width: 34px;
+  height: 34px;
+  border: 1px solid rgba(212, 175, 55, 0.5);
+  border-radius: 4px;
+  color: #d4af37;
+  cursor: pointer;
+  list-style: none;
+}
+
+.brand-menu > summary::-webkit-details-marker {
+  display: none;
+}
+
+.brand-dropdown {
+  position: absolute;
+  top: calc(100% + 8px);
+  left: 0;
+  z-index: 200;
+  min-width: 205px;
+  padding: 8px;
+  background: #171717;
+  border: 1px solid #8f752d;
+  border-radius: 5px;
+}
+
+.brand-dropdown button {
+  display: block;
+  width: 100%;
+  padding: 11px;
+  border: 0;
+  border-radius: 3px;
+  background: transparent;
+  color: #f5f0df;
+  text-align: left;
+  cursor: pointer;
+}
+
+.brand-dropdown button:hover {
+  background: rgba(212, 175, 55, 0.12);
+  color: #d4af37;
+}
+
+@media (max-width: 850px) {
+  header nav {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 12px;
+    padding: 12px 16px;
+  }
+
+  .brand-container {
+    justify-content: space-between;
+  }
+
+  .main-nav {
+    justify-content: flex-start;
+    flex-wrap: wrap;
+    gap: 8px 18px;
+  }
+
+  .dropdown {
+    position: static;
+    min-width: 0;
+    margin-top: 5px;
+  }
+
+  .brand-dropdown {
+    right: 0;
+    left: auto;
+  }
+}
+
+@media (max-width: 400px) {
+  .brand-logo {
+    width: 42px !important;
+    height: 42px !important;
+    max-width: 42px !important;
+    max-height: 42px !important;
+    flex-basis: 42px;
+  }
+
+  .brand-text {
+    font-size: 0.88rem;
+  }
+
+  .brand-text small {
+    font-size: 0.58rem;
+    letter-spacing: 2px;
+  }
+
+  .main-nav {
+    gap: 6px 14px;
+  }
+
+  .main-nav > a,
+  .main-nav summary {
+    font-size: 0.82rem;
+  }
+}
     /* ========================================
        TOURNAMENTS PAGE
     ======================================== */
@@ -381,11 +629,10 @@
         aria-label="CheckmaîtréX Chess Club Home"
       >
         <img
-          class="brand-logo"
-          src="logo.png
-          class="brand-logo">
-          alt="CheckmaîtréX Chess Club logo"
-        >
+  class="brand-logo"
+  src="logo.png"
+  alt="CheckmaîtréX Chess Club logo"
+>
 
         <span class="brand-text">
           CHECKMAÎTRÉX
