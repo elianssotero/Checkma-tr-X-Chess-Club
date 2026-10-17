@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -235,26 +236,7 @@
     }
 
     /* FOUNDER PROFILE */
-    
-/* FOUNDER PROFILE PHOTO */
-.leadership-founder-photo {
-  width: 190px;
-  height: 190px;
-  object-fit: cover;
-  object-position: center;
-  border-radius: 50%;
-  border: 3px solid var(--gold);
-  box-shadow: 0 0 25px #d4af3730;
-  margin-bottom: 18px;
-}
-
-@media (max-width: 600px) {
-  .leadership-founder-photo {
-    width: 160px;
-    height: 160px;
-  }
-}
-.leadership-founder {
+    .leadership-founder {
       display: grid;
       grid-template-columns: 0.8fr 1.4fr;
       align-items: stretch;
@@ -275,16 +257,11 @@
       text-align: center;
     }
 
-    
-<img
-  class="leadership-founder-photo"
-  src="https://pxdrop.online/raw/db95doa81qec73f6p3a0"
-  alt="El.ians Sotero, Founder and Club President"
-  loading="eager"
->
-
-<p>FOUNDER • LEADERSHIP • VISION</p>
-
+    .leadership-founder-mark {
+      color: var(--gold);
+      font-family: Georgia, "Times New Roman", serif;
+      font-size: 100px;
+      line-height: 1.2;
     }
 
     .leadership-founder-panel p {
@@ -292,6 +269,20 @@
       color: #c9c9c9;
       font-size: 11px;
       letter-spacing: 3px;
+    }
+
+    /* FOUNDER PROFILE PHOTO */
+    .leadership-founder-photo {
+      display: block;
+      width: 190px;
+      height: 190px;
+      max-width: 100%;
+      object-fit: cover;
+      object-position: center;
+      border-radius: 50%;
+      border: 3px solid var(--gold);
+      box-shadow: 0 0 25px #d4af3730;
+      margin: 0 auto 18px;
     }
 
     .leadership-founder-copy {
@@ -497,6 +488,11 @@
         font-size: 76px;
       }
 
+      .leadership-founder-photo {
+        width: 160px;
+        height: 160px;
+      }
+
       .leadership-card-grid {
         grid-template-columns: 1fr;
       }
@@ -567,9 +563,14 @@
       <div class="section-wrap leadership-founder">
 
         <div class="leadership-founder-panel">
-          <div class="leadership-founder-mark" aria-hidden="true">
-            ♔
-          </div>
+          <img
+            class="leadership-founder-photo"
+            src="https://pxdrop.online/raw/db95doa81qec73f6p3a0"
+            alt="El.ians Sotero, Founder and Club President"
+            loading="eager"
+            referrerpolicy="no-referrer"
+          >
+
           <p>FOUNDER • LEADERSHIP • VISION</p>
         </div>
 
