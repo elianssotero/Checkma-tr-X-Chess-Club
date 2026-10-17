@@ -3,108 +3,144 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="theme-color" content="#0b0b0b">
-  <meta name="description" content="Discover the achievements, gallery, and latest news of CheckmaîtréX Chess Club.">
-
   <title>Club Highlights | CheckmaîtréX Chess Club</title>
-  <link rel="stylesheet" href="style.css">
 
   <style>
-    .highlights-page {
-      max-width: 1100px;
-      margin: 0 auto;
-      padding: 55px 20px 80px;
-      color: #f5f0e3;
+    * { box-sizing: border-box; }
+
+    html {
+      scroll-behavior: smooth;
+      background: #0b0b0b;
     }
 
-    .highlights-hero {
+    body {
+      margin: 0;
+      background: #0b0b0b;
+      color: #f5f0e3;
+      font-family: Arial, Helvetica, sans-serif;
+      line-height: 1.7;
+    }
+
+    a { color: inherit; }
+
+    .topbar {
+      padding: 17px 20px;
+      border-bottom: 1px solid #493d20;
+      background: #101010;
+    }
+
+    .topbar-inner {
+      max-width: 1100px;
+      margin: auto;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 15px;
+      flex-wrap: wrap;
+    }
+
+    .brand {
+      color: #d4af37;
+      font-weight: bold;
+      text-decoration: none;
+      letter-spacing: 1px;
+    }
+
+    .home-link {
+      color: #f5f0e3;
+      text-decoration: none;
+      border: 1px solid #8f752d;
+      padding: 7px 13px;
+      border-radius: 4px;
+    }
+
+    .home-link:hover { background: #292313; }
+
+    main {
+      max-width: 1100px;
+      margin: auto;
+      padding: 35px 20px 70px;
+    }
+
+    .hero {
       text-align: center;
       padding: 35px 0 40px;
     }
 
-    .highlights-hero .eyebrow {
+    .eyebrow {
       color: #d4af37;
-      letter-spacing: 3px;
       text-transform: uppercase;
+      letter-spacing: 3px;
       font-size: 12px;
       font-weight: bold;
     }
 
-    .highlights-hero h1 {
-      font-size: clamp(32px, 6vw, 54px);
-      margin: 15px 0;
+    h1 {
       color: #d4af37;
+      font-size: clamp(32px, 7vw, 55px);
+      line-height: 1.2;
+      margin: 12px 0;
     }
 
-    .highlights-hero p {
+    .hero p {
       max-width: 650px;
       margin: 0 auto;
-      color: #c8c3b7;
-      line-height: 1.8;
+      color: #ccc5b7;
     }
 
-    .highlight-nav {
+    .tabs {
       display: flex;
-      justify-content: center;
       flex-wrap: wrap;
+      justify-content: center;
       gap: 10px;
-      margin: 10px 0 55px;
+      margin: 15px 0 55px;
     }
 
-    .highlight-nav a {
+    .tabs a {
       color: #d4af37;
       text-decoration: none;
       border: 1px solid #8f752d;
-      padding: 11px 17px;
+      padding: 9px 13px;
       border-radius: 4px;
-      transition: background .2s, color .2s;
     }
 
-    .highlight-nav a:hover,
-    .highlight-nav a:focus {
+    .tabs a:hover,
+    .tabs a:focus {
       background: #d4af37;
       color: #0b0b0b;
     }
 
-    .highlight-section {
-      margin: 0 0 65px;
-      scroll-margin-top: 30px;
+    .section {
+      margin: 0 0 60px;
+      scroll-margin-top: 20px;
     }
 
-    .highlight-section h2 {
+    h2 {
       color: #d4af37;
-      font-size: clamp(23px, 4vw, 32px);
-      margin-bottom: 8px;
+      font-size: 29px;
+      margin-bottom: 4px;
     }
 
-    .section-intro {
-      color: #bdb8ac;
-      margin-bottom: 24px;
-      line-height: 1.7;
-    }
+    .intro { color: #bbb4a6; }
 
-    .highlight-grid {
+    .grid {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(min(100%, 270px), 1fr));
-      gap: 22px;
+      grid-template-columns: repeat(auto-fit, minmax(min(100%, 260px), 1fr));
+      gap: 20px;
+      margin-top: 22px;
     }
 
-    .highlight-card {
+    .card {
       min-width: 0;
       overflow: hidden;
-      background: #141414;
       border: 1px solid #493d20;
-      border-radius: 8px;
-      transition: border-color .2s, transform .2s;
+      border-radius: 7px;
+      background: #141414;
     }
 
-    .highlight-card:hover {
-      border-color: #d4af37;
-      transform: translateY(-3px);
-    }
-
-    .highlight-card img {
+    .card img {
       display: block;
       width: 100%;
       aspect-ratio: 16 / 10;
@@ -112,339 +148,330 @@
       background: #202020;
     }
 
-    .highlight-card-content {
-      padding: 20px;
-    }
+    .card-content { padding: 18px; }
 
-    .highlight-category {
+    .category {
       color: #d4af37;
       font-size: 11px;
       font-weight: bold;
-      letter-spacing: 1.5px;
       text-transform: uppercase;
+      letter-spacing: 1.5px;
     }
 
-    .highlight-card h3 {
-      margin: 10px 0;
-      color: #fff5d8;
+    h3 {
+      color: #fff3cf;
       font-size: 21px;
+      line-height: 1.4;
       overflow-wrap: anywhere;
     }
 
-    .highlight-date {
+    .date {
       color: #aaa394;
       font-size: 13px;
-      margin-bottom: 14px;
     }
 
-    .highlight-body {
+    .description {
       color: #d0cbc0;
-      line-height: 1.75;
-      white-space: pre-wrap;
       overflow-wrap: anywhere;
+      white-space: pre-wrap;
     }
 
-    .highlight-empty,
-    .highlight-status {
-      color: #c8c3b7;
-      background: #141414;
+    .notice {
+      padding: 17px;
       border: 1px solid #493d20;
-      padding: 22px;
-      border-radius: 6px;
-      line-height: 1.7;
+      border-radius: 5px;
+      color: #c8c1b3;
+      background: #141414;
     }
 
-    .highlight-error {
-      border-color: #805050;
-    }
-
-    .highlight-footer {
+    footer {
       text-align: center;
-      color: #aaa394;
       padding: 25px 15px;
       border-top: 1px solid #493d20;
+      color: #aaa394;
       font-size: 13px;
     }
 
-    @media (max-width: 600px) {
-      .highlights-page {
-        padding: 30px 15px 55px;
-      }
-
-      .highlight-nav a {
-        padding: 10px 12px;
-        font-size: 13px;
-      }
+    @media (max-width: 500px) {
+      main { padding: 25px 15px 50px; }
+      h2 { font-size: 25px; }
     }
   </style>
 </head>
 
 <body>
-  <main class="highlights-page">
-    <section class="highlights-hero">
-      <p class="eyebrow">CheckmaîtréX Chess Club</p>
+  <header class="topbar">
+    <div class="topbar-inner">
+      <a class="brand" href="index.html">CHECKMAÎTRÉX CHESS CLUB</a>
+      <a class="home-link" href="index.html">← Back to Home</a>
+    </div>
+  </header>
+
+  <main>
+    <section class="hero">
+      <div class="eyebrow">Official Club Website</div>
       <h1>Club Highlights</h1>
       <p>
-        Discover our achievements, relive our club moments, and stay
-        updated with the latest news and activities of our chess community.
+        Discover our achievements, revisit memorable club moments,
+        and stay updated with the latest news from our chess community.
       </p>
     </section>
 
-    <nav class="highlight-nav" aria-label="Club Highlights navigation">
+    <nav class="tabs" aria-label="Highlight categories">
       <a href="#all-highlights">All Highlights</a>
       <a href="#achievements">Achievements</a>
       <a href="#gallery">Club Gallery</a>
       <a href="#news">News &amp; Updates</a>
     </nav>
 
-    <section class="highlight-section" id="all-highlights">
+    <section class="section" id="all-highlights">
       <h2>All Highlights</h2>
-      <p class="section-intro">
-        Explore the latest stories and memorable moments from our club.
-      </p>
-      <div class="highlight-grid" id="all-grid">
-        <p class="highlight-status">Loading club highlights...</p>
+      <p class="intro">Stories and memorable moments from our club.</p>
+      <div class="grid" id="all-grid">
+        <p class="notice">The page is ready. Checking for published posts...</p>
       </div>
     </section>
 
-    <section class="highlight-section" id="achievements">
+    <section class="section" id="achievements">
       <h2>Achievements</h2>
-      <p class="section-intro">
-        Celebrating the dedication, progress, and accomplishments of our club.
-      </p>
-      <div class="highlight-grid" id="achievements-grid">
-        <p class="highlight-status">Loading achievements...</p>
+      <p class="intro">Celebrating the dedication and accomplishments of our members.</p>
+      <div class="grid" id="achievements-grid">
+        <p class="notice">Loading achievements...</p>
       </div>
     </section>
 
-    <section class="highlight-section" id="gallery">
+    <section class="section" id="gallery">
       <h2>Club Gallery</h2>
-      <p class="section-intro">
-        Moments, memories, and experiences from our chess community.
-      </p>
-      <div class="highlight-grid" id="gallery-grid">
-        <p class="highlight-status">Loading gallery...</p>
+      <p class="intro">Photos and memories from our chess activities and events.</p>
+      <div class="grid" id="gallery-grid">
+        <p class="notice">Loading gallery...</p>
       </div>
     </section>
 
-    <section class="highlight-section" id="news">
+    <section class="section" id="news">
       <h2>News &amp; Updates</h2>
-      <p class="section-intro">
-        Read the latest announcements and updates from CheckmaîtréX Chess Club.
-      </p>
-      <div class="highlight-grid" id="news-grid">
-        <p class="highlight-status">Loading news...</p>
+      <p class="intro">Announcements and the latest club updates.</p>
+      <div class="grid" id="news-grid">
+        <p class="notice">Loading news...</p>
       </div>
     </section>
   </main>
 
-  <footer class="highlight-footer">
+  <footer>
     <p>Calculate. Conquer. Checkmate.</p>
     <p>&copy; 2026 CheckmaîtréX Chess Club</p>
   </footer>
 
   <script>
-    const REPOSITORY_OWNER = "elianssotero";
-    const REPOSITORY_NAME = "Checkma-tr-X-Chess-Club";
-    const BRANCH = "main";
-    const CONTENT_PATH = "content/highlights";
+    (function () {
+      const owner = "elianssotero";
+      const repo = "Checkma-tr-X-Chess-Club";
+      const branch = "main";
+      const folder = "content/highlights";
 
-    const categoryTargets = {
-      "Achievements": "achievements-grid",
-      "Club Gallery": "gallery-grid",
-      "News & Updates": "news-grid"
-    };
+      const sections = {
+        "Achievements": "achievements-grid",
+        "Club Gallery": "gallery-grid",
+        "News & Updates": "news-grid"
+      };
 
-    function showMessage(targetId, message, isError = false) {
-      const target = document.getElementById(targetId);
-      target.replaceChildren();
+      function message(id, text) {
+        const target = document.getElementById(id);
+        if (!target) return;
 
-      const paragraph = document.createElement("p");
-      paragraph.className = isError
-        ? "highlight-status highlight-error"
-        : "highlight-empty";
-      paragraph.textContent = message;
-      target.appendChild(paragraph);
-    }
-
-    function formatDate(value) {
-      if (!value) return "Date not provided";
-
-      const date = new Date(value + "T00:00:00");
-
-      if (Number.isNaN(date.getTime())) return value;
-
-      return new Intl.DateTimeFormat("en", {
-        year: "numeric",
-        month: "long",
-        day: "numeric"
-      }).format(date);
-    }
-
-    function makeCard(post) {
-      const article = document.createElement("article");
-      article.className = "highlight-card";
-
-      const imagePath = typeof post.image === "string"
-        ? post.image
-        : post.image && typeof post.image === "object"
-          ? post.image.url || post.image.src || ""
-          : "";
-
-      if (imagePath) {
-        const image = document.createElement("img");
-        image.src = imagePath;
-        image.alt = post.title
-          ? "Image for " + post.title
-          : "CheckmaîtréX Chess Club highlight";
-        image.loading = "lazy";
-        image.addEventListener("error", () => image.remove());
-        article.appendChild(image);
-      }
-
-      const content = document.createElement("div");
-      content.className = "highlight-card-content";
-
-      const category = document.createElement("p");
-      category.className = "highlight-category";
-      category.textContent = post.category || "Club Highlight";
-
-      const title = document.createElement("h3");
-      title.textContent = post.title || "Untitled Highlight";
-
-      const date = document.createElement("p");
-      date.className = "highlight-date";
-      date.textContent = formatDate(post.date);
-
-      const body = document.createElement("div");
-      body.className = "highlight-body";
-
-      // Display submitted content as text for safety.
-      body.textContent = typeof post.body === "string"
-        ? post.body
-        : post.body
-          ? JSON.stringify(post.body)
-          : "";
-
-      content.append(category, title, date, body);
-      article.appendChild(content);
-
-      return article;
-    }
-
-    function renderPosts(posts) {
-      const allGrid = document.getElementById("all-grid");
-      allGrid.replaceChildren();
-
-      if (posts.length === 0) {
-        showMessage(
-          "all-grid",
-          "No highlights have been published yet. New entries will appear here when they are added to the repository."
-        );
-      } else {
-        posts.forEach(post => allGrid.appendChild(makeCard(post)));
-      }
-
-      Object.entries(categoryTargets).forEach(([category, targetId]) => {
-        const target = document.getElementById(targetId);
         target.replaceChildren();
 
-        const matchingPosts = posts.filter(
-          post => post.category === category
-        );
+        const paragraph = document.createElement("p");
+        paragraph.className = "notice";
+        paragraph.textContent = text;
+        target.appendChild(paragraph);
+      }
 
-        if (matchingPosts.length === 0) {
-          showMessage(
-            targetId,
-            "No posts in this category yet. Check back for updates."
+      function makeCard(post) {
+        const card = document.createElement("article");
+        card.className = "card";
+
+        let imagePath = post.image;
+
+        if (imagePath && typeof imagePath === "object") {
+          imagePath = imagePath.url || imagePath.src || "";
+        }
+
+        if (typeof imagePath === "string" && imagePath.trim()) {
+          const base = "https://" + owner + ".github.io/" + repo + "/";
+          const cleaned = imagePath.trim();
+
+          let imageUrl = cleaned;
+
+          if (!/^https?:\/\//i.test(cleaned)) {
+            imageUrl = new URL(cleaned.replace(/^\/+/, ""), base).href;
+          }
+
+          const image = document.createElement("img");
+          image.src = imageUrl;
+          image.alt = post.title || "Club highlight";
+          image.loading = "lazy";
+          image.onerror = function () {
+            image.remove();
+          };
+          card.appendChild(image);
+        }
+
+        const content = document.createElement("div");
+        content.className = "card-content";
+
+        const category = document.createElement("div");
+        category.className = "category";
+        category.textContent = post.category || "Club Highlight";
+
+        const title = document.createElement("h3");
+        title.textContent = post.title || "Untitled Highlight";
+
+        const date = document.createElement("p");
+        date.className = "date";
+
+        if (post.date) {
+          const parsedDate = new Date(post.date + "T00:00:00");
+          date.textContent = Number.isNaN(parsedDate.getTime())
+            ? post.date
+            : parsedDate.toLocaleDateString("en", {
+                year: "numeric",
+                month: "long",
+                day: "numeric"
+              });
+        } else {
+          date.textContent = "";
+        }
+
+        const description = document.createElement("div");
+        description.className = "description";
+
+        if (typeof post.body === "string") {
+          description.textContent = post.body;
+        } else if (post.body) {
+          description.textContent = JSON.stringify(post.body);
+        }
+
+        content.append(category, title, date, description);
+        card.appendChild(content);
+
+        return card;
+      }
+
+      function render(posts) {
+        const all = document.getElementById("all-grid");
+        all.replaceChildren();
+
+        if (posts.length === 0) {
+          message(
+            "all-grid",
+            "No highlights have been published yet. Your page is working, but it has no posts to display."
           );
-          return;
+        } else {
+          posts.forEach(function (post) {
+            all.appendChild(makeCard(post));
+          });
         }
 
-        matchingPosts.forEach(post => {
-          target.appendChild(makeCard(post));
-        });
-      });
-    }
+        Object.keys(sections).forEach(function (category) {
+          const targetId = sections[category];
+          const target = document.getElementById(targetId);
+          target.replaceChildren();
 
-    async function loadHighlights() {
-      const apiUrl =
-        "https://api.github.com/repos/" +
-        REPOSITORY_OWNER + "/" +
-        REPOSITORY_NAME +
-        "/contents/" + CONTENT_PATH +
-        "?ref=" + BRANCH;
-
-      try {
-        const response = await fetch(apiUrl, {
-          headers: { "Accept": "application/vnd.github+json" }
-        });
-
-        if (response.status === 404) {
-          renderPosts([]);
-          return;
-        }
-
-        if (!response.ok) {
-          throw new Error("GitHub returned status " + response.status);
-        }
-
-        const files = await response.json();
-
-        if (!Array.isArray(files)) {
-          throw new Error("The highlights folder could not be read.");
-        }
-
-        const jsonFiles = files.filter(file =>
-          file.type === "file" &&
-          file.name.toLowerCase().endsWith(".json")
-        );
-
-        const results = await Promise.allSettled(
-          jsonFiles.map(async file => {
-            const postResponse = await fetch(file.download_url);
-
-            if (!postResponse.ok) {
-              throw new Error("Could not read " + file.name);
-            }
-
-            return postResponse.json();
-          })
-        );
-
-        const posts = results
-          .filter(result => result.status === "fulfilled")
-          .map(result => result.value)
-          .filter(post => post && typeof post === "object")
-          .sort((a, b) => {
-            return new Date(b.date || 0) - new Date(a.date || 0);
+          const matches = posts.filter(function (post) {
+            return post.category === category;
           });
 
-        renderPosts(posts);
-
-        if (results.some(result => result.status === "rejected")) {
-          console.warn("Some highlight files could not be loaded.");
-        }
-      } catch (error) {
-        console.error("Unable to load club highlights:", error);
-
-        showMessage(
-          "all-grid",
-          "We could not load the highlights right now. Please try again later.",
-          true
-        );
-
-        Object.values(categoryTargets).forEach(targetId => {
-          showMessage(
-            targetId,
-            "This section could not be loaded. Please try again later.",
-            true
-          );
+          if (matches.length === 0) {
+            message(targetId, "No posts in this category yet.");
+          } else {
+            matches.forEach(function (post) {
+              target.appendChild(makeCard(post));
+            });
+          }
         });
       }
-    }
 
-    loadHighlights();
+      async function loadPosts() {
+        const url =
+          "https://api.github.com/repos/" + owner + "/" + repo +
+          "/contents/" + folder + "?ref=" + branch;
+
+        try {
+          const response = await fetch(url, {
+            headers: {
+              Accept: "application/vnd.github+json"
+            }
+          });
+
+          if (response.status === 404) {
+            render([]);
+            return;
+          }
+
+          if (!response.ok) {
+            throw new Error("GitHub returned HTTP " + response.status);
+          }
+
+          const files = await response.json();
+
+          if (!Array.isArray(files)) {
+            throw new Error("The content folder is not a file list.");
+          }
+
+          const jsonFiles = files.filter(function (file) {
+            return file.type === "file" &&
+              file.name.toLowerCase().endsWith(".json");
+          });
+
+          const results = await Promise.allSettled(
+            jsonFiles.map(async function (file) {
+              const postResponse = await fetch(file.download_url);
+
+              if (!postResponse.ok) {
+                throw new Error("Could not load " + file.name);
+              }
+
+              return postResponse.json();
+            })
+          );
+
+          const posts = results
+            .filter(function (result) {
+              return result.status === "fulfilled";
+            })
+            .map(function (result) {
+              return result.value;
+            })
+            .filter(function (post) {
+              return post && typeof post === "object";
+            })
+            .sort(function (a, b) {
+              return new Date(b.date || 0) - new Date(a.date || 0);
+            });
+
+          render(posts);
+
+          if (results.some(function (result) {
+            return result.status === "rejected";
+          })) {
+            console.warn("Some highlight posts could not be loaded.");
+          }
+        } catch (error) {
+          console.error("Could not load highlights:", error);
+          message(
+            "all-grid",
+            "The page design loaded, but the posts could not be retrieved. Please check the content folder and try again."
+          );
+
+          Object.values(sections).forEach(function (id) {
+            message(id, "Posts could not be loaded at this time.");
+          });
+        }
+      }
+
+      loadPosts();
+    })();
   </script>
 </body>
 </html>
