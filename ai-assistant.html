@@ -306,9 +306,9 @@
         status.textContent = "You are chatting with CheckmaîtréX AI. Responses may be imperfect.";
       } catch (error) {
         waiting.textContent =
-          "Sorry, I couldn't get a response. Please try again later.";
+          "Looks like that move didn't go as planned. Let's try again.";
         status.textContent =
-          "Connection issue: " + (error.message || "Please try again.");
+          "CheckmaîtréX AI is temporarily unavailable. Please try again shortly.");
       } finally {
         send.disabled = false;
         send.textContent = "Send ♟";
