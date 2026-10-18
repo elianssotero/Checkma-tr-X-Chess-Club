@@ -553,6 +553,37 @@
         animation-delay: 0ms;  
       }  
     }  
+
+/* HERO BUTTON SPACING AND EQUAL SIZE */
+.hero-actions {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 16px;
+}
+
+.hero-actions .hero-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 200px;
+  min-height: 48px;
+  padding: 12px 16px;
+  box-sizing: border-box;
+  text-align: center;
+}
+
+@media (max-width: 460px) {
+  .hero-actions {
+    gap: 12px;
+  }
+
+  .hero-actions .hero-button {
+    width: min(100%, 260px);
+  }
+}
+
   </style>
 </head>
 <body>
