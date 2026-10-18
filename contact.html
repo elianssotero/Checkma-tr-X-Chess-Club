@@ -1,0 +1,1235 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#0b0b0b">
+  <meta name="description" content="Contact CheckmaîtréX Chess Club. Connect with us through our official social media, community group chats, or contact form.">
+  <title>Contact Us | CheckmaîtréX Chess Club</title>
+  <link rel="stylesheet" href="style.css">
+
+  <style>
+    :root {
+      --black: #0b0b0b;
+      --surface: #141414;
+      --surface-light: #1b1b1b;
+      --gold: #d4af37;
+      --gold-light: #f0d878;
+      --white: #f5f5f5;
+      --muted: #b5b5b5;
+      --border: #383326;
+      --green: #b8e6bd;
+      --red: #ffb5b5;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html {
+      scroll-behavior: smooth;
+      scroll-padding-top: 110px;
+    }
+
+    body {
+      margin: 0;
+      background: var(--black);
+      color: var(--white);
+      font-family: Arial, Helvetica, sans-serif;
+      line-height: 1.7;
+    }
+
+    a {
+      color: inherit;
+    }
+
+    button,
+    input,
+    textarea,
+    select {
+      font: inherit;
+    }
+
+    button,
+    a {
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    /* HEADER AND NAVIGATION */
+
+    header {
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+      background: rgba(11, 11, 11, 0.97);
+      border-bottom: 1px solid rgba(212, 175, 55, 0.35);
+      backdrop-filter: blur(12px);
+    }
+
+    nav {
+      width: min(1200px, 94%);
+      min-height: 82px;
+      margin: auto;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 24px;
+    }
+
+    .brand-container {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex-shrink: 0;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      color: var(--white);
+      text-decoration: none;
+    }
+
+    .brand-logo {
+      width: 52px;
+      height: 52px;
+      object-fit: contain;
+    }
+
+    .brand-text {
+      font-size: 15px;
+      font-weight: 800;
+      letter-spacing: 1px;
+      line-height: 1.3;
+    }
+
+    .brand-text small {
+      display: block;
+      margin-top: 3px;
+      color: var(--gold);
+      font-size: 10px;
+      letter-spacing: 4px;
+    }
+
+    .brand-menu {
+      position: relative;
+    }
+
+    .brand-menu summary {
+      display: grid;
+      place-items: center;
+      width: 32px;
+      height: 32px;
+      list-style: none;
+      border: 1px solid var(--border);
+      border-radius: 50%;
+      color: var(--gold);
+      cursor: pointer;
+    }
+
+    .brand-menu summary::-webkit-details-marker,
+    .main-nav summary::-webkit-details-marker {
+      display: none;
+    }
+
+    .brand-dropdown {
+      position: absolute;
+      top: calc(100% + 12px);
+      left: 0;
+      width: 215px;
+      padding: 8px;
+      background: #171717;
+      border: 1px solid #8f752d;
+      border-radius: 10px;
+      box-shadow: 0 12px 30px #0009;
+    }
+
+    .brand-dropdown a {
+      display: block;
+      padding: 9px 10px;
+      border-radius: 6px;
+      text-decoration: none;
+      font-size: 13px;
+    }
+
+    .brand-dropdown a:hover {
+      color: var(--gold);
+      background: #ffffff08;
+    }
+
+    .main-nav {
+      display: flex;
+      align-items: center;
+      gap: 20px;
+    }
+
+    .main-nav > a,
+    .main-nav > details > summary {
+      position: relative;
+      padding: 10px 0;
+      color: #eeeeee;
+      text-decoration: none;
+      font-size: 13px;
+      font-weight: 700;
+      white-space: nowrap;
+      cursor: pointer;
+      list-style: none;
+    }
+
+    .main-nav > a::after,
+    .main-nav > details > summary::after {
+      position: absolute;
+      bottom: 2px;
+      left: 0;
+      width: 0;
+      height: 2px;
+      content: "";
+      background: var(--gold);
+      transition: width 0.2s ease;
+    }
+
+    .main-nav > a:hover,
+    .main-nav > details > summary:hover,
+    .main-nav > details[open] > summary {
+      color: var(--gold);
+    }
+
+    .main-nav > a:hover::after,
+    .main-nav > details > summary:hover::after,
+    .main-nav > details[open] > summary::after {
+      width: 100%;
+    }
+
+    .main-nav > a.active {
+      color: var(--gold);
+    }
+
+    .main-nav > a.active::after {
+      width: 100%;
+    }
+
+    .main-nav details {
+      position: relative;
+    }
+
+    .dropdown {
+      position: absolute;
+      top: calc(100% + 8px);
+      left: -12px;
+      min-width: 195px;
+      padding: 9px;
+      background: #171717;
+      border: 1px solid #8f752d;
+      border-radius: 10px;
+      box-shadow: 0 12px 30px #0009;
+    }
+
+    .dropdown a {
+      display: block;
+      padding: 8px 10px;
+      border-radius: 6px;
+      color: #ededed;
+      text-decoration: none;
+      font-size: 13px;
+    }
+
+    .dropdown a:hover,
+    .dropdown a[aria-current="page"] {
+      color: var(--gold);
+      background: #ffffff08;
+    }
+
+    /* GENERAL PAGE STYLES */
+
+    .container {
+      width: min(1100px, 90%);
+      margin: auto;
+    }
+
+    .section {
+      padding: 65px 0;
+    }
+
+    .eyebrow {
+      color: var(--gold);
+      font-size: 12px;
+      font-weight: 800;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+    }
+
+    .section-heading {
+      margin: 0 0 12px;
+      font-size: clamp(25px, 4vw, 36px);
+      line-height: 1.25;
+    }
+
+    .section-intro {
+      max-width: 680px;
+      margin: 0 auto 32px;
+      color: var(--muted);
+    }
+
+    .center {
+      text-align: center;
+    }
+
+    .gold {
+      color: var(--gold);
+    }
+
+    /* HERO */
+
+    .hero {
+      position: relative;
+      overflow: hidden;
+      padding: 88px 0 78px;
+      text-align: center;
+      background:
+        radial-gradient(ellipse at 50% 0%, #72591c33, transparent 60%),
+        linear-gradient(180deg, #0e0e0e, var(--black));
+      border-bottom: 1px solid #d4af371a;
+    }
+
+    .hero h1 {
+      max-width: 850px;
+      margin: 14px auto;
+      font-size: clamp(36px, 6vw, 62px);
+      line-height: 1.12;
+      letter-spacing: -1.5px;
+    }
+
+    .hero h1 span {
+      color: var(--gold);
+    }
+
+    .hero p {
+      max-width: 650px;
+      margin: 18px auto 0;
+      color: #c5c5c5;
+      font-size: 16px;
+    }
+
+    .hero-actions {
+      display: flex;
+      justify-content: center;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-top: 28px;
+    }
+
+    .button {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      min-height: 44px;
+      padding: 10px 20px;
+      border: 1px solid var(--gold);
+      border-radius: 6px;
+      background: var(--gold);
+      color: #111;
+      font-size: 13px;
+      font-weight: 800;
+      text-decoration: none;
+      cursor: pointer;
+      transition: background 0.2s, transform 0.2s;
+    }
+
+    .button:hover {
+      background: var(--gold-light);
+      transform: translateY(-1px);
+    }
+
+    .button-outline {
+      background: transparent;
+      color: var(--gold);
+    }
+
+    .button-outline:hover {
+      background: #d4af3714;
+      color: var(--gold-light);
+    }
+
+    /* SOCIAL MEDIA CARDS */
+
+    .social-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 16px;
+    }
+
+    .social-card {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      min-width: 0;
+      padding: 19px;
+      background: linear-gradient(145deg, #191919, #101010);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      text-decoration: none;
+      transition: border-color 0.2s, transform 0.2s;
+    }
+
+    .social-card:hover {
+      border-color: var(--gold);
+      transform: translateY(-3px);
+    }
+
+    .social-icon {
+      display: grid;
+      place-items: center;
+      flex: 0 0 46px;
+      width: 46px;
+      height: 46px;
+      border: 1px solid #8f752d;
+      border-radius: 10px;
+      background: #d4af3710;
+      color: var(--gold);
+      font-size: 15px;
+      font-weight: 900;
+    }
+
+    .social-card strong {
+      display: block;
+      font-size: 15px;
+    }
+
+    .social-card small {
+      display: block;
+      margin-top: 3px;
+      color: var(--muted);
+      font-size: 12px;
+      overflow-wrap: anywhere;
+    }
+
+    /* EMAIL AND GROUP CHAT */
+
+    .contact-panels {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 20px;
+    }
+
+    .panel {
+      padding: 26px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+    }
+
+    .panel h3 {
+      margin: 0 0 8px;
+      font-size: 21px;
+    }
+
+    .panel p {
+      margin: 0 0 20px;
+      color: var(--muted);
+      font-size: 14px;
+    }
+
+    .email-link {
+      display: block;
+      padding: 14px;
+      border: 1px solid #8f752d;
+      border-radius: 8px;
+      color: var(--gold-light);
+      text-align: center;
+      text-decoration: none;
+      overflow-wrap: anywhere;
+    }
+
+    .email-link:hover {
+      background: #d4af3710;
+    }
+
+    .chat-list {
+      display: grid;
+      gap: 10px;
+    }
+
+    .chat-link {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      padding: 11px 13px;
+      border: 1px solid #383326;
+      border-radius: 7px;
+      text-decoration: none;
+      font-size: 14px;
+    }
+
+    .chat-link span:last-child {
+      color: var(--gold);
+      white-space: nowrap;
+      font-size: 12px;
+    }
+
+    .chat-link:hover {
+      border-color: var(--gold);
+      color: var(--gold-light);
+    }
+
+    .notice {
+      margin-top: 16px;
+      color: #a9a9a9;
+      font-size: 12px;
+    }
+
+    /* CONTACT FORM */
+
+    .form-wrap {
+      max-width: 760px;
+      margin: auto;
+      padding: clamp(22px, 4vw, 38px);
+      background: linear-gradient(145deg, #191919, #101010);
+      border: 1px solid var(--border);
+      border-radius: 15px;
+      box-shadow: 0 20px 50px #0003;
+    }
+
+    .form-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 18px;
+    }
+
+    .field {
+      display: flex;
+      flex-direction: column;
+      gap: 7px;
+    }
+
+    .field-full {
+      grid-column: 1 / -1;
+    }
+
+    .field label {
+      color: #eeeeee;
+      font-size: 13px;
+      font-weight: 700;
+    }
+
+    .field input,
+    .field textarea,
+    .field select {
+      width: 100%;
+      padding: 12px 13px;
+      border: 1px solid #444;
+      border-radius: 7px;
+      outline: none;
+      background: #0d0d0d;
+      color: var(--white);
+      font-size: 14px;
+    }
+
+    .field input:focus,
+    .field textarea:focus,
+    .field select:focus {
+      border-color: var(--gold);
+      box-shadow: 0 0 0 2px #d4af371c;
+    }
+
+    .field textarea {
+      min-height: 155px;
+      resize: vertical;
+    }
+
+    .field input::placeholder,
+    .field textarea::placeholder {
+      color: #858585;
+    }
+
+    .form-footer {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 14px;
+      margin-top: 22px;
+    }
+
+    .privacy-note {
+      max-width: 390px;
+      margin: 0;
+      color: #a8a8a8;
+      font-size: 12px;
+    }
+
+    .form-status {
+      display: none;
+      margin-top: 20px;
+      padding: 13px 15px;
+      border-radius: 8px;
+      font-size: 14px;
+      overflow-wrap: anywhere;
+    }
+
+    .form-status.success {
+      display: block;
+      border: 1px solid #447c4c;
+      background: #16311a;
+      color: var(--green);
+    }
+
+    .form-status.error {
+      display: block;
+      border: 1px solid #854545;
+      background: #321717;
+      color: var(--red);
+    }
+
+    .form-status a {
+      color: inherit;
+      text-decoration: underline;
+    }
+
+    .submit-button:disabled {
+      opacity: 0.65;
+      cursor: wait;
+      transform: none;
+    }
+
+    /* FOOTER */
+
+    footer {
+      margin-top: 30px;
+      padding: 30px 0;
+      border-top: 1px solid #d4af3733;
+      background: #080808;
+      text-align: center;
+    }
+
+    .footer-motto {
+      margin: 0 0 8px;
+      color: var(--gold);
+      font-weight: 800;
+      letter-spacing: 1.5px;
+    }
+
+    .footer-links {
+      display: flex;
+      justify-content: center;
+      flex-wrap: wrap;
+      gap: 18px;
+      margin: 14px 0;
+    }
+
+    .footer-links a {
+      color: #c4c4c4;
+      font-size: 12px;
+      text-decoration: none;
+    }
+
+    .footer-links a:hover {
+      color: var(--gold);
+    }
+
+    footer small {
+      color: #888;
+      font-size: 12px;
+    }
+
+    /* RESPONSIVE LAYOUT */
+
+    @media (max-width: 1000px) {
+      nav {
+        flex-wrap: wrap;
+        justify-content: center;
+        padding: 12px 0;
+        gap: 10px 20px;
+      }
+
+      .main-nav {
+        justify-content: center;
+        flex-wrap: wrap;
+        gap: 8px 18px;
+      }
+    }
+
+    @media (max-width: 700px) {
+      html {
+        scroll-padding-top: 150px;
+      }
+
+      nav {
+        width: 92%;
+        flex-direction: column;
+        align-items: stretch;
+      }
+
+      .brand-container {
+        justify-content: center;
+      }
+
+      .main-nav {
+        width: 100%;
+        justify-content: center;
+        gap: 5px 15px;
+      }
+
+      .main-nav > a,
+      .main-nav > details > summary {
+        font-size: 12px;
+      }
+
+      .dropdown {
+        position: absolute;
+        z-index: 5;
+        left: auto;
+        right: 0;
+        max-width: 85vw;
+      }
+
+      .brand-dropdown {
+        left: auto;
+        right: 0;
+      }
+
+      .hero {
+        padding: 65px 0 58px;
+      }
+
+      .section {
+        padding: 48px 0;
+      }
+
+      .social-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 10px;
+      }
+
+      .social-card {
+        align-items: flex-start;
+        flex-direction: column;
+        gap: 10px;
+        padding: 14px;
+      }
+
+      .contact-panels {
+        grid-template-columns: 1fr;
+      }
+
+      .form-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .field-full {
+        grid-column: auto;
+      }
+
+      .form-footer {
+        align-items: stretch;
+        flex-direction: column;
+      }
+
+      .form-footer .button {
+        width: 100%;
+      }
+    }
+
+    @media (max-width: 390px) {
+      .brand-logo {
+        width: 42px;
+        height: 42px;
+      }
+
+      .brand-text {
+        font-size: 13px;
+      }
+
+      .brand-text small {
+        font-size: 9px;
+        letter-spacing: 3px;
+      }
+
+      .main-nav {
+        gap: 4px 11px;
+      }
+
+      .social-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .social-card {
+        align-items: center;
+        flex-direction: row;
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *,
+      *::before,
+      *::after {
+        scroll-behavior: auto !important;
+        transition: none !important;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <!-- HEADER -->
+  <header>
+    <nav aria-label="Main navigation">
+      <div class="brand-container">
+        <a class="brand" href="index.html"
+           aria-label="CheckmaîtréX Chess Club Home">
+          <img class="brand-logo" src="logo.png"
+               alt="CheckmaîtréX Chess Club logo">
+          <span class="brand-text">
+            CHECKMAÎTRÉX
+            <small>CHESS CLUB</small>
+          </span>
+        </a>
+
+        <details class="brand-menu">
+          <summary aria-label="Open quick access menu"
+                   title="Quick Access">
+            <span aria-hidden="true">▾</span>
+          </summary>
+          <div class="brand-dropdown">
+            <a href="index.html">Home</a>
+            <a href="membership.html">Membership</a>
+            <a href="faqs.html#faq">Frequently Asked Questions</a>
+            <a href="#contact">Send Us a Message</a>
+            <a href="contact.html#contact">Contact Us</a>
+          </div>
+        </details>
+      </div>
+
+      <div class="main-nav">
+        <a href="index.html">Home</a>
+
+        <details>
+          <summary>About Us</summary>
+          <div class="dropdown">
+            <a href="our-story.html">Our Story</a>
+            <a href="mission-vision.html">Mission &amp; Vision</a>
+            <a href="leadership.html">Leadership</a>
+          </div>
+        </details>
+
+        <details>
+          <summary>Activities</summary>
+          <div class="dropdown">
+            <a href="activities.html">All Activities</a>
+            <a href="events.html">Events</a>
+            <a href="development.html">Chess Development</a>
+            <a href="tournaments.html">Tournaments</a>
+          </div>
+        </details>
+
+        <details>
+          <summary>Club Highlights</summary>
+          <div class="dropdown">
+            <a href="highlights.html">All Highlights</a>
+            <a href="achievements.html">Achievements</a>
+            <a href="gallery.html">Club Gallery</a>
+            <a href="news.html">News &amp; Updates</a>
+          </div>
+        </details>
+
+        <details open>
+          <summary>Join Us</summary>
+          <div class="dropdown">
+            <a href="membership.html">Membership</a>
+            <a href="faqs.html#faq">FAQs</a>
+            <a href="contact.html#contact" aria-current="page">Contact Us</a>
+          </div>
+        </details>
+      </div>
+    </nav>
+  </header>
+
+  <main>
+    <!-- HERO -->
+    <section class="hero">
+      <div class="container">
+        <div class="eyebrow">CheckmaîtréX Chess Club</div>
+        <h1>Let's <span>Connect.</span></h1>
+        <p>
+          Have a question, an idea, or want to become part of our chess
+          community? Reach out through our official channels or send us
+          a message directly from this website.
+        </p>
+        <div class="hero-actions">
+          <a class="button" href="#contact">Send Us a Message</a>
+          <a class="button button-outline" href="#socials">
+            Connect With Us
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <!-- SOCIAL MEDIA -->
+    <section class="section" id="socials">
+      <div class="container">
+        <div class="center">
+          <div class="eyebrow">Stay Connected</div>
+          <h2 class="section-heading">Connect With Us</h2>
+          <p class="section-intro">
+            Follow CheckmaîtréX Chess Club on our social media platforms
+            for club updates, chess content, activities, and community news.
+          </p>
+        </div>
+
+        <div class="social-grid">
+          <a class="social-card"
+             href="https://www.facebook.com/CheckmaitreXChessClub"
+             target="_blank" rel="noopener noreferrer">
+            <span class="social-icon" aria-hidden="true">f</span>
+            <span>
+              <strong>Facebook</strong>
+              <small>CheckmaitreXChessClub</small>
+            </span>
+          </a>
+
+          <a class="social-card"
+             href="https://www.instagram.com/checkmaitrex?obrf=dHFrN2ljNHhwaXV6"
+             target="_blank" rel="noopener noreferrer">
+            <span class="social-icon" aria-hidden="true">IG</span>
+            <span>
+              <strong>Instagram</strong>
+              <small>@checkmaitrex</small>
+            </span>
+          </a>
+
+          <a class="social-card"
+             href="https://www.threads.com/@checkmaitrex"
+             target="_blank" rel="noopener noreferrer">
+            <span class="social-icon" aria-hidden="true">@</span>
+            <span>
+              <strong>Threads</strong>
+              <small>@checkmaitrex</small>
+            </span>
+          </a>
+
+          <a class="social-card"
+             href="https://www.tiktok.com/@checkmaitrexchessclub?_r=1&_t=ZS-9Ae20E6009p"
+             target="_blank" rel="noopener noreferrer">
+            <span class="social-icon" aria-hidden="true">♪</span>
+            <span>
+              <strong>TikTok</strong>
+              <small>@checkmaitrexchessclub</small>
+            </span>
+          </a>
+
+          <a class="social-card"
+             href="https://youtube.com/@checkmaitrexchessclub?si=a1lcvOBnG21hzuS-"
+             target="_blank" rel="noopener noreferrer">
+            <span class="social-icon" aria-hidden="true">▶</span>
+            <span>
+              <strong>YouTube</strong>
+              <small>@checkmaitrexchessclub</small>
+            </span>
+          </a>
+
+          <a class="social-card"
+             href="https://x.com/CheckmaitreX"
+             target="_blank" rel="noopener noreferrer">
+            <span class="social-icon" aria-hidden="true">X</span>
+            <span>
+              <strong>X</strong>
+              <small>@CheckmaitreX</small>
+            </span>
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <!-- EMAIL AND GROUP CHATS -->
+    <section class="section" id="community">
+      <div class="container">
+        <div class="center">
+          <div class="eyebrow">Get in Touch</div>
+          <h2 class="section-heading">Reach Our Community</h2>
+          <p class="section-intro">
+            Choose the contact channel that works best for you.
+            For a private inquiry, you can also use the message form below.
+          </p>
+        </div>
+
+        <div class="contact-panels">
+          <div class="panel">
+            <h3><span class="gold">✉</span> Official Email</h3>
+            <p>
+              For general questions, membership inquiries, and other
+              club-related matters, email us here.
+            </p>
+            <a class="email-link"
+               href="mailto:checkmaitrex00@gmail.com">
+              checkmaitrex00@gmail.com
+            </a>
+            <p class="notice">
+              Your device may open its default email application.
+            </p>
+          </div>
+
+          <div class="panel">
+            <h3><span class="gold">♟</span> Join Our Group Chats</h3>
+            <p>
+              Use the invitation links below to connect with the
+              CheckmaîtréX Chess Club community.
+            </p>
+
+            <div class="chat-list">
+              <a class="chat-link"
+                 href="https://m.me/j/EYqsQSHOKJaPexfo/?send_source=gc%3Acopy_invite_link_c"
+                 target="_blank" rel="noopener noreferrer">
+                <span>Facebook Messenger</span>
+                <span>Join ↗</span>
+              </a>
+
+              <a class="chat-link"
+                 href="https://ig.me/j/Gbt1kinIpU1Dp-il/"
+                 target="_blank" rel="noopener noreferrer">
+                <span>Instagram Group</span>
+                <span>Join ↗</span>
+              </a>
+
+              <a class="chat-link"
+                 href="https://tiktok.me/group/ZSboSxq16/"
+                 target="_blank" rel="noopener noreferrer">
+                <span>TikTok Group</span>
+                <span>Join ↗</span>
+              </a>
+
+              <a class="chat-link"
+                 href="https://x.com/i/chat/group_join/g2109581199660535880/RRi4zDH2pG"
+                 target="_blank" rel="noopener noreferrer">
+                <span>X Group Chat</span>
+                <span>Join ↗</span>
+              </a>
+            </div>
+
+            <p class="notice">
+              Invitation links are subject to each platform's availability
+              and membership settings.
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- CONTACT FORM -->
+    <section class="section" id="contact">
+      <div class="container">
+        <div class="center">
+          <div class="eyebrow">We'd Love to Hear From You</div>
+          <h2 class="section-heading">Send Us a Message</h2>
+          <p class="section-intro">
+            Complete the form below and send your message directly
+            through our website. Please provide a valid email address
+            so the club can respond if needed.
+          </p>
+        </div>
+
+        <div class="form-wrap">
+          <form id="contact-form"
+                action="https://formspree.io/f/meaedjaq"
+                method="POST">
+
+            <input type="hidden" name="_subject"
+                   value="New Contact Us Message - CheckmaîtréX Chess Club">
+
+            <!-- Honeypot field for basic spam protection -->
+            <div hidden aria-hidden="true">
+              <label for="website">Leave this field empty</label>
+              <input id="website" type="text" name="_gotcha"
+                     tabindex="-1" autocomplete="off">
+            </div>
+
+            <div class="form-grid">
+              <div class="field">
+                <label for="name">Full Name *</label>
+                <input id="name" name="name" type="text"
+                       placeholder="Enter your full name"
+                       autocomplete="name" maxlength="100" required>
+              </div>
+
+              <div class="field">
+                <label for="email">Email Address *</label>
+                <input id="email" name="email" type="email"
+                       placeholder="you@example.com"
+                       autocomplete="email" maxlength="254" required>
+              </div>
+
+              <div class="field field-full">
+                <label for="subject">Subject *</label>
+                <select id="subject" name="subject" required>
+                  <option value="" selected disabled>
+                    Select a subject
+                  </option>
+                  <option value="General Inquiry">General Inquiry</option>
+                  <option value="Membership Inquiry">Membership Inquiry</option>
+                  <option value="Chess Activities">Chess Activities</option>
+                  <option value="Events and Tournaments">Events and Tournaments</option>
+                  <option value="Collaboration">Collaboration</option>
+                  <option value="Website Feedback">Website Feedback</option>
+                  <option value="Other">Other</option>
+                </select>
+              </div>
+
+              <div class="field field-full">
+                <label for="message">Your Message *</label>
+                <textarea id="message" name="message"
+                          placeholder="Write your message here..."
+                          minlength="10" maxlength="5000"
+                          required></textarea>
+              </div>
+            </div>
+
+            <div class="form-footer">
+              <p class="privacy-note">
+                Please do not include passwords, financial details,
+                or other sensitive personal information. Your message
+                will be processed by Formspree to deliver it to the club.
+              </p>
+              <button class="button submit-button" id="submit-button"
+                      type="submit">
+                Send Message <span aria-hidden="true">→</span>
+              </button>
+            </div>
+
+            <div id="form-status" class="form-status"
+                 role="status" aria-live="polite"></div>
+          </form>
+        </div>
+      </div>
+    </section>
+
+    <!-- HELPFUL LINKS -->
+    <section class="section">
+      <div class="container center">
+        <div class="eyebrow">Explore the Club</div>
+        <h2 class="section-heading">How Can We Help?</h2>
+        <p class="section-intro">
+          Explore these pages for more information about CheckmaîtréX Chess Club.
+        </p>
+
+        <div class="hero-actions">
+          <a class="button button-outline" href="membership.html">
+            Membership
+          </a>
+          <a class="button button-outline" href="faqs.html#faq">
+            FAQs
+          </a>
+          <a class="button button-outline" href="development.html">
+            Chess Development
+          </a>
+          <a class="button button-outline" href="gallery.html">
+            Club Gallery
+          </a>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- FOOTER -->
+  <footer>
+    <div class="container">
+      <p class="footer-motto">CALCULATE. CONQUER. CHECKMATE.</p>
+
+      <div class="footer-links">
+        <a href="index.html">Home</a>
+        <a href="membership.html">Membership</a>
+        <a href="faqs.html#faq">FAQs</a>
+        <a href="#socials">Social Media</a>
+        <a href="#contact">Contact Us</a>
+      </div>
+
+      <small>
+        &copy; <span id="current-year">2026</span>
+        CheckmaîtréX Chess Club. All rights reserved.
+      </small>
+    </div>
+  </footer>
+
+  <script>
+    // Keep the footer year current.
+    document.getElementById("current-year").textContent =
+      new Date().getFullYear();
+
+    // Submit through Formspree and display feedback on this page.
+    const contactForm = document.getElementById("contact-form");
+    const submitButton = document.getElementById("submit-button");
+    const formStatus = document.getElementById("form-status");
+
+    contactForm.addEventListener("submit", async function (event) {
+      event.preventDefault();
+
+      if (!contactForm.reportValidity()) {
+        return;
+      }
+
+      const originalButtonText = submitButton.innerHTML;
+
+      submitButton.disabled = true;
+      submitButton.textContent = "Sending...";
+      formStatus.className = "form-status";
+      formStatus.textContent = "";
+
+      try {
+        const response = await fetch(contactForm.action, {
+          method: "POST",
+          body: new FormData(contactForm),
+          headers: {
+            "Accept": "application/json"
+          }
+        });
+
+        if (response.ok) {
+          formStatus.className = "form-status success";
+          formStatus.textContent =
+            "Thank you! Your message has been submitted successfully. " +
+            "If a response is needed, the club can contact you at the email address you provided.";
+
+          contactForm.reset();
+        } else {
+          let errorMessage =
+            "We couldn't submit your message. Please try again or email checkmaitrex00@gmail.com.";
+
+          try {
+            const result = await response.json();
+
+            if (result.errors && result.errors.length) {
+              errorMessage = result.errors
+                .map(function (error) {
+                  return error.message;
+                })
+                .join(" ");
+            }
+          } catch (parseError) {
+            // Keep the default error message if no JSON is returned.
+          }
+
+          formStatus.className = "form-status error";
+          formStatus.textContent = errorMessage;
+        }
+      } catch (error) {
+        formStatus.className = "form-status error";
+        formStatus.textContent =
+          "We couldn't connect to the form service. Check your internet connection and try again, or email checkmaitrex00@gmail.com.";
+      } finally {
+        submitButton.disabled = false;
+        submitButton.innerHTML = originalButtonText;
+      }
+    });
+
+    // Close an open navigation dropdown when the user taps outside it.
+    document.addEventListener("click", function (event) {
+      document.querySelectorAll("header details[open]").forEach(function (menu) {
+        if (!menu.contains(event.target)) {
+          menu.removeAttribute("open");
+        }
+      });
+    });
+  </script>
+</body>
+</html>
