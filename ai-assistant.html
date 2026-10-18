@@ -215,15 +215,14 @@
   alt="CheckmaîtréX AI logo"
 >
       <h1>CheckmaîtréX AI</h1>
-      <p>Your chess companion. Learn the rules, explore tactics,
-         understand strategy, and improve one move at a time.</p>
+      <p>Your CheckmaîtréX AI-Powered Chess Assistant</p>
     </section>
 
     <section id="chat" class="chat" aria-live="polite"
              aria-label="Conversation">
       <div class="message assistant">
-        Hello! Welcome to CheckmaîtréX AI. ♟
-        Ask me about chess rules, tactics, openings, or strategy.
+        Hello! I'm CheckmaîtréX AI, your AI chess assistant.
+        Ask me anything about chess to get started.
       </div>
     </section>
 
@@ -235,19 +234,27 @@
     </form>
 
     <p id="status" class="note">
-      AI responses may occasionally be incorrect. Please verify important information.
+      CheckmaîtréX AI responses may occasionally be incorrect. Please verify important information.
     </p>
 
     <a class="back" href="index.html">← Back to the Club Website</a>
   </main>
 
   <footer>
-    © 2026 CheckmaîtréX Chess Club · Calculate. Conquer. Checkmate.
+  <div>
+    © <span id="current-year"></span> CheckmaîtréX Chess Club. All rights reserved.
+  </div>
+  <div>
+    Calculate. Conquer. Checkmate.
+  </div>
   </footer>
 
   <script>
-    const WORKER_URL =
-      "https://checkmaitrex-ai.elianssotero11.workers.dev/";
+  document.getElementById("current-year").textContent =
+    new Date().getFullYear();
+
+  const WORKER_URL =
+    "https://checkmaitrex-ai.elianssotero11.workers.dev/";
 
     const form = document.getElementById("chat-form");
     const input = document.getElementById("message");
