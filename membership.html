@@ -1,0 +1,1132 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#0b0b0b">
+
+  <title>Membership | CheckmaîtréX Chess Club</title>
+
+  <meta
+    name="description"
+    content="Discover membership opportunities at CheckmaîtréX Chess Club. Apply to become part of a community built on strategy, discipline, and sportsmanship."
+  >
+
+  <link rel="icon" href="logo.png" type="image/png">
+  <link rel="stylesheet" href="style.css">
+
+  <style>
+    :root {
+      --black: #0b0b0b;
+      --black-soft: #111111;
+      --card: #151515;
+      --gold: #d4af37;
+      --gold-light: #f0d77a;
+      --text: #f5f5f5;
+      --muted: #b8b8b8;
+      --border: rgba(212, 175, 55, 0.28);
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html {
+      scroll-behavior: smooth;
+      scroll-padding-top: 100px;
+    }
+
+    body {
+      margin: 0;
+      background: var(--black);
+      color: var(--text);
+      font-family: Arial, Helvetica, sans-serif;
+      line-height: 1.7;
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    button,
+    summary {
+      font: inherit;
+    }
+
+    button,
+    a,
+    summary {
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    /* HEADER */
+
+    .site-header {
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+      background: rgba(11, 11, 11, 0.97);
+      border-bottom: 1px solid var(--border);
+      backdrop-filter: blur(14px);
+    }
+
+    .header-inner {
+      width: min(1200px, 92%);
+      min-height: 82px;
+      margin: 0 auto;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 22px;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      flex-shrink: 0;
+    }
+
+    .brand-logo {
+      width: 52px;
+      height: 52px;
+      object-fit: contain;
+    }
+
+    .brand-name {
+      display: block;
+      color: var(--gold);
+      font-size: 15px;
+      font-weight: 800;
+      letter-spacing: 1.5px;
+      line-height: 1.4;
+    }
+
+    .brand-subtitle {
+      display: block;
+      color: #ddd;
+      font-size: 10px;
+      letter-spacing: 3px;
+    }
+
+    .main-nav {
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+      flex-wrap: wrap;
+      gap: 20px;
+    }
+
+    .main-nav > a,
+    .main-nav > details > summary {
+      position: relative;
+      padding: 12px 0;
+      color: #e5e5e5;
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      list-style: none;
+      white-space: nowrap;
+    }
+
+    .main-nav > details > summary::-webkit-details-marker {
+      display: none;
+    }
+
+    .main-nav > details > summary::after {
+      content: " ▾";
+      color: var(--gold);
+    }
+
+    .main-nav > a::before,
+    .main-nav > details > summary::before {
+      content: "";
+      position: absolute;
+      bottom: 3px;
+      left: 0;
+      width: 0;
+      height: 2px;
+      background: var(--gold);
+      transition: width 0.25s ease;
+    }
+
+    .main-nav > a:hover,
+    .main-nav > details > summary:hover,
+    .main-nav > details[open] > summary,
+    .main-nav > a.active {
+      color: var(--gold-light);
+    }
+
+    .main-nav > a:hover::before,
+    .main-nav > details > summary:hover::before,
+    .main-nav > details[open] > summary::before,
+    .main-nav > a.active::before {
+      width: 100%;
+    }
+
+    .main-nav details {
+      position: relative;
+    }
+
+    .dropdown {
+      position: absolute;
+      top: calc(100% + 2px);
+      left: -14px;
+      min-width: 190px;
+      padding: 8px;
+      background: #171717;
+      border: 1px solid #8f752d;
+      border-radius: 8px;
+      box-shadow: 0 12px 30px rgba(0, 0, 0, 0.45);
+    }
+
+    .dropdown a {
+      display: block;
+      padding: 10px 12px;
+      border-radius: 5px;
+      color: #ddd;
+      font-size: 13px;
+      transition: background 0.2s ease, color 0.2s ease;
+    }
+
+    .dropdown a:hover,
+    .dropdown a.active {
+      background: rgba(212, 175, 55, 0.12);
+      color: var(--gold-light);
+    }
+
+    /* QUICK ACCESS */
+
+    .quick-access {
+      position: relative;
+      flex-shrink: 0;
+    }
+
+    .quick-access > summary {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      padding: 10px 13px;
+      color: var(--gold);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      font-size: 12px;
+      cursor: pointer;
+      list-style: none;
+    }
+
+    .quick-access > summary::-webkit-details-marker {
+      display: none;
+    }
+
+    .quick-access > summary::after {
+      content: " ▾";
+    }
+
+    .quick-access[open] > summary,
+    .quick-access > summary:hover {
+      background: rgba(212, 175, 55, 0.1);
+    }
+
+    .quick-menu {
+      position: absolute;
+      top: calc(100% + 8px);
+      right: 0;
+      width: 210px;
+      padding: 8px;
+      background: #171717;
+      border: 1px solid #8f752d;
+      border-radius: 8px;
+      box-shadow: 0 12px 30px rgba(0, 0, 0, 0.45);
+    }
+
+    .quick-menu a,
+    .quick-menu button {
+      display: block;
+      width: 100%;
+      padding: 10px 12px;
+      background: transparent;
+      border: 0;
+      border-radius: 5px;
+      color: #ddd;
+      text-align: left;
+      font-size: 13px;
+      cursor: pointer;
+    }
+
+    .quick-menu a:hover,
+    .quick-menu button:hover {
+      background: rgba(212, 175, 55, 0.12);
+      color: var(--gold-light);
+    }
+
+    /* GENERAL */
+
+    .container {
+      width: min(1080px, 90%);
+      margin: 0 auto;
+    }
+
+    .section {
+      padding: 76px 0;
+    }
+
+    .section-heading {
+      margin: 0 0 14px;
+      color: var(--gold);
+      font-size: clamp(25px, 4vw, 36px);
+      line-height: 1.25;
+    }
+
+    .section-intro {
+      max-width: 720px;
+      margin: 0 auto;
+      color: var(--muted);
+    }
+
+    .center {
+      text-align: center;
+    }
+
+    .eyebrow {
+      display: inline-block;
+      margin-bottom: 16px;
+      color: var(--gold-light);
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+    }
+
+    .gold-line {
+      width: 64px;
+      height: 3px;
+      margin: 22px auto;
+      background: var(--gold);
+    }
+
+    .button {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 46px;
+      padding: 12px 22px;
+      border: 1px solid var(--gold);
+      border-radius: 5px;
+      font-size: 13px;
+      font-weight: 700;
+      text-align: center;
+      transition: transform 0.2s ease, background 0.2s ease;
+    }
+
+    .button:hover {
+      transform: translateY(-2px);
+    }
+
+    .button-primary {
+      background: var(--gold);
+      color: #101010;
+    }
+
+    .button-primary:hover {
+      background: var(--gold-light);
+    }
+
+    .button-outline {
+      color: var(--gold);
+      background: transparent;
+    }
+
+    .button-outline:hover {
+      background: rgba(212, 175, 55, 0.1);
+    }
+
+    /* MEMBERSHIP HERO */
+
+    .membership-hero {
+      position: relative;
+      overflow: hidden;
+      padding: 100px 0 88px;
+      text-align: center;
+      background:
+        radial-gradient(
+          ellipse at 50% 0%,
+          rgba(114, 89, 28, 0.22),
+          transparent 65%
+        ),
+        var(--black);
+      border-bottom: 1px solid rgba(212, 175, 55, 0.12);
+    }
+
+    .membership-hero h1 {
+      max-width: 850px;
+      margin: 0 auto;
+      color: var(--gold);
+      font-family: Georgia, "Times New Roman", serif;
+      font-size: clamp(38px, 7vw, 66px);
+      line-height: 1.12;
+      letter-spacing: 1px;
+    }
+
+    .membership-hero p {
+      max-width: 700px;
+      margin: 22px auto 28px;
+      color: #d0d0d0;
+      font-size: 16px;
+    }
+
+    .hero-actions {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+
+    /* INTRODUCTION */
+
+    .intro-grid {
+      display: grid;
+      grid-template-columns: 1.15fr 0.85fr;
+      align-items: center;
+      gap: 40px;
+    }
+
+    .intro-copy p {
+      color: var(--muted);
+    }
+
+    .intro-panel {
+      padding: 30px;
+      background: linear-gradient(145deg, #191919, #101010);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+    }
+
+    .intro-panel h3 {
+      margin-top: 0;
+      color: var(--gold);
+      font-family: Georgia, "Times New Roman", serif;
+      font-size: 23px;
+    }
+
+    .intro-panel p {
+      margin-bottom: 0;
+      color: var(--muted);
+      font-size: 14px;
+    }
+
+    /* BENEFIT CARDS */
+
+    .benefits-section {
+      background: #101010;
+      border-top: 1px solid rgba(212, 175, 55, 0.12);
+      border-bottom: 1px solid rgba(212, 175, 55, 0.12);
+    }
+
+    .card-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 20px;
+      margin-top: 38px;
+    }
+
+    .info-card {
+      padding: 27px 23px;
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      transition: transform 0.25s ease, border-color 0.25s ease;
+    }
+
+    .info-card:hover {
+      transform: translateY(-4px);
+      border-color: var(--gold);
+    }
+
+    .card-number {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 42px;
+      height: 42px;
+      margin-bottom: 16px;
+      border: 1px solid var(--gold);
+      border-radius: 50%;
+      color: var(--gold);
+      font-family: Georgia, "Times New Roman", serif;
+      font-size: 18px;
+    }
+
+    .info-card h3 {
+      margin: 0 0 10px;
+      color: var(--gold-light);
+      font-size: 18px;
+    }
+
+    .info-card p {
+      margin: 0;
+      color: var(--muted);
+      font-size: 14px;
+    }
+
+    /* APPLICATION PROCESS */
+
+    .process-list {
+      max-width: 780px;
+      margin: 35px auto 0;
+      padding: 0;
+      list-style: none;
+      counter-reset: process;
+    }
+
+    .process-list li {
+      position: relative;
+      margin-bottom: 15px;
+      padding: 20px 22px 20px 70px;
+      background: #141414;
+      border: 1px solid var(--border);
+      border-radius: 7px;
+      counter-increment: process;
+    }
+
+    .process-list li::before {
+      content: counter(process, decimal-leading-zero);
+      position: absolute;
+      top: 20px;
+      left: 20px;
+      color: var(--gold);
+      font-weight: 800;
+      letter-spacing: 1px;
+    }
+
+    .process-list strong {
+      display: block;
+      margin-bottom: 4px;
+      color: var(--gold-light);
+    }
+
+    .process-list span {
+      color: var(--muted);
+      font-size: 14px;
+    }
+
+    /* IMPORTANT NOTICE */
+
+    .notice {
+      max-width: 850px;
+      margin: 30px auto 0;
+      padding: 22px 24px;
+      background: rgba(212, 175, 55, 0.07);
+      border: 1px solid var(--border);
+      border-left: 4px solid var(--gold);
+      border-radius: 5px;
+      text-align: left;
+    }
+
+    .notice h3 {
+      margin: 0 0 8px;
+      color: var(--gold);
+      font-size: 17px;
+    }
+
+    .notice p {
+      margin: 0;
+      color: #d0d0d0;
+      font-size: 14px;
+    }
+
+    /* APPLY SECTION */
+
+    .apply-section {
+      padding: 80px 0;
+      background:
+        radial-gradient(
+          ellipse at 50% 100%,
+          rgba(114, 89, 28, 0.18),
+          transparent 70%
+        ),
+        #101010;
+      border-top: 1px solid var(--border);
+      text-align: center;
+    }
+
+    .apply-box {
+      max-width: 760px;
+      margin: 0 auto;
+      padding: 40px 28px;
+      background: rgba(11, 11, 11, 0.8);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+    }
+
+    .apply-box h2 {
+      margin-top: 0;
+      color: var(--gold);
+      font-family: Georgia, "Times New Roman", serif;
+      font-size: clamp(27px, 4vw, 38px);
+    }
+
+    .apply-box p {
+      max-width: 620px;
+      margin: 0 auto 24px;
+      color: var(--muted);
+    }
+
+    .apply-caption {
+      margin-top: 16px;
+      color: #999;
+      font-size: 12px;
+    }
+
+    /* FOOTER */
+
+    .site-footer {
+      padding: 32px 0 22px;
+      background: #080808;
+      border-top: 1px solid var(--border);
+      text-align: center;
+    }
+
+    .footer-brand {
+      margin-bottom: 8px;
+      color: var(--gold);
+      font-family: Georgia, "Times New Roman", serif;
+      font-size: 20px;
+      font-weight: 700;
+      letter-spacing: 1px;
+    }
+
+    .footer-motto {
+      margin: 0 0 16px;
+      color: #c9c9c9;
+      font-size: 12px;
+      letter-spacing: 2px;
+    }
+
+    .footer-copy {
+      margin: 0;
+      color: #888;
+      font-size: 12px;
+    }
+
+    .footer-links {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 18px;
+      margin: 0 0 18px;
+    }
+
+    .footer-links a {
+      color: #c5c5c5;
+      font-size: 12px;
+    }
+
+    .footer-links a:hover {
+      color: var(--gold);
+    }
+
+    /* RESPONSIVE */
+
+    @media (max-width: 1000px) {
+      .header-inner {
+        flex-wrap: wrap;
+        justify-content: center;
+        padding: 14px 0;
+        gap: 12px 20px;
+      }
+
+      .brand {
+        margin-right: auto;
+      }
+
+      .main-nav {
+        order: 3;
+        width: 100%;
+        justify-content: center;
+        gap: 12px 20px;
+      }
+
+      .quick-access {
+        margin-left: auto;
+      }
+    }
+
+    @media (max-width: 650px) {
+      .header-inner {
+        width: 94%;
+      }
+
+      .brand-logo {
+        width: 42px;
+        height: 42px;
+      }
+
+      .brand-name {
+        font-size: 12px;
+        letter-spacing: 1px;
+      }
+
+      .brand-subtitle {
+        font-size: 9px;
+        letter-spacing: 2px;
+      }
+
+      .quick-access > summary {
+        padding: 9px;
+        font-size: 11px;
+      }
+
+      .main-nav {
+        justify-content: flex-start;
+        flex-wrap: nowrap;
+        overflow-x: auto;
+        padding: 2px 0 7px;
+        gap: 19px;
+      }
+
+      .main-nav > a,
+      .main-nav > details > summary {
+        font-size: 12px;
+      }
+
+      .dropdown {
+        position: fixed;
+        top: auto;
+        left: auto;
+        margin-top: 0;
+        max-width: 88vw;
+      }
+
+      .membership-hero {
+        padding: 75px 0 65px;
+      }
+
+      .membership-hero p {
+        font-size: 14px;
+      }
+
+      .section {
+        padding: 58px 0;
+      }
+
+      .intro-grid {
+        grid-template-columns: 1fr;
+        gap: 24px;
+      }
+
+      .card-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .info-card {
+        padding: 24px;
+      }
+
+      .process-list li {
+        padding: 18px 17px 18px 60px;
+      }
+
+      .process-list li::before {
+        left: 16px;
+        top: 19px;
+      }
+
+      .notice {
+        padding: 18px;
+      }
+
+      .apply-box {
+        padding: 30px 20px;
+      }
+
+      .button {
+        width: 100%;
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *,
+      *::before,
+      *::after {
+        scroll-behavior: auto !important;
+        transition-duration: 0.01ms !important;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- HEADER -->
+  <header class="site-header">
+    <div class="header-inner">
+
+      <a class="brand" href="index.html" aria-label="CheckmaîtréX Chess Club Home">
+        <img
+          class="brand-logo"
+          src="logo.png"
+          alt="CheckmaîtréX Chess Club logo"
+        >
+        <span>
+          <span class="brand-name">CHECKMAÎTRÉX</span>
+          <span class="brand-subtitle">CHESS CLUB</span>
+        </span>
+      </a>
+
+      <details class="quick-access">
+        <summary>Quick Access</summary>
+        <div class="quick-menu">
+          <a href="index.html">Home</a>
+          <a href="membership.html">Membership</a>
+          <a href="faqs.html">FAQs</a>
+          <a href="contact.html">Contact Us</a>
+          <a href="index.html#about">About This Website</a>
+        </div>
+      </details>
+
+      <nav class="main-nav" aria-label="Main navigation">
+
+        <a href="index.html">Home</a>
+
+        <details>
+          <summary>About Us</summary>
+          <div class="dropdown">
+            <a href="our-story.html">Our Story</a>
+            <a href="mission-vision.html">Mission &amp; Vision</a>
+            <a href="leadership.html">Leadership</a>
+          </div>
+        </details>
+
+        <details>
+          <summary>Activities</summary>
+          <div class="dropdown">
+            <a href="activities.html">All Activities</a>
+            <a href="events.html">Events</a>
+            <a href="development.html">Chess Development</a>
+            <a href="tournaments.html">Tournaments</a>
+          </div>
+        </details>
+
+        <details>
+          <summary>Club Highlights</summary>
+          <div class="dropdown">
+            <a href="highlights.html">All Highlights</a>
+            <a href="achievements.html">Achievements</a>
+            <a href="gallery.html">Club Gallery</a>
+            <a href="news.html">News &amp; Updates</a>
+          </div>
+        </details>
+
+        <details open>
+          <summary>Join Us</summary>
+          <div class="dropdown">
+            <a class="active" href="membership.html" aria-current="page">
+              Membership
+            </a>
+            <a href="faqs.html">FAQs</a>
+            <a href="contact.html">Contact Us</a>
+          </div>
+        </details>
+
+      </nav>
+    </div>
+  </header>
+
+  <main>
+
+    <!-- HERO -->
+    <section class="membership-hero">
+      <div class="container">
+        <span class="eyebrow">Become Part of Our Community</span>
+
+        <h1>Membership</h1>
+
+        <div class="gold-line"></div>
+
+        <p>
+          Every great chess journey begins with a single move.
+          Discover the opportunities to learn, improve, and grow
+          with CheckmaîtréX Chess Club.
+        </p>
+
+        <div class="hero-actions">
+          <a class="button button-primary" href="#apply">
+            Apply for Membership
+          </a>
+
+          <a class="button button-outline" href="#membership-info">
+            Learn About Membership
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <!-- INTRODUCTION -->
+    <section class="section" id="membership-info">
+      <div class="container intro-grid">
+
+        <div class="intro-copy">
+          <span class="eyebrow">Your Chess Journey Starts Here</span>
+
+          <h2 class="section-heading">More Than Just a Game</h2>
+
+          <p>
+            Chess is a game of vision, discipline, and decisive moves.
+            At CheckmaîtréX Chess Club, membership is an opportunity
+            to become part of a community that values learning,
+            strategic thinking, sportsmanship, and continuous growth.
+          </p>
+
+          <p>
+            Whether you are beginning your chess journey or seeking
+            opportunities to further develop your skills, we welcome
+            your interest in becoming part of our club.
+          </p>
+        </div>
+
+        <aside class="intro-panel">
+          <h3>Think Beyond. Move With Purpose.</h3>
+
+          <p>
+            Build your understanding of chess, connect with fellow
+            enthusiasts, and embrace every opportunity to learn
+            through the game.
+          </p>
+        </aside>
+
+      </div>
+    </section>
+
+    <!-- MEMBERSHIP INFORMATION -->
+    <section class="section benefits-section">
+      <div class="container">
+
+        <div class="center">
+          <span class="eyebrow">Membership Overview</span>
+
+          <h2 class="section-heading">Begin Your Next Move</h2>
+
+          <p class="section-intro">
+            Learn about the values and process behind joining
+            CheckmaîtréX Chess Club.
+          </p>
+        </div>
+
+        <div class="card-grid">
+
+          <article class="info-card">
+            <span class="card-number">01</span>
+
+            <h3>Who Can Apply?</h3>
+
+            <p>
+              Anyone interested in chess and the club's community
+              may express their interest through the membership
+              application. Final eligibility is subject to the
+              club's membership requirements and review.
+            </p>
+          </article>
+
+          <article class="info-card">
+            <span class="card-number">02</span>
+
+            <h3>What Can You Expect?</h3>
+
+            <p>
+              Membership is intended to support a shared interest
+              in chess, learning, strategic thinking, discipline,
+              and sportsmanship. Specific activities and benefits
+              depend on the club's programs.
+            </p>
+          </article>
+
+          <article class="info-card">
+            <span class="card-number">03</span>
+
+            <h3>Application Review</h3>
+
+            <p>
+              Every application must be reviewed according to
+              the club's process. Submitting the form alone does
+              not confirm membership or guarantee approval.
+            </p>
+          </article>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- APPLICATION PROCESS -->
+    <section class="section">
+      <div class="container">
+
+        <div class="center">
+          <span class="eyebrow">How It Works</span>
+
+          <h2 class="section-heading">Membership Application Process</h2>
+
+          <p class="section-intro">
+            Follow these steps to submit your application and
+            understand what happens afterward.
+          </p>
+        </div>
+
+        <ol class="process-list">
+
+          <li>
+            <strong>Complete the Application Form</strong>
+            <span>
+              Open the official Google Form and provide the requested
+              information accurately.
+            </span>
+          </li>
+
+          <li>
+            <strong>Submit Your Application</strong>
+            <span>
+              Review your answers before submitting the form.
+              Keep any submission confirmation for your reference.
+            </span>
+          </li>
+
+          <li>
+            <strong>Wait for the Club's Review</strong>
+            <span>
+              Your application must be reviewed before your membership
+              can be officially approved.
+            </span>
+          </li>
+
+          <li>
+            <strong>Receive Your Official Membership Details</strong>
+            <span>
+              If approved, follow the club's instructions for receiving
+              your official membership confirmation and Membership ID,
+              when issued by the club.
+            </span>
+          </li>
+
+        </ol>
+
+        <div class="notice">
+          <h3>Important Membership Notice</h3>
+
+          <p>
+            Submitting a membership application does not automatically
+            make an applicant an official member. Membership is subject
+            to review and approval by CheckmaîtréX Chess Club.
+            A Membership ID should be considered official only after
+            it has been issued or confirmed by the club.
+          </p>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- APPLY -->
+    <section class="apply-section" id="apply">
+      <div class="container">
+        <div class="apply-box">
+
+          <span class="eyebrow">Take the First Step</span>
+
+          <h2>Ready to Make Your Move?</h2>
+
+          <p>
+            Interested in joining CheckmaîtréX Chess Club?
+            Complete the membership application form to express
+            your interest. Please provide accurate information
+            and review your answers before submitting.
+          </p>
+
+          <a
+            class="button button-primary"
+            href="https://docs.google.com/forms/d/e/1FAIpQLScPtr6_lUMY6Y-5CugSHgKwZOnbQDL14q3vQMLWAp4ElMTifg/viewform?pli=1"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            Apply for Membership
+          </a>
+
+          <p class="apply-caption">
+            The application opens in a new tab. Approval is not
+            automatic and is subject to the club's review.
+          </p>
+
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- FOOTER -->
+  <footer class="site-footer">
+    <div class="container">
+
+      <div class="footer-brand">CheckmaîtréX Chess Club</div>
+
+      <p class="footer-motto">Calculate. Conquer. Checkmate.</p>
+
+      <nav class="footer-links" aria-label="Footer navigation">
+        <a href="index.html">Home</a>
+        <a href="membership.html">Membership</a>
+        <a href="faqs.html">FAQs</a>
+        <a href="contact.html">Contact Us</a>
+      </nav>
+
+      <p class="footer-copy">
+        &copy; <span id="current-year">2026</span>
+        CheckmaîtréX Chess Club. All rights reserved.
+      </p>
+
+    </div>
+  </footer>
+
+  <script>
+    // Automatically update the copyright year.
+    document.getElementById("current-year").textContent =
+      new Date().getFullYear();
+
+    // Close other navigation dropdowns when one is opened.
+    const navigationDetails = document.querySelectorAll(
+      ".main-nav > details, .quick-access"
+    );
+
+    navigationDetails.forEach((currentDetails) => {
+      currentDetails.addEventListener("toggle", () => {
+        if (!currentDetails.open) return;
+
+        navigationDetails.forEach((otherDetails) => {
+          if (otherDetails !== currentDetails) {
+            otherDetails.open = false;
+          }
+        });
+      });
+    });
+
+    // Close dropdowns when clicking outside them.
+    document.addEventListener("click", (event) => {
+      navigationDetails.forEach((details) => {
+        if (!details.contains(event.target)) {
+          details.open = false;
+        }
+      });
+    });
+
+    // Close dropdowns with the Escape key.
+    document.addEventListener("keydown", (event) => {
+      if (event.key === "Escape") {
+        navigationDetails.forEach((details) => {
+          details.open = false;
+        });
+      }
+    });
+  </script>
+
+</body>
+</html>
