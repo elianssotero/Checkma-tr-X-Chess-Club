@@ -1,0 +1,720 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#0b0b0b">
+
+  <meta
+    name="description"
+    content="Find answers to frequently asked questions about CheckmaîtréX Chess Club, membership, activities, and contacting the club."
+  >
+
+  <title>FAQs | CheckmaîtréX Chess Club</title>
+
+  <link rel="icon" href="logo.png">
+  <link rel="stylesheet" href="style.css">
+
+  <style>
+    :root {
+      --faq-bg: #0b0b0b;
+      --faq-panel: #141414;
+      --faq-gold: #d4af37;
+      --faq-gold-light: #f0d77b;
+      --faq-text: #f5f5f5;
+      --faq-muted: #b8b8b8;
+      --faq-border: rgba(212, 175, 55, 0.25);
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      margin: 0;
+      background: var(--faq-bg);
+      color: var(--faq-text);
+      font-family: Arial, Helvetica, sans-serif;
+      line-height: 1.7;
+    }
+
+    a {
+      color: inherit;
+    }
+
+    .faq-page {
+      width: min(1100px, 92%);
+      margin: 0 auto;
+      padding: 55px 0 75px;
+    }
+
+    .faq-hero {
+      position: relative;
+      overflow: hidden;
+      padding: clamp(35px, 7vw, 75px) 22px;
+      text-align: center;
+      border: 1px solid var(--faq-border);
+      border-radius: 18px;
+      background:
+        radial-gradient(
+          ellipse at top,
+          rgba(212, 175, 55, 0.15),
+          transparent 65%
+        ),
+        linear-gradient(145deg, #171717, #0d0d0d);
+    }
+
+    .faq-eyebrow {
+      margin: 0 0 12px;
+      color: var(--faq-gold);
+      font-size: 0.76rem;
+      font-weight: 700;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+    }
+
+    .faq-hero h1 {
+      margin: 0;
+      color: var(--faq-gold-light);
+      font-size: clamp(2.1rem, 6vw, 3.7rem);
+      line-height: 1.2;
+    }
+
+    .faq-hero p:last-child {
+      max-width: 650px;
+      margin: 18px auto 0;
+      color: var(--faq-muted);
+      font-size: 1rem;
+    }
+
+    .faq-section {
+      margin-top: 42px;
+    }
+
+    .faq-section-heading {
+      margin-bottom: 22px;
+      text-align: center;
+    }
+
+    .faq-section-heading h2 {
+      margin: 0 0 8px;
+      color: var(--faq-gold-light);
+      font-size: clamp(1.5rem, 4vw, 2rem);
+    }
+
+    .faq-section-heading p {
+      margin: 0;
+      color: var(--faq-muted);
+    }
+
+    .faq-search-wrap {
+      max-width: 650px;
+      margin: 25px auto;
+    }
+
+    .faq-search {
+      width: 100%;
+      padding: 15px 17px;
+      border: 1px solid var(--faq-border);
+      border-radius: 10px;
+      outline: none;
+      background: #151515;
+      color: #fff;
+      font: inherit;
+      transition: border-color 0.2s, box-shadow 0.2s;
+    }
+
+    .faq-search:focus {
+      border-color: var(--faq-gold);
+      box-shadow: 0 0 0 3px rgba(212, 175, 55, 0.12);
+    }
+
+    .faq-search::placeholder {
+      color: #929292;
+    }
+
+    .faq-list {
+      display: grid;
+      gap: 13px;
+    }
+
+    .faq-item {
+      overflow: hidden;
+      border: 1px solid var(--faq-border);
+      border-radius: 12px;
+      background: var(--faq-panel);
+      transition: border-color 0.2s, background 0.2s;
+    }
+
+    .faq-item[open] {
+      border-color: rgba(212, 175, 55, 0.65);
+      background: #181818;
+    }
+
+    .faq-question {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 18px;
+      padding: 19px 20px;
+      color: var(--faq-text);
+      cursor: pointer;
+      font-size: 1rem;
+      font-weight: 700;
+      list-style: none;
+    }
+
+    .faq-question::-webkit-details-marker {
+      display: none;
+    }
+
+    .faq-question::after {
+      content: "+";
+      flex: 0 0 auto;
+      color: var(--faq-gold);
+      font-size: 1.6rem;
+      font-weight: 400;
+      line-height: 1;
+      transition: transform 0.2s;
+    }
+
+    .faq-item[open] .faq-question::after {
+      content: "−";
+    }
+
+    .faq-question:hover {
+      color: var(--faq-gold-light);
+    }
+
+    .faq-question:focus-visible {
+      outline: 2px solid var(--faq-gold);
+      outline-offset: -4px;
+      border-radius: 10px;
+    }
+
+    .faq-answer {
+      padding: 0 20px 20px;
+      color: #c8c8c8;
+      overflow-wrap: anywhere;
+    }
+
+    .faq-answer p {
+      margin: 0 0 12px;
+    }
+
+    .faq-answer p:last-child {
+      margin-bottom: 0;
+    }
+
+    .faq-answer a {
+      color: var(--faq-gold-light);
+      text-decoration: underline;
+      text-underline-offset: 3px;
+    }
+
+    .faq-answer ul {
+      padding-left: 22px;
+    }
+
+    .faq-answer li {
+      margin-bottom: 7px;
+    }
+
+    .faq-empty {
+      display: none;
+      padding: 24px;
+      border: 1px dashed var(--faq-border);
+      border-radius: 12px;
+      color: var(--faq-muted);
+      text-align: center;
+    }
+
+    .faq-contact {
+      margin-top: 45px;
+      padding: clamp(25px, 5vw, 42px);
+      border: 1px solid var(--faq-border);
+      border-radius: 16px;
+      background:
+        radial-gradient(
+          ellipse at top right,
+          rgba(212, 175, 55, 0.1),
+          transparent 65%
+        ),
+        #121212;
+      text-align: center;
+    }
+
+    .faq-contact h2 {
+      margin: 0 0 10px;
+      color: var(--faq-gold-light);
+      font-size: clamp(1.5rem, 4vw, 2rem);
+    }
+
+    .faq-contact p {
+      max-width: 650px;
+      margin: 0 auto 22px;
+      color: var(--faq-muted);
+    }
+
+    .faq-button {
+      display: inline-block;
+      margin: 5px;
+      padding: 12px 22px;
+      border: 1px solid var(--faq-gold);
+      border-radius: 7px;
+      background: var(--faq-gold);
+      color: #111;
+      font-weight: 700;
+      text-decoration: none;
+      transition: background 0.2s, color 0.2s, transform 0.2s;
+    }
+
+    .faq-button:hover {
+      transform: translateY(-2px);
+      background: transparent;
+      color: var(--faq-gold-light);
+    }
+
+    .faq-button.secondary {
+      background: transparent;
+      color: var(--faq-gold-light);
+    }
+
+    .faq-button.secondary:hover {
+      background: var(--faq-gold);
+      color: #111;
+    }
+
+    .faq-footer {
+      padding: 25px 15px;
+      border-top: 1px solid var(--faq-border);
+      color: #999;
+      text-align: center;
+      font-size: 0.88rem;
+    }
+
+    .faq-footer p {
+      margin: 5px 0;
+    }
+
+    .faq-footer strong {
+      color: var(--faq-gold);
+    }
+
+    @media (max-width: 600px) {
+      .faq-page {
+        width: 92%;
+        padding-top: 28px;
+        padding-bottom: 48px;
+      }
+
+      .faq-hero {
+        border-radius: 13px;
+      }
+
+      .faq-question {
+        padding: 16px;
+        font-size: 0.94rem;
+      }
+
+      .faq-answer {
+        padding: 0 16px 17px;
+        font-size: 0.93rem;
+      }
+
+      .faq-contact {
+        border-radius: 13px;
+      }
+
+      .faq-button {
+        width: 100%;
+        max-width: 300px;
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      html {
+        scroll-behavior: auto;
+      }
+
+      *,
+      *::before,
+      *::after {
+        transition-duration: 0.01ms !important;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- HEADER AND NAVIGATION -->
+  <header>
+    <div class="header-container">
+      <a class="brand" href="index.html" aria-label="CheckmaîtréX Chess Club Home">
+        <img
+          src="logo.png"
+          alt="CheckmaîtréX Chess Club logo"
+          class="brand-logo"
+        >
+        <span class="brand-text">
+          <strong>CHECKMAÎTRÉX</strong>
+          <small>CHESS CLUB</small>
+        </span>
+      </a>
+
+      <nav class="navbar" aria-label="Main navigation">
+        <a href="index.html">Home</a>
+
+        <details>
+          <summary>About Us</summary>
+          <div class="dropdown">
+            <a href="our-story.html">Our Story</a>
+            <a href="mission-vision.html">Mission &amp; Vision</a>
+            <a href="leadership.html">Leadership</a>
+          </div>
+        </details>
+
+        <details>
+          <summary>Activities</summary>
+          <div class="dropdown">
+            <a href="activities.html">All Activities</a>
+            <a href="events.html">Events</a>
+            <a href="development.html">Chess Development</a>
+            <a href="tournaments.html">Tournaments</a>
+          </div>
+        </details>
+
+        <details>
+          <summary>Club Highlights</summary>
+          <div class="dropdown">
+            <a href="highlights.html">All Highlights</a>
+            <a href="achievements.html">Achievements</a>
+            <a href="gallery.html">Club Gallery</a>
+            <a href="news.html">News &amp; Updates</a>
+          </div>
+        </details>
+
+        <details>
+          <summary>Join Us</summary>
+          <div class="dropdown">
+            <a href="membership.html">Membership</a>
+            <a href="faqs.html" aria-current="page">FAQs</a>
+            <a href="contact.html">Contact Us</a>
+          </div>
+        </details>
+      </nav>
+    </div>
+  </header>
+
+  <main class="faq-page">
+
+    <!-- PAGE INTRODUCTION -->
+    <section class="faq-hero">
+      <p class="faq-eyebrow">CheckmaîtréX Chess Club</p>
+      <h1>Frequently Asked Questions</h1>
+      <p>
+        Looking for answers? Explore the information below about our club,
+        membership, chess activities, and how to get in touch with us.
+      </p>
+    </section>
+
+    <!-- FAQ CONTENT -->
+    <section class="faq-section" aria-labelledby="faq-heading">
+      <div class="faq-section-heading">
+        <h2 id="faq-heading">How Can We Help You?</h2>
+        <p>Choose a question to reveal its answer.</p>
+      </div>
+
+      <div class="faq-search-wrap">
+        <label for="faqSearch" class="visually-hidden">
+          Search frequently asked questions
+        </label>
+        <input
+          id="faqSearch"
+          class="faq-search"
+          type="search"
+          placeholder="Search a question..."
+          autocomplete="off"
+        >
+      </div>
+
+      <div class="faq-list" id="faqList">
+
+        <details class="faq-item">
+          <summary class="faq-question">
+            1. What is CheckmaîtréX Chess Club?
+          </summary>
+          <div class="faq-answer">
+            <p>
+              CheckmaîtréX Chess Club is a chess community focused on
+              learning, strategic thinking, discipline, sportsmanship,
+              and growth through the game of chess.
+            </p>
+            <p>
+              Our goal is to encourage players to improve their skills,
+              share their passion for chess, and become part of a
+              supportive community.
+            </p>
+          </div>
+        </details>
+
+        <details class="faq-item">
+          <summary class="faq-question">
+            2. Who can join the club?
+          </summary>
+          <div class="faq-answer">
+            <p>
+              People interested in chess and the club's community are
+              welcome to inquire about membership. Specific eligibility
+              requirements, if any, will be explained through the club's
+              official membership process.
+            </p>
+          </div>
+        </details>
+
+        <details class="faq-item">
+          <summary class="faq-question">
+            3. Do I need chess experience to join?
+          </summary>
+          <div class="faq-answer">
+            <p>
+              Not necessarily. If you are interested in chess, you can
+              inquire about joining even if you are still learning.
+              Available learning activities and participation requirements
+              may depend on the club's current programs.
+            </p>
+          </div>
+        </details>
+
+        <details class="faq-item">
+          <summary class="faq-question">
+            4. How can I become a member?
+          </summary>
+          <div class="faq-answer">
+            <p>
+              Visit our Membership page and complete the official
+              membership application form provided there.
+            </p>
+            <p>
+              Make sure your submitted information is accurate and follow
+              any additional instructions given by the club.
+            </p>
+            <p>
+              <a href="membership.html">Visit the Membership page</a>
+              to get started.
+            </p>
+          </div>
+        </details>
+
+        <details class="faq-item">
+          <summary class="faq-question">
+            5. Is there a membership fee?
+          </summary>
+          <div class="faq-answer">
+            <p>
+              Please check the Membership page or contact the club for
+              the latest official information about membership fees,
+              contributions, or other possible costs.
+            </p>
+            <p>
+              Do not assume that a fee is required or that membership
+              is free unless the club has officially confirmed it.
+            </p>
+          </div>
+        </details>
+
+        <details class="faq-item">
+          <summary class="faq-question">
+            6. Does submitting the membership form guarantee approval?
+          </summary>
+          <div class="faq-answer">
+            <p>
+              No. Submitting the application form does not automatically
+              mean that your membership has been approved.
+            </p>
+            <p>
+              Your application must go through the club's applicable
+              confirmation or approval process. Please wait for official
+              instructions or confirmation from the club.
+            </p>
+          </div>
+        </details>
+
+        <details class="faq-item">
+          <summary class="faq-question">
+            7. When will I receive my Membership ID?
+          </summary>
+          <div class="faq-answer">
+            <p>
+              A Membership ID should be considered official only after
+              it has been issued or confirmed by CheckmaîtréX Chess Club.
+            </p>
+            <p>
+              Submitting the form alone does not mean that an ID has
+              already been assigned. Please wait for the club's official
+              confirmation and instructions.
+            </p>
+          </div>
+        </details>
+
+        <details class="faq-item">
+          <summary class="faq-question">
+            8. What activities and events does the club organize?
+          </summary>
+          <div class="faq-answer">
+            <p>
+              Club activities may include chess learning opportunities,
+              community gatherings, chess-related events, and other
+              programs announced by the club.
+            </p>
+            <p>
+              Activities can change over time. Visit our Activities and
+              Events pages for information about currently announced
+              programs.
+            </p>
+            <p>
+              <a href="activities.html">Explore Activities</a>
+              &nbsp;|&nbsp;
+              <a href="events.html">Explore Events</a>
+            </p>
+          </div>
+        </details>
+
+        <details class="faq-item">
+          <summary class="faq-question">
+            9. Does the club organize chess tournaments?
+          </summary>
+          <div class="faq-answer">
+            <p>
+              Tournament opportunities and schedules depend on the
+              club's official plans and announcements. Check the
+              Tournaments page for available information.
+            </p>
+            <p>
+              <a href="tournaments.html">Visit the Tournaments page</a>
+            </p>
+          </div>
+        </details>
+
+        <details class="faq-item">
+          <summary class="faq-question">
+            10. Where can I find club announcements and updates?
+          </summary>
+          <div class="faq-answer">
+            <p>
+              Visit the News &amp; Updates page for announcements
+              published on the website. You may also check the club's
+              established official communication channels for additional
+              announcements.
+            </p>
+            <p>
+              <a href="news.html">Visit News &amp; Updates</a>
+            </p>
+          </div>
+        </details>
+
+        <details class="faq-item">
+          <summary class="faq-question">
+            11. How can I contact CheckmaîtréX Chess Club?
+          </summary>
+          <div class="faq-answer">
+            <p>
+              Visit our Contact Us page for the club's available
+              contact information and communication options.
+            </p>
+            <p>
+              <a href="contact.html">Go to Contact Us</a>
+            </p>
+          </div>
+        </details>
+
+      </div>
+
+      <p class="faq-empty" id="faqEmpty" role="status">
+        No matching questions found. Try another search term.
+      </p>
+    </section>
+
+    <!-- CONTACT CALL TO ACTION -->
+    <section class="faq-contact">
+      <h2>Still Have Questions?</h2>
+      <p>
+        If you cannot find the information you need, visit our Contact Us
+        page to explore the club's available communication options.
+      </p>
+
+      <a class="faq-button" href="contact.html">
+        Connect With Us
+      </a>
+
+      <a class="faq-button secondary" href="membership.html">
+        Membership Information
+      </a>
+    </section>
+
+  </main>
+
+  <!-- FOOTER -->
+  <footer class="faq-footer">
+    <p><strong>CHECKMAÎTRÉX CHESS CLUB</strong></p>
+    <p>Calculate. Conquer. Checkmate.</p>
+    <p>&copy; 2026 CheckmaîtréX Chess Club. All rights reserved.</p>
+  </footer>
+
+  <!-- FAQ SEARCH AND ACCORDION -->
+  <script>
+    document.addEventListener("DOMContentLoaded", () => {
+      const searchInput = document.getElementById("faqSearch");
+      const faqItems = Array.from(
+        document.querySelectorAll(".faq-item")
+      );
+      const emptyMessage = document.getElementById("faqEmpty");
+
+      searchInput.addEventListener("input", () => {
+        const searchTerm = searchInput.value
+          .trim()
+          .toLowerCase();
+
+        let visibleCount = 0;
+
+        faqItems.forEach((item) => {
+          const matches = item.textContent
+            .toLowerCase()
+            .includes(searchTerm);
+
+          item.hidden = !matches;
+
+          if (matches) {
+            visibleCount++;
+          } else {
+            item.open = false;
+          }
+        });
+
+        emptyMessage.style.display =
+          visibleCount === 0 ? "block" : "none";
+      });
+
+      // Keep only one FAQ answer open at a time.
+      faqItems.forEach((item) => {
+        item.addEventListener("toggle", () => {
+          if (item.open) {
+            faqItems.forEach((otherItem) => {
+              if (otherItem !== item) {
+                otherItem.open = false;
+              }
+            });
+          }
+        });
+      });
+    });
+  </script>
+
+</body>
+</html>
