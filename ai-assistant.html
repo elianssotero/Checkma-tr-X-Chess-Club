@@ -280,10 +280,10 @@
       addMessage(message, "user");
       input.value = "";
       send.disabled = true;
-      send.textContent = "Thinking...";
+      send.textContent = "CheckmaîtréX AI is Thinking...";
       status.textContent = "CheckmaîtréX AI is preparing an answer...";
 
-      const waiting = addMessage("Thinking...", "assistant");
+      const waiting = addMessage("CheckmaîtréX AI is Thinking...", "assistant");
 
       try {
         const response = await fetch(WORKER_URL, {
@@ -299,11 +299,11 @@
         }
 
         if (typeof data.answer !== "string") {
-          throw new Error("The AI response was not in the expected format.");
+          throw new Error("The CheckmaîtréX AI response was not in the expected format.");
         }
 
         waiting.textContent = data.answer;
-        status.textContent = "You are chatting with an AI. Responses may be imperfect.";
+        status.textContent = "You are chatting with CheckmaîtréX AI. Responses may be imperfect.";
       } catch (error) {
         waiting.textContent =
           "Sorry, I couldn't get a response. Please try again later.";
