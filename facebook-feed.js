@@ -51,7 +51,19 @@
   const page = location.pathname.split("/").pop().toLowerCase();
   const config = PAGE_CONFIG[page];
 
-  if (!config || document.getElementById("facebook-posts-feed")) return;
+  if (!config) {
+  console.error(
+    "[CheckmaitreX] No page configuration found:",
+    location.pathname
+  );
+  return;
+}
+
+const existingFeed = document.getElementById("facebook-posts-feed");
+
+if (existingFeed) {
+  existingFeed.remove();
+}
 
   const style = document.createElement("style");
   style.textContent = `
