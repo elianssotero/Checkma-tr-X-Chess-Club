@@ -2,6 +2,7 @@
 (() => {
   "use strict";
 
+    alert("Facebook feed script is running!");
   const API_URL =
     "https://checkmaitrex-activities-sync.elianssotero11.workers.dev/api/posts";
 
