@@ -173,6 +173,11 @@ if (existingFeed) {
 
   const section = document.createElement("section");
   section.id = "facebook-posts-feed";
+  section.style.cssText =
+  "display:block;min-height:100px;padding:20px;background:#222;color:#fff;font-size:18px;";
+
+section.textContent =
+  "DIAGNOSTIC: Facebook feed script reached this point.";
   section.innerHTML = `
     <div class="feed-heading">
       <p class="feed-eyebrow">Official Facebook Page</p>
