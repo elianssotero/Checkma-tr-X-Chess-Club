@@ -177,21 +177,21 @@ if (existingFeed) {
   "display:block;min-height:100px;padding:20px;background:#222;color:#fff;font-size:18px;";
 
 section.innerHTML = `
-  <p style="padding:20px;background:#222;color:white;font-size:18px;">
-    DIAGNOSTIC: Facebook feed script reached this point.
+  <div class="feed-heading">
+    <p class="feed-eyebrow">Official Facebook Page</p>
+    <h2></h2>
+    <p class="feed-subtitle"></p>
+  </div>
+  <p class="feed-status" role="status" aria-live="polite">
+    Loading the latest club posts…
   </p>
+  <div class="feed-grid"></div>
 `;
-    <div class="feed-heading">
-      <p class="feed-eyebrow">Official Facebook Page</p>
-      <h2></h2>
-      <p class="feed-subtitle"></p>
-    </div>
-    <p class="feed-status" role="status" aria-live="polite">
-      Loading the latest club posts…
-    </p>
-    <div class="feed-grid"></div>
-  `;
 
+section.insertAdjacentHTML(
+  "afterbegin",
+  '<p style="padding:12px;background:#222;color:white;">DIAGNOSTIC: Script is running.</p>'
+);
   section.querySelector("h2").textContent = config.title;
   section.querySelector(".feed-subtitle").textContent = config.subtitle;
 
