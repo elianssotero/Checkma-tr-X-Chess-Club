@@ -176,9 +176,11 @@ if (existingFeed) {
   section.style.cssText =
   "display:block;min-height:100px;padding:20px;background:#222;color:#fff;font-size:18px;";
 
-section.textContent =
-  "DIAGNOSTIC: Facebook feed script reached this point.";
-  section.innerHTML = `
+section.innerHTML = `
+  <p style="padding:20px;background:#222;color:white;font-size:18px;">
+    DIAGNOSTIC: Facebook feed script reached this point.
+  </p>
+`;
     <div class="feed-heading">
       <p class="feed-eyebrow">Official Facebook Page</p>
       <h2></h2>
