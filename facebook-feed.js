@@ -11,7 +11,7 @@ document.addEventListener("DOMContentLoaded", () => {
   "use strict";
 
   const API_URL =
-    "https://checkmaitrex-ai.elianssotero11.workers.dev/api/posts";
+    "https://checkmaitrex-activities-sync.elianssotero11.workers.dev/api/posts";
 
   const PAGE_CONFIG = {
     "activities.html": {
