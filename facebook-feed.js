@@ -365,5 +365,3 @@ document.addEventListener("DOMContentLoaded", () => {
     });
 });
 ```
-
-I-copy mo lang ang buong code sa itaas at palitan ang laman ng `facebook-feed.js` sa GitHub repo mo. Pagkatapos i-push, auto-deploy na ang Cloudflare Pages at makikita mo na ang mga FB posts sa website.
