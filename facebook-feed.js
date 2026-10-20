@@ -1,4 +1,3 @@
-```javascript
 console.log("[CheckmaitreX] facebook-feed.js loaded");
 
 window.addEventListener("error", function (event) {
