@@ -1,4 +1,11 @@
+console.log("[CheckmaitreX] facebook-feed.js loaded");
 
+window.addEventListener("error", function (event) {
+  console.error(
+    "[CheckmaitreX] JavaScript error:",
+    event.message
+  );
+});
 (() => {
   "use strict";
 
