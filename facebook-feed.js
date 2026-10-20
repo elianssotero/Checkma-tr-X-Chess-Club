@@ -304,13 +304,7 @@ section.insertAdjacentHTML(
         throw new Error(data.error || "Invalid feed response.");
       }
 
-      const allowed = new Set(config.categories);
-
       const posts = data.posts
-        .filter(post =>
-          (post.categories || [post.category])
-            .some(category => allowed.has(category))
-        )
         .sort((a, b) =>
           new Date(b.created_time || 0) -
           new Date(a.created_time || 0)
