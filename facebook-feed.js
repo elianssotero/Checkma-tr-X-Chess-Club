@@ -1,3 +1,4 @@
+```javascript
 console.log("[CheckmaitreX] facebook-feed.js loaded");
 
 window.addEventListener("error", function (event) {
@@ -6,11 +7,12 @@ window.addEventListener("error", function (event) {
     event.message
   );
 });
-(() => {
+
+document.addEventListener("DOMContentLoaded", () => {
   "use strict";
 
   const API_URL =
-    "https://checkmaitrex-activities-sync.elianssotero11.workers.dev/api/posts";
+    "https://checkmaitrex-ai.elianssotero11.workers.dev/api/posts";
 
   const PAGE_CONFIG = {
     "activities.html": {
@@ -59,18 +61,18 @@ window.addEventListener("error", function (event) {
   const config = PAGE_CONFIG[page];
 
   if (!config) {
-  console.error(
-    "[CheckmaitreX] No page configuration found:",
-    location.pathname
-  );
-  return;
-}
+    console.error(
+      "[CheckmaitreX] No page configuration found:",
+      location.pathname
+    );
+    return;
+  }
 
-const existingFeed = document.getElementById("facebook-posts-feed");
+  const existingFeed = document.getElementById("facebook-posts-feed");
 
-if (existingFeed) {
-  existingFeed.remove();
-}
+  if (existingFeed) {
+    existingFeed.remove();
+  }
 
   const style = document.createElement("style");
   style.textContent = `
@@ -107,6 +109,12 @@ if (existingFeed) {
       border: 1px solid #51451e;
       border-radius: 12px;
       color: #ddd;
+    }
+    #facebook-posts-feed .feed-updated {
+      text-align: center;
+      color: #888;
+      font-size: .8rem;
+      margin-top: 16px;
     }
     #facebook-posts-feed .feed-grid {
       display: grid;
@@ -180,37 +188,31 @@ if (existingFeed) {
 
   const section = document.createElement("section");
   section.id = "facebook-posts-feed";
-  section.style.cssText =
-  "display:block;min-height:100px;padding:20px;background:#222;color:#fff;font-size:18px;";
 
-section.innerHTML = `
-  <div class="feed-heading">
-    <p class="feed-eyebrow">Official Facebook Page</p>
-    <h2></h2>
-    <p class="feed-subtitle"></p>
-  </div>
-  <p class="feed-status" role="status" aria-live="polite">
-    Loading the latest club posts…
-  </p>
-  <div class="feed-grid"></div>
-`;
+  section.innerHTML = `
+    <div class="feed-heading">
+      <p class="feed-eyebrow">Official Facebook Page</p>
+      <h2></h2>
+      <p class="feed-subtitle"></p>
+    </div>
+    <p class="feed-status" role="status" aria-live="polite">
+      Loading the latest club posts…
+    </p>
+    <div class="feed-grid"></div>
+  `;
 
-section.insertAdjacentHTML(
-  "afterbegin",
-  '<p style="padding:12px;background:#222;color:white;">DIAGNOSTIC: Script is running.</p>'
-);
   section.querySelector("h2").textContent = config.title;
   section.querySelector(".feed-subtitle").textContent = config.subtitle;
 
   const footer = document.querySelector("footer");
   const main = document.querySelector("main");
 
-  if (footer?.parentNode) {
+  if (footer && footer.parentNode) {
     footer.parentNode.insertBefore(section, footer);
   } else if (main) {
     main.appendChild(section);
   } else {
-    return;
+    document.body.appendChild(section);
   }
 
   const status = section.querySelector(".feed-status");
@@ -226,6 +228,18 @@ section.insertAdjacentHTML(
       year: "numeric",
       month: "short",
       day: "numeric"
+    }).format(date);
+  }
+
+  function formatSyncTime(value) {
+    if (!value) return "";
+    const date = new Date(value);
+    if (Number.isNaN(date.getTime())) return "";
+    return new Intl.DateTimeFormat(undefined, {
+      month: "short",
+      day: "numeric",
+      hour: "2-digit",
+      minute: "2-digit"
     }).format(date);
   }
 
@@ -304,11 +318,22 @@ section.insertAdjacentHTML(
         throw new Error(data.error || "Invalid feed response.");
       }
 
-      const posts = data.posts
-        .sort((a, b) =>
-          new Date(b.created_time || 0) -
-          new Date(a.created_time || 0)
-        );
+      // Filter posts by this page's configured categories
+      const allowedCategories = config.categories || [];
+      let posts = data.posts;
+
+      if (allowedCategories.length > 0) {
+        posts = posts.filter(post => {
+          const postCats = post.categories || [post.category];
+          return postCats.some(c => allowedCategories.includes(c));
+        });
+      }
+
+      // Sort by date, newest first
+      posts.sort((a, b) =>
+        new Date(b.created_time || 0) -
+        new Date(a.created_time || 0)
+      );
 
       status.remove();
 
@@ -324,9 +349,21 @@ section.insertAdjacentHTML(
       const fragment = document.createDocumentFragment();
       posts.forEach(post => fragment.appendChild(createPost(post)));
       grid.appendChild(fragment);
+
+      // Show last synced time
+      if (data.updatedAt) {
+        const updated = document.createElement("p");
+        updated.className = "feed-updated";
+        updated.textContent =
+          `Last synced: ${formatSyncTime(data.updatedAt)}`;
+        grid.insertAdjacentElement("afterend", updated);
+      }
     })
     .catch(error => {
       status.textContent =
         error.message || "Unable to load Facebook posts right now.";
     });
-})();
+});
+```
+
+I-copy mo lang ang buong code sa itaas at palitan ang laman ng `facebook-feed.js` sa GitHub repo mo. Pagkatapos i-push, auto-deploy na ang Cloudflare Pages at makikita mo na ang mga FB posts sa website.
