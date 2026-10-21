@@ -95,7 +95,10 @@
       }
       try {
         const response = await fetch("https://api.github.com/repos/" + owner + "/" + repo + "/contents/" + folder + "?ref=main");
-        if (response.status === 404) { message("No gallery posts have been published yet."); return; }
+        if (response.status === 404) {
+  target.replaceChildren();
+  return;
+        }
         if (!response.ok) throw new Error("Could not retrieve posts.");
         const files = await response.json();
         const jsonFiles = files.filter(file => file.type === "file" && file.name.toLowerCase().endsWith(".json"));
