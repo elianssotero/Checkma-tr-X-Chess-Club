@@ -197,8 +197,8 @@
         const response = await fetch(url);
 
         if (response.status === 404) {
-          showMessage("No highlights have been published yet.");
-          return;
+  target.replaceChildren();
+  return;
         }
         if (!response.ok) throw new Error("Could not retrieve posts.");
 
