@@ -6,7 +6,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="theme-color" content="#0b0b0b">
   <meta name="description" content="Meet CheckmaîtréX AI, your chess learning assistant.">
-  <meta name="color-scheme" content="dark">
+  <meta name="color-scheme" content="dark light">
   <title>CheckmaîtréX AI | Chess Assistant</title>
 
   <style>
@@ -16,748 +16,113 @@
       --panel: #151515;
       --panel-soft: #101010;
       --gold: #d4af37;
+      --gold-light: #f4d879;
+      --gold-dim: #8a7028;
       --text: #f5f1e5;
       --muted: #b8b3a5;
       --border: #51451f;
       --danger: #ffb4a9;
       --success: #d5e8b4;
+      --radius: 12px;
+      --transition: 0.2s ease;
     }
 
-    * {
-      box-sizing: border-box;
+    [data-theme="light"] {
+      color-scheme: light;
+      --bg: #f5f3ef;
+      --panel: #ffffff;
+      --panel-soft: #f0eee8;
+      --gold: #a8861a;
+      --gold-light: #d4af37;
+      --gold-dim: #8a7028;
+      --text: #1a1a1a;
+      --muted: #666;
+      --border: #d4c9a8;
+      --danger: #c44;
+      --success: #4a8a2a;
     }
 
-    html {
-      scroll-behavior: smooth;
-    }
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
 
     body {
       margin: 0;
       min-height: 100vh;
-      background: radial-gradient(
-        ellipse at top,
-        #302711 0%,
-        var(--bg) 48%
-      );
+      background: radial-gradient(ellipse at top, #302711 0%, var(--bg) 48%);
       color: var(--text);
       font-family: system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
       display: flex;
       flex-direction: column;
     }
 
-    button,
-    textarea {
-      font: inherit;
+    [data-theme="light"] body {
+      background: radial-gradient(ellipse at top, #f0ead4 0%, var(--bg) 48%);
     }
+
+    button, textarea { font: inherit; }
 
     header {
       padding: 16px 20px;
       border-bottom: 1px solid var(--border);
       background: #0b0b0bf2;
-    }
-
-    .brand {
-      width: min(850px, 100%);
-      margin: auto;
-      display: flex;
-      align-items: center;
-      gap: 12px;
-    }
-
-    .logo {
-      width: 38px;
-      height: 38px;
-      object-fit: contain;
-      display: block;
-      flex-shrink: 0;
-    }
-
-    .brand-name {
-      color: var(--gold);
-      font-weight: 800;
-      letter-spacing: 1px;
-    }
-
-    .brand-subtitle {
-      font-size: 12px;
-      color: var(--muted);
-      letter-spacing: 2px;
-    }
-
-    main {
-      width: min(800px, 100%);
-      margin: auto;
-      padding: 24px 16px;
-      flex: 1;
-      display: flex;
-      flex-direction: column;
-    }
-
-    .intro {
-      text-align: center;
-      margin-bottom: 20px;
-    }
-
-    .ai-logo {
-      width: 76px;
-      height: 76px;
-      object-fit: contain;
-      display: block;
-      margin: 0 auto;
-    }
-
-    h1 {
-      color: var(--gold);
-      font-size: clamp(27px, 5vw, 38px);
-      margin: 12px 0 8px;
-    }
-
-    .intro p,
-    .note {
-      color: var(--muted);
-      line-height: 1.6;
-    }
-
-    .intro p {
-      margin: 0;
-    }
-
-    .toolbar {
       display: flex;
       align-items: center;
       justify-content: space-between;
       gap: 12px;
-      margin: 0 0 10px;
     }
+    [data-theme="light"] header { background: #ffffffee; }
 
-    .toolbar-label {
-      color: var(--muted);
-      font-size: 13px;
+    .brand { display: flex; align-items: center; gap: 12px; }
+    .logo { width: 38px; height: 38px; object-fit: contain; display: block; flex-shrink: 0; }
+    .brand-name { color: var(--gold); font-weight: 800; letter-spacing: 1px; }
+    .brand-subtitle { font-size: 12px; color: var(--muted); letter-spacing: 2px; }
+    .header-actions { display: flex; align-items: center; gap: 8px; }
+
+    .icon-btn {
+      width: 38px; height: 38px; min-height: 38px;
+      border: 1px solid var(--border); border-radius: 10px;
+      background: var(--panel); color: var(--gold);
+      font-size: 16px; cursor: pointer;
+      display: flex; align-items: center; justify-content: center;
+      transition: var(--transition);
     }
+    .icon-btn:hover:not(:disabled) { border-color: var(--gold); background: #211c10; }
+    [data-theme="light"] .icon-btn:hover:not(:disabled) { background: #f0ead4; }
 
-    .small-button {
-      padding: 8px 12px;
-      min-height: 38px;
-      border: 1px solid var(--border);
-      border-radius: 10px;
-      background: #171717;
-      color: var(--gold);
-      font-size: 13px;
-      font-weight: 650;
-      cursor: pointer;
+    .overlay {
+      position: fixed; inset: 0;
+      background: rgba(0,0,0,0.5); z-index: 150;
+      opacity: 0; pointer-events: none;
+      transition: opacity 0.3s ease;
     }
+    .overlay.show { opacity: 1; pointer-events: auto; }
 
-    .small-button:hover:not(:disabled) {
-      border-color: var(--gold);
-      background: #211c10;
-    }
-
-    .chat {
-      display: flex;
-      flex-direction: column;
-      gap: 14px;
-      min-height: 300px;
-      max-height: 52vh;
-      overflow-y: auto;
-      overscroll-behavior: contain;
-      padding: 16px;
-      background: #101010e8;
-      border: 1px solid var(--border);
-      border-radius: 16px;
-      scrollbar-color: #72591c #101010;
-    }
-
-    .message {
-      padding: 12px 14px;
-      border-radius: 12px;
-      line-height: 1.6;
-      overflow-wrap: anywhere;
-      white-space: pre-wrap;
-      max-width: 94%;
-    }
-
-    .assistant {
-      align-self: flex-start;
-      background: #202020;
-      border: 1px solid #393939;
-    }
-
-    .user {
-      align-self: flex-end;
-      background: #342b13;
-      border: 1px solid var(--border);
-    }
-
-    .message-label {
-      display: block;
-      color: var(--gold);
-      font-size: 11px;
-      font-weight: 800;
-      letter-spacing: .8px;
-      margin-bottom: 5px;
-      text-transform: uppercase;
-    }
-
-    .message-body {
-      display: block;
-    }
-
-    .message.waiting .message-body::after {
-      content: "";
-      display: inline-block;
-      width: 6px;
-      height: 6px;
-      margin-left: 6px;
-      border-radius: 50%;
-      background: var(--gold);
-      animation: pulse 1s infinite alternate;
-    }
-
-    @keyframes pulse {
-      from { opacity: .25; }
-      to { opacity: 1; }
-    }
-
-    .composer {
-      margin-top: 14px;
-    }
-
-    .input-wrap {
-      display: flex;
-      align-items: stretch;
-      gap: 10px;
-    }
-
-    textarea {
-      flex: 1;
-      min-width: 0;
-      min-height: 90px;
-      max-height: 280px;
-      resize: vertical;
-      padding: 14px;
-      border-radius: 12px;
-      border: 1px solid var(--border);
+    .sidebar {
+      position: fixed; top: 0; left: 0;
+      width: 280px; height: 100vh;
       background: var(--panel);
-      color: var(--text);
-      line-height: 1.55;
+      border-right: 1px solid var(--border);
+      transform: translateX(-100%);
+      transition: transform 0.3s ease;
+      z-index: 200; display: flex; flex-direction: column; overflow: hidden;
     }
+    .sidebar.open { transform: translateX(0); }
+    .sidebar-header { padding: 16px; border-bottom: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; }
+    .sidebar-header strong { font-size: 0.95rem; }
+    .sidebar-list { flex: 1; overflow-y: auto; padding: 8px; }
 
-    textarea::placeholder {
-      color: #9b9586;
+    .sidebar-item {
+      padding: 10px 12px; border-radius: 10px; cursor: pointer;
+      font-size: 0.88rem; color: var(--muted);
+      transition: var(--transition); margin-bottom: 4px;
+      display: flex; align-items: center; justify-content: space-between; gap: 8px;
     }
-
-    textarea:focus-visible,
-    button:focus-visible,
-    a:focus-visible {
-      outline: 2px solid var(--gold);
-      outline-offset: 3px;
-    }
-
-    .send-button {
-      min-width: 110px;
-      align-self: stretch;
-      border: 1px solid var(--gold);
-      border-radius: 12px;
-      padding: 12px 18px;
-      background: var(--gold);
-      color: #111;
-      font-weight: 800;
-      cursor: pointer;
-    }
-
-    button:disabled {
-      opacity: .55;
-      cursor: wait;
-    }
-
-    .composer-meta {
-      display: flex;
-      justify-content: space-between;
-      gap: 12px;
-      margin-top: 7px;
-      font-size: 12px;
-      color: var(--muted);
-    }
-
-    .note {
-      font-size: 12px;
-      text-align: center;
-      margin: 16px 0 0;
-      overflow-wrap: anywhere;
-    }
-
-    .note.error {
-      color: var(--danger);
-    }
-
-    .note.success {
-      color: var(--success);
-    }
-
-    .back {
-      display: inline-block;
-      align-self: center;
-      margin-top: 18px;
-      padding: 12px 18px;
-      border: 1px solid var(--gold);
-      border-radius: 12px;
-      background: transparent;
-      color: var(--gold);
-      font-weight: 700;
-      text-decoration: none;
-      text-align: center;
-    }
-
-    .back:hover {
-      background: #211c10;
-    }
-
-    footer {
-      padding: 18px;
-      text-align: center;
-      color: var(--muted);
-      font-size: 12px;
-      border-top: 1px solid #282828;
-      line-height: 1.8;
-    }
-
-    .footer-tagline {
-      color: var(--gold);
-      letter-spacing: .5px;
-    }
-
-    @media (max-width: 520px) {
-      header {
-        padding: 14px 16px;
-      }
-
-      main {
-        padding: 20px 12px;
-      }
-
-      .ai-logo {
-        width: 68px;
-        height: 68px;
-      }
-
-      .chat {
-        min-height: 260px;
-        max-height: 52vh;
-        padding: 12px;
-      }
-
-      .message {
-        max-width: 98%;
-        padding: 11px 12px;
-      }
-
-      .input-wrap {
-        flex-direction: column;
-      }
-
-      textarea {
-        min-height: 110px;
-        max-height: 280px;
-      }
-
-      .send-button {
-        min-height: 48px;
-      }
-
-      .composer-meta {
-        font-size: 11px;
-      }
-    }
-
-    @media (prefers-reduced-motion: reduce) {
-      html {
-        scroll-behavior: auto;
-      }
-
-      *,
-      *::before,
-      *::after {
-        animation-duration: .01ms !important;
-        animation-iteration-count: 1 !important;
-        transition-duration: .01ms !important;
-      }
-    }
-  </style>
-</head>
-
-<body>
-  <header>
-    <div class="brand">
-      <img
-        class="logo"
-        src="logo.png"
-        alt="CheckmaîtréX logo"
-        onerror="this.hidden = true"
-      >
-      <div>
-        <div class="brand-name">CHECKMAÎTRÉX</div>
-        <div class="brand-subtitle">CHESS CLUB</div>
-      </div>
-    </div>
-  </header>
-
-  <main>
-    <section class="intro" aria-labelledby="page-title">
-      <img
-        class="ai-logo"
-        src="ai-logo.png"
-        alt="CheckmaîtréX AI logo"
-        onerror="this.hidden = true"
-      >
-      <h1 id="page-title">CheckmaîtréX AI</h1>
-      <p>Your CheckmaîtréX AI-Powered Chess Assistant</p>
-    </section>
-
-    <div class="toolbar">
-      <span class="toolbar-label">Conversation</span>
-      <button
-        id="clear-chat"
-        class="small-button"
-        type="button"
-      >Clear chat</button>
-    </div>
-
-    <section
-      id="chat"
-      class="chat"
-      aria-label="Conversation"
-      aria-live="polite"
-      aria-relevant="additions"
-    >
-      <div class="message assistant">
-        <span class="message-label">CheckmaîtréX AI</span>
-        <span class="message-body">Hello! I'm CheckmaîtréX AI, your AI assistant.
-
-Ask me anything about chess to get started.</span>
-      </div>
-    </section>
-
-    <form id="chat-form" class="composer">
-      <div class="input-wrap">
-        <textarea
-          id="message"
-          maxlength="12000"
-          required
-          placeholder="Ask CheckmaîtréX AI"
-          aria-label="Your message"
-          autocomplete="off"
-          spellcheck="false"
-        ></textarea>
-        <button id="send" class="send-button" type="submit">
-          Send ♟
-        </button>
-      </div>
-
-      <div class="composer-meta">
-        <span>Enter to send</span>
-        <span id="char-count">0 / 1000</span>
-      </div>
-    </form>
-
-    <p id="status" class="note" role="status" aria-live="polite">
-      CheckmaîtréX AI responses may occasionally be incorrect.
-      Chat history is kept only while this page remains open.
-    </p>
-
-    <a class="back" href="index.html">← Back to the Club Website</a>
-  </main>
-
-  <footer>
-    <div>
-      © <span id="current-year"></span> CheckmaîtréX Chess Club.
-      All rights reserved.
-    </div>
-    <div class="footer-tagline">Calculate. Conquer. Checkmate.</div>
-  </footer>
-
-  <script>
-    "use strict";
-
-    document.getElementById("current-year").textContent =
-      String(new Date().getFullYear());
-
-    const WORKER_URL =
-      "https://checkmaitrex-ai.elianssotero11.workers.dev/";
-
-    const MAX_INPUT_LENGTH = 12000;
-    const MAX_HISTORY_ITEMS = 8;
-    const MAX_HISTORY_ITEM_LENGTH = 1000;
-    const REQUEST_TIMEOUT_MS = 30000;
-
-    const form = document.getElementById("chat-form");
-    const input = document.getElementById("message");
-    const chat = document.getElementById("chat");
-    const send = document.getElementById("send");
-    const status = document.getElementById("status");
-    const clearButton = document.getElementById("clear-chat");
-    const charCount = document.getElementById("char-count");
-
-    /*
-     * This history exists only in this page's memory.
-     * It is not written to localStorage or sent to any other service.
-     */
-    let conversationHistory = [];
-    let isSending = false;
-
-    function scrollChatToBottom() {
-      chat.scrollTop = chat.scrollHeight;
-    }
-
-    function addMessage(text, role, options = {}) {
-      const item = document.createElement("div");
-      item.className = "message " + role;
-
-      if (options.waiting) {
-        item.classList.add("waiting");
-      }
-
-      const label = document.createElement("span");
-      label.className = "message-label";
-      label.textContent = role === "user"
-        ? "You"
-        : "CheckmaîtréX AI";
-
-      const body = document.createElement("span");
-      body.className = "message-body";
-      body.textContent = text;
-
-      item.appendChild(label);
-      item.appendChild(body);
-      chat.appendChild(item);
-
-      scrollChatToBottom();
-
-      return {
-        element: item,
-        body
-      };
-    }
-
-    function setStatus(message, type = "") {
-      status.textContent = message;
-      status.classList.remove("error", "success");
-
-      if (type) {
-        status.classList.add(type);
-      }
-    }
-
-    function updateCharacterCount() {
-      charCount.textContent =
-        input.value.length + " / " + MAX_INPUT_LENGTH;
-    }
-
-    function rememberMessage(role, content) {
-      conversationHistory.push({
-        role,
-        content: content.slice(0, MAX_HISTORY_ITEM_LENGTH)
-      });
-
-      conversationHistory =
-        conversationHistory.slice(-MAX_HISTORY_ITEMS);
-    }
-
-    function getHistoryForRequest() {
-      /*
-       * The current message is sent separately as "message".
-       * Each history item is capped to keep the request within the
-       * Worker body limit.
-       */
-      return conversationHistory
-        .slice(-MAX_HISTORY_ITEMS)
-        .map((item) => ({
-          role: item.role,
-          content: item.content.slice(0, MAX_HISTORY_ITEM_LENGTH)
-        }));
-    }
-
-    function showErrorMessage(error) {
-      if (error && error.name === "AbortError") {
-        return "The request timed out. Please try again.";
-      }
-
-      if (error instanceof TypeError) {
-        return "Could not connect to CheckmaîtréX AI. Check your internet connection and try again.";
-      }
-
-      return error && error.message
-        ? error.message
-        : "Something went wrong. Please try again.";
-    }
-
-    async function requestAI(message, history) {
-      const controller = new AbortController();
-      const timeoutId = setTimeout(
-        () => controller.abort(),
-        REQUEST_TIMEOUT_MS
-      );
-
-      try {
-        const response = await fetch(WORKER_URL, {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json"
-          },
-          body: JSON.stringify({
-            message,
-            history
-          }),
-          signal: controller.signal
-        });
-
-        let data;
-
-        try {
-          data = await response.json();
-        } catch {
-          throw new Error(
-            "The server returned an unreadable response. Please try again."
-          );
-        }
-
-        if (!response.ok) {
-          const errorMessage =
-            typeof data.error === "string"
-              ? data.error
-              : "Request failed with status " + response.status + ".";
-
-          throw new Error(errorMessage);
-        }
-
-        if (typeof data.answer !== "string" || !data.answer.trim()) {
-          throw new Error(
-            "The AI response was empty or in an unexpected format."
-          );
-        }
-
-        return data;
-      } finally {
-        clearTimeout(timeoutId);
-      }
-    }
-
-    form.addEventListener("submit", async (event) => {
-      event.preventDefault();
-
-      if (isSending) return;
-
-      const message = input.value.trim();
-
-      if (!message) {
-        setStatus("Please enter a message first.", "error");
-        input.focus();
-        return;
-      }
-
-      if (message.length > MAX_INPUT_LENGTH) {
-        setStatus("Your message is too long.", "error");
-        return;
-      }
-
-      isSending = true;
-
-      const historyForRequest = getHistoryForRequest();
-
-      addMessage(message, "user");
-
-      input.value = "";
-      updateCharacterCount();
-
-      send.disabled = true;
-      clearButton.disabled = true;
-      send.textContent = "Thinking...";
-      setStatus("CheckmaîtréX AI is preparing an answer...");
-
-      const waiting = addMessage(
-        "Thinking...",
-        "assistant",
-        { waiting: true }
-      );
-
-      try {
-        const data = await requestAI(
-          message,
-          historyForRequest
-        );
-
-        waiting.body.textContent = data.answer;
-        waiting.element.classList.remove("waiting");
-
-        /*
-         * Save this turn in memory only after receiving the answer.
-         * The Worker receives the current message separately.
-         */
-        rememberMessage("user", message);
-        rememberMessage("assistant", data.answer);
-
-        if (data.engine && data.engine.type === "cached") {
-          setStatus(
-            "Answer received. CheckmaîtréX AI engine data was available for this position.",
-            "success"
-          );
-        } else {
-          setStatus(
-            "Answer received. CheckmaîtréX AI responses may be imperfect."
-          );
-        }
-      } catch (error) {
-        waiting.body.textContent = showErrorMessage(error);
-        waiting.element.classList.remove("waiting");
-        setStatus(
-          "The request was not completed. You can try sending your message again.",
-          "error"
-        );
-      } finally {
-        isSending = false;
-        send.disabled = false;
-        clearButton.disabled = false;
-        send.textContent = "Send ♟";
-        scrollChatToBottom();
-        input.focus();
-      }
-    });
-
-    input.addEventListener("input", updateCharacterCount);
-
-    input.addEventListener("keydown", (event) => {
-      if (
-        event.key === "Enter" &&
-        !event.shiftKey &&
-        !event.isComposing
-      ) {
-        event.preventDefault();
-
-        if (!isSending) {
-          form.requestSubmit();
-        }
-      }
-    });
-
-    clearButton.addEventListener("click", () => {
-      if (isSending) return;
-
-      conversationHistory = [];
-
-      chat.replaceChildren();
-
-      addMessage(
-        "Chat cleared. What would you like to explore about chess?",
-        "assistant"
-      );
-
-      setStatus(
-        "Conversation history cleared from this page. It was not permanently saved."
-      );
-
-      input.focus();
-    });
-
-    updateCharacterCount();
-  </script>
-</body>
-</html>
+    .sidebar-item:hover { background: var(--panel-soft); color: var(--text); }
+    .sidebar-item.active { background: var(--panel-soft); color: var(--gold); border-left: 3px solid var(--gold); }
+    .sidebar-item .item-title { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; flex: 1; }
+    .sidebar-item .del-btn { background: none; border: none; color: var(--muted); cursor: pointer; font-size: 16px; padding: 2px 6px; border-radius: 4px; opacity: 0; transition: var(--transition); flex-shrink: 0; }
+    .sidebar-item:hover .del-btn { opacity: 1; }
+    .sidebar-item .del-btn:hover { color: var(--danger); }
+    .sidebar-empty { padding: 24px 16px; text-align: center; color: var(--muted); font-size: 0.85rem; }
+    .sidebar-footer { padding: 12px 16px; border-top: 1px solid var(--border); }
+    .sidebar-footer .icon-btn { width: 100%; justify-content: center; gap: 6px; }
