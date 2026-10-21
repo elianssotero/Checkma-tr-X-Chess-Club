@@ -108,10 +108,10 @@
           .filter(post => post && typeof post === "object" && post.category === categoryFilter)
           .sort((a, b) => new Date(b.date || 0) - new Date(a.date || 0));
         target.replaceChildren();
-        if (!posts.length) { message("No gallery posts have been published yet."); return; }
+        if (!posts.length) { message("CheckmaîtréX Chess Club Gallery"); return; }
         posts.forEach(post => target.appendChild(makeCard(post)));
       } catch (error) {
-        console.error(error); message("Gallery posts could not be loaded. Please check the content folder and try again.");
+        console.error(error); message("Gallery posts could not be loaded. Please check and try again.");
       }
     })();
   </script>
