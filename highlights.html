@@ -221,13 +221,13 @@
 
         target.replaceChildren();
         if (!posts.length) {
-          showMessage("No highlights have been published yet.");
+          showMessage("CheckmaîtréX Chess Club Highlights");
           return;
         }
         posts.forEach(post => target.appendChild(makeCard(post)));
       } catch (error) {
         console.error(error);
-        showMessage("Posts could not be loaded. Please check the content folder and try again.");
+        showMessage("Posts could not be loaded. Please check and try again.");
       }
     })();
   </script>
