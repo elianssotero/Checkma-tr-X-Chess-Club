@@ -611,11 +611,25 @@
             <span class="brand-menu-arrow">▾</span>  
           </summary>  
 
-          <div class="brand-dropdown">  
-            <button type="button" data-feature="settings">  
-              <span aria-hidden="true">⚙</span>  
-              Settings  
-            </button>  
+          
+<div class="brand-dropdown">
+  <button type="button" data-feature="settings">
+    <span aria-hidden="true">⚙</span>
+    Settings
+  </button>
+
+  <button type="button" data-feature="login">
+    <span aria-hidden="true">♟</span>
+    Login
+  </button>
+
+  <button type="button" data-feature="install">
+    <span aria-hidden="true">↓</span>
+    Install App
+  </button>
+  
+</div>
+  
 
             <button type="button" data-feature="install">  
               <span aria-hidden="true">↓</span>  
@@ -1422,11 +1436,9 @@
           closeBrandMenu();  
   
           window.setTimeout(() => {  
-            if (feature === "settings") {  
-              alert(  
-                "Settings\n\nTheme and display preferences will be added here in a future update."  
-              );  
-            }  
+            if (feature === "settings") {
+  window.location.href = "settings.html";
+            } 
   
             if (feature === "install") {  
               alert(  
