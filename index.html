@@ -268,6 +268,110 @@
       background: #292316;
     }
 
+    .main-nav details[open] > .dropdown {
+      animation: dropdownOpen 0.25s ease both;
+      transform-origin: top;
+    }
+
+    .main-nav details.is-closing > .dropdown {
+      animation: dropdownClose 0.22s ease both;
+      pointer-events: none;
+    }
+
+    @keyframes dropdownOpen {
+      from {
+        opacity: 0;
+        transform: translateY(-8px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    @keyframes dropdownClose {
+      from {
+        opacity: 1;
+        transform: translateY(0);
+      }
+      to {
+        opacity: 0;
+        transform: translateY(-8px);
+      }
+    }
+
+    .main-nav details[open]:not(.is-closing) .dropdown a {
+      animation: menuItemFade 0.25s ease both;
+    }
+
+    .main-nav details[open] .dropdown a:nth-child(1) { animation-delay: 0.03s; }
+    .main-nav details[open] .dropdown a:nth-child(2) { animation-delay: 0.06s; }
+    .main-nav details[open] .dropdown a:nth-child(3) { animation-delay: 0.09s; }
+    .main-nav details[open] .dropdown a:nth-child(4) { animation-delay: 0.12s; }
+
+    @keyframes menuItemFade {
+      from {
+        opacity: 0;
+        transform: translateY(-5px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .brand-menu[open] .brand-dropdown {
+      animation: brandMenuOpen 0.25s ease both;
+      transform-origin: top left;
+    }
+
+    .brand-menu[open]:not(.is-closing) .brand-dropdown button {
+      animation: brandItemFade 0.25s ease both;
+    }
+
+    .brand-menu[open] .brand-dropdown button:nth-child(1) { animation-delay: 0.03s; }
+    .brand-menu[open] .brand-dropdown button:nth-child(2) { animation-delay: 0.06s; }
+    .brand-menu[open] .brand-dropdown button:nth-child(3) { animation-delay: 0.09s; }
+    .brand-menu[open] .brand-dropdown button:nth-child(4) { animation-delay: 0.12s; }
+
+    .brand-menu.is-closing .brand-dropdown {
+      animation: brandMenuClose 0.22s ease both;
+      pointer-events: none;
+    }
+
+    @keyframes brandMenuOpen {
+      from {
+        opacity: 0;
+        transform: translateY(-7px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    @keyframes brandItemFade {
+      from {
+        opacity: 0;
+        transform: translateY(-5px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    @keyframes brandMenuClose {
+      from {
+        opacity: 1;
+        transform: translateY(0);
+      }
+      to {
+        opacity: 0;
+        transform: translateY(-7px);
+      }
+    }
+
     main {
       max-width: 1200px;
       margin: 0 auto;
@@ -445,6 +549,18 @@
       .button { width: 100%; }
       .hero-actions { flex-direction: column; }
     }
+
+    @media (prefers-reduced-motion: reduce) {
+      .main-nav details[open] > .dropdown,
+      .main-nav details[open] .dropdown a,
+      .main-nav details.is-closing > .dropdown,
+      .brand-menu[open] .brand-dropdown,
+      .brand-menu[open] .brand-dropdown button,
+      .brand-menu.is-closing .brand-dropdown {
+        animation-duration: 0.01ms;
+        animation-delay: 0ms;
+      }
+    }
   </style>
 </head>
 <body>
@@ -573,14 +689,33 @@
   <script>
     document.getElementById('year').textContent = new Date().getFullYear();
 
-    const allDetails = document.querySelectorAll('details');
+    const allDetails = [
+      ...document.querySelectorAll('.main-nav details'),
+      ...document.querySelectorAll('.brand-menu')
+    ];
+
+    function closeMenu(menu) {
+      if (!menu || !menu.open || menu.classList.contains('is-closing')) return;
+      menu.classList.add('is-closing');
+      setTimeout(() => {
+        menu.removeAttribute('open');
+        menu.classList.remove('is-closing');
+      }, 220);
+    }
+
     allDetails.forEach((detail) => {
       detail.addEventListener('toggle', () => {
         if (!detail.open) return;
         allDetails.forEach((other) => {
-          if (other !== detail) other.removeAttribute('open');
+          if (other !== detail) closeMenu(other);
         });
       });
+    });
+
+    document.addEventListener('click', (event) => {
+      if (!event.target.closest('details')) {
+        allDetails.forEach(closeMenu);
+      }
     });
   </script>
 </body>
