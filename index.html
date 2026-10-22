@@ -1,723 +1,1525 @@
 <!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <meta name="theme-color" content="#0b0b0b" />
-  <meta name="description" content="Official website of CheckmaîtréX Chess Club." />
+<html lang="en">  
+<head>  
+  <meta charset="UTF-8">  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">  
+  <meta name="theme-color" content="#0b0b0b">  
+  <meta name="description" content="Welcome to CheckmaîtréX Chess Club, a community built around chess, strategy, and growth.">
   <title>CheckmaîtréX Chess Club | Official Website</title>
-  <style>
-    :root {
-      --bg: #0b0b0b;
-      --bg-soft: #141414;
-      --panel: #171717;
-      --gold: #d4af37;
-      --gold-soft: #f1d77a;
-      --text: #f5f5f5;
-      --muted: #c5c5c5;
-      --border: rgba(212, 175, 55, 0.55);
-    }
-
-    * { box-sizing: border-box; }
-
-    html { scroll-behavior: smooth; }
-
-    body {
-      margin: 0;
-      background: var(--bg);
-      color: var(--text);
-      font-family: Arial, Helvetica, sans-serif;
-      line-height: 1.6;
-    }
-
-    a {
-      color: var(--gold);
-      text-decoration: none;
-    }
-
-    img {
-      max-width: 100%;
-      display: block;
-    }
-
-    header {
-      position: sticky;
-      top: 0;
-      z-index: 1000;
-      background: rgba(11, 11, 11, 0.97);
-      border-bottom: 1px solid rgba(212, 175, 55, 0.35);
-    }
-
-    nav {
-      max-width: 1200px;
-      margin: 0 auto;
-      padding: 16px 5%;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 24px;
-    }
-
-    .brand-container {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      flex-shrink: 0;
-    }
-
-    .brand {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      color: var(--gold);
-      font-size: 1.1rem;
-      font-weight: 800;
-      letter-spacing: 1px;
-      white-space: nowrap;
-      text-decoration: none;
-      flex-shrink: 0;
-    }
-
-    .brand-logo {
-      width: 52px;
-      height: 52px;
-      object-fit: contain;
-      flex-shrink: 0;
-    }
-
-    .brand-text {
-      display: flex;
-      flex-direction: column;
-      line-height: 1.1;
-    }
-
-    .brand-text small {
-      display: block;
-      color: #eee;
-      font-size: .65rem;
-      letter-spacing: 4px;
-      margin-top: 3px;
-    }
-
-    .brand-menu {
-      position: relative;
-      flex-shrink: 0;
-    }
-
-    .brand-menu > summary {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      width: 30px;
-      height: 30px;
-      padding: 0;
-      list-style: none;
-      cursor: pointer;
-      color: var(--gold);
-      border: 1px solid var(--border);
-      border-radius: 50%;
-      transition: background 0.2s ease, color 0.2s ease;
-    }
-
-    .brand-menu > summary::-webkit-details-marker {
-      display: none;
-    }
-
-    .brand-menu > summary:hover,
-    .brand-menu[open] > summary {
-      background: var(--gold);
-      color: #0b0b0b;
-    }
-
-    .brand-menu-arrow {
-      display: inline-block;
-      transition: transform 0.25s ease;
-    }
-
-    .brand-menu[open] .brand-menu-arrow {
-      transform: rotate(180deg);
-    }
-
-    .brand-dropdown {
-      position: absolute;
-      top: calc(100% + 10px);
-      left: 0;
-      width: 225px;
-      padding: 8px;
-      background: var(--panel);
-      border: 1px solid #8f752d;
-      border-radius: 8px;
-      box-shadow: 0 12px 25px rgba(0,0,0,0.5);
-      z-index: 1001;
-    }
-
-    .brand-dropdown button {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      width: 100%;
-      padding: 11px 12px;
-      border: 0;
-      border-radius: 5px;
-      background: transparent;
-      color: var(--text);
-      text-align: left;
-      font: inherit;
-      font-size: .9rem;
-      cursor: pointer;
-    }
-
-    .brand-dropdown button span {
-      width: 18px;
-      color: var(--gold);
-      text-align: center;
-      flex-shrink: 0;
-    }
-
-    .brand-dropdown button:hover,
-    .brand-dropdown button:focus-visible {
-      background: #292316;
-      color: var(--gold);
-      outline: none;
-    }
-
-    .main-nav {
-      display: flex;
-      align-items: center;
-      gap: 22px;
-      flex-wrap: wrap;
-    }
-
-    .main-nav > a,
-    .main-nav summary {
-      position: relative;
-      display: inline-block;
-      padding: 10px 0;
-      color: #f5f5f5;
-      font-weight: 600;
-      cursor: pointer;
-      list-style: none;
-      white-space: nowrap;
-      text-decoration: none;
-      transition: color 0.2s ease;
-    }
-
-    .main-nav summary::-webkit-details-marker { display: none; }
-
-    .main-nav summary::after {
-      content: " ▾";
-      color: var(--gold);
-    }
-
-    .main-nav > a::before,
-    .main-nav summary::before {
-      content: "";
-      position: absolute;
-      left: 0;
-      right: 0;
-      bottom: 2px;
-      height: 2px;
-      background: var(--gold);
-      transform: scaleX(0);
-      transform-origin: left;
-      transition: transform 0.25s ease;
-    }
-
-    .main-nav > a:hover,
-    .main-nav summary:hover,
-    .main-nav details[open] > summary,
-    .main-nav > a.active {
-      color: var(--gold);
-    }
-
-    .main-nav > a:hover::before,
-    .main-nav > a.active::before,
-    .main-nav summary:hover::before,
-    .main-nav details[open] > summary::before {
-      transform: scaleX(1);
-    }
-
-    .main-nav details {
-      position: relative;
-    }
-
-    .dropdown {
-      position: absolute;
-      top: 100%;
-      left: 0;
-      min-width: 190px;
-      margin-top: 12px;
-      padding: 10px;
-      background: #171717;
-      border: 1px solid #8f752d;
-      border-radius: 8px;
-      box-shadow: 0 12px 25px rgba(0,0,0,0.5);
-      z-index: 20;
-    }
-
-    .dropdown a {
-      display: block;
-      padding: 10px;
-      border-radius: 5px;
-      color: var(--text);
-      text-decoration: none;
-    }
-
-    .dropdown a:hover {
-      color: var(--gold);
-      background: #292316;
-    }
-
-    .main-nav details[open] > .dropdown {
-      animation: dropdownOpen 0.25s ease both;
-      transform-origin: top;
-    }
-
-    .main-nav details.is-closing > .dropdown {
-      animation: dropdownClose 0.22s ease both;
-      pointer-events: none;
-    }
-
-    @keyframes dropdownOpen {
-      from {
-        opacity: 0;
-        transform: translateY(-8px);
-      }
-      to {
-        opacity: 1;
-        transform: translateY(0);
-      }
-    }
-
-    @keyframes dropdownClose {
-      from {
-        opacity: 1;
-        transform: translateY(0);
-      }
-      to {
-        opacity: 0;
-        transform: translateY(-8px);
-      }
-    }
-
-    .main-nav details[open]:not(.is-closing) .dropdown a {
-      animation: menuItemFade 0.25s ease both;
-    }
-
-    .main-nav details[open] .dropdown a:nth-child(1) { animation-delay: 0.03s; }
-    .main-nav details[open] .dropdown a:nth-child(2) { animation-delay: 0.06s; }
-    .main-nav details[open] .dropdown a:nth-child(3) { animation-delay: 0.09s; }
-    .main-nav details[open] .dropdown a:nth-child(4) { animation-delay: 0.12s; }
-
-    @keyframes menuItemFade {
-      from {
-        opacity: 0;
-        transform: translateY(-5px);
-      }
-      to {
-        opacity: 1;
-        transform: translateY(0);
-      }
-    }
-
-    .brand-menu[open] .brand-dropdown {
-      animation: brandMenuOpen 0.25s ease both;
-      transform-origin: top left;
-    }
-
-    .brand-menu[open]:not(.is-closing) .brand-dropdown button {
-      animation: brandItemFade 0.25s ease both;
-    }
-
-    .brand-menu[open] .brand-dropdown button:nth-child(1) { animation-delay: 0.03s; }
-    .brand-menu[open] .brand-dropdown button:nth-child(2) { animation-delay: 0.06s; }
-    .brand-menu[open] .brand-dropdown button:nth-child(3) { animation-delay: 0.09s; }
-    .brand-menu[open] .brand-dropdown button:nth-child(4) { animation-delay: 0.12s; }
-
-    .brand-menu.is-closing .brand-dropdown {
-      animation: brandMenuClose 0.22s ease both;
-      pointer-events: none;
-    }
-
-    @keyframes brandMenuOpen {
-      from {
-        opacity: 0;
-        transform: translateY(-7px);
-      }
-      to {
-        opacity: 1;
-        transform: translateY(0);
-      }
-    }
-
-    @keyframes brandItemFade {
-      from {
-        opacity: 0;
-        transform: translateY(-5px);
-      }
-      to {
-        opacity: 1;
-        transform: translateY(0);
-      }
-    }
-
-    @keyframes brandMenuClose {
-      from {
-        opacity: 1;
-        transform: translateY(0);
-      }
-      to {
-        opacity: 0;
-        transform: translateY(-7px);
-      }
-    }
-
-    main {
-      max-width: 1200px;
-      margin: 0 auto;
-      padding: 0 5% 48px;
-    }
-
-    .hero {
-      padding: 80px 0 40px;
-      text-align: center;
-    }
-
-    .eyebrow {
-      color: var(--gold);
-      font-size: 0.8rem;
-      letter-spacing: 3px;
-      text-transform: uppercase;
-      font-weight: 700;
-    }
-
-    h1 {
-      margin: 20px 0 16px;
-      color: var(--gold-soft);
-      font-size: clamp(2.5rem, 7vw, 5rem);
-      line-height: 1.05;
-    }
-
-    .hero p {
-      max-width: 780px;
-      margin: 0 auto;
-      color: var(--muted);
-      font-size: 1.08rem;
-    }
-
-    .hero-actions {
-      display: flex;
-      justify-content: center;
-      gap: 16px;
-      flex-wrap: wrap;
-      margin-top: 24px;
-    }
-
-    .button {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      min-height: 48px;
-      padding: 12px 20px;
-      border: 1px solid var(--gold);
-      border-radius: 6px;
-      background: var(--gold);
-      color: #111;
-      font-weight: 700;
-      text-decoration: none;
-      transition: 0.2s ease;
-    }
-
-    .button:hover {
-      background: transparent;
-      color: var(--gold);
-    }
-
-    .button.outline {
-      background: transparent;
-      color: var(--gold);
-    }
-
-    .button.outline:hover {
-      background: rgba(212, 175, 55, 0.08);
-    }
-
-    .welcome {
-      padding: 24px 0 12px;
-      text-align: center;
-    }
-
-    .welcome h2 {
-      margin: 10px 0 16px;
-      color: var(--gold-soft);
-      font-size: clamp(2rem, 5vw, 3rem);
-    }
-
-    .welcome > p {
-      max-width: 760px;
-      margin: 0 auto;
-      color: var(--muted);
-      line-height: 1.8;
-    }
-
-    .preview-grid {
-      display: grid;
-      grid-template-columns: repeat(3, minmax(0, 1fr));
-      gap: 18px;
-      margin-top: 30px;
-      text-align: left;
-    }
-
-    .card {
-      padding: 24px;
-      background: var(--bg-soft);
-      border: 1px solid #333;
-      border-radius: 12px;
-      transition: transform 0.2s ease, border-color 0.2s ease;
-    }
-
-    .card:hover {
-      transform: translateY(-4px);
-      border-color: var(--gold);
-    }
-
-    .card h3 {
-      margin-top: 0;
-      color: var(--gold);
-    }
-
-    .card p {
-      color: var(--muted);
-    }
-
-    .section-link {
-      display: inline-block;
-      margin-top: 6px;
-      font-weight: 700;
-    }
-
-    footer {
-      text-align: center;
-      padding: 24px 5% 40px;
-      color: var(--muted);
-      border-top: 1px solid rgba(212, 175, 55, 0.3);
-      background: #080808;
-    }
-
-    .footer-divider {
-      width: min(700px, 100%);
-      height: 2px;
-      background: var(--gold);
-      margin: 14px auto;
-    }
-
-    @media (max-width: 850px) {
-      nav {
-        align-items: flex-start;
-        flex-direction: column;
-        gap: 12px;
-      }
-
-      .main-nav {
-        width: 100%;
-        align-items: stretch;
-        flex-direction: column;
-        gap: 0;
-      }
-
-      .main-nav > a,
-      .main-nav summary {
-        display: block;
-        padding: 12px 0;
-      }
-
-      .dropdown {
-        position: static;
-        margin: 0 0 8px;
-        box-shadow: none;
-      }
-
-      .preview-grid {
-        grid-template-columns: 1fr;
-      }
-    }
-
-    @media (max-width: 400px) {
-      .brand { font-size: 0.95rem; gap: 8px; }
-      .brand-logo { width: 38px; height: 38px; }
-      .brand-text small { font-size: .58rem; letter-spacing: 3px; }
-      .button { width: 100%; }
-      .hero-actions { flex-direction: column; }
-    }
-
-    @media (prefers-reduced-motion: reduce) {
-      .main-nav details[open] > .dropdown,
-      .main-nav details[open] .dropdown a,
-      .main-nav details.is-closing > .dropdown,
-      .brand-menu[open] .brand-dropdown,
-      .brand-menu[open] .brand-dropdown button,
-      .brand-menu.is-closing .brand-dropdown {
-        animation-duration: 0.01ms;
-        animation-delay: 0ms;
-      }
-    }
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="enhancements.css">
+  <style>  
+    /* HEADER AND CLUB LOGO */  
+    header {  
+      position: relative;  
+      z-index: 10;  
+    }  
+
+    header nav {  
+      display: flex;  
+      align-items: center;  
+      justify-content: space-between;  
+      gap: 24px;  
+    }  
+
+    .brand {  
+      display: flex;  
+      align-items: center;  
+      gap: 12px;  
+      color: #d4af37;  
+      font-size: 1.1rem;  
+      font-weight: 800;  
+      letter-spacing: 1px;  
+      white-space: nowrap;  
+      text-decoration: none;  
+      flex-shrink: 0;  
+    }  
+
+    .brand-logo {  
+      width: 52px;  
+      height: 52px;  
+      object-fit: contain;  
+      flex-shrink: 0;  
+    }  
+
+    .brand-text {  
+      display: flex;  
+      flex-direction: column;  
+    }  
+
+    .brand-text small {  
+      display: block;  
+      color: #eee;  
+      font-size: .65rem;  
+      letter-spacing: 4px;  
+      margin-top: 3px;  
+    }  
+
+    /* MAIN NAVIGATION */  
+    .main-nav {  
+      display: flex;  
+      align-items: center;  
+      gap: 22px;  
+    }  
+
+    .main-nav > a,  
+    .main-nav summary {  
+      position: relative;  
+      display: inline-block;  
+      padding: 10px 0;  
+      color: #f5f5f5;  
+      font-weight: 600;  
+      cursor: pointer;  
+      list-style: none;  
+      white-space: nowrap;  
+      text-decoration: none;  
+      transition: color .2s ease;  
+    }  
+
+    .main-nav summary::-webkit-details-marker {  
+      display: none;  
+    }  
+
+    .main-nav summary::after {  
+      content: " ▾";  
+      color: #d4af37;  
+    }  
+
+    /* GOLD UNDERLINE ANIMATION */  
+    .main-nav > a::before,  
+    .main-nav summary::before {  
+      content: "";  
+      position: absolute;  
+      left: 0;  
+      right: 0;  
+      bottom: 2px;  
+      height: 2px;  
+      background: #d4af37;  
+      transform: scaleX(0);  
+      transform-origin: left;  
+      transition: transform .25s ease;  
+    }  
+
+    .main-nav > a:hover,  
+    .main-nav summary:hover,  
+    .main-nav details[open] > summary {  
+      color: #d4af37;  
+    }  
+
+    .main-nav > a:hover::before,  
+    .main-nav > a.active::before,  
+    .main-nav summary:hover::before,  
+    .main-nav details[open] > summary::before {  
+      transform: scaleX(1);  
+    }  
+
+    /* DROPDOWN MENUS */  
+    .main-nav details {  
+      position: relative;  
+    }  
+
+    .dropdown {  
+      position: absolute;  
+      top: 100%;  
+      left: 0;  
+      min-width: 190px;  
+      padding: 10px;  
+      margin-top: 12px;  
+      background: #171717;  
+      border: 1px solid #8f752d;  
+      border-radius: 8px;  
+      box-shadow: 0 12px 25px #0008;  
+      z-index: 20;  
+    }  
+
+    .dropdown a {  
+      display: block;  
+      padding: 10px;  
+      border-radius: 5px;  
+      color: #f5f5f5;  
+      text-decoration: none;  
+    }  
+
+    .dropdown a:hover {  
+      color: #d4af37;  
+      background: #292316;  
+    }  
+
+
+<!-- HERO SECTION -->
+<section class="hero">
+  <div class="eyebrow">Official Club Website</div>
+
+  <h1>Calculate. Conquer.<br>Checkmate.</h1>
+
+  <p>
+    Welcome to CheckmaîtréX Chess Club — where strategy
+    sharpens the mind, discipline builds character, and
+    every move brings new opportunities to excel.
+  </p>
+
+  <div class="hero-actions">
+    <a class="button" href="#page-bottom">
+      Discover Our Club
+    </a>
+
+    <a
+      class="button outline-button"
+      href="contact.html#connect"
+    >
+      Connect With Us
+    </a>
+  </div>
+</section>
+
+
+    /* WELCOME SECTION */  
+    .welcome {  
+      text-align: center;  
+      background: #141414;  
+    }  
+
+    .welcome p {  
+      max-width: 700px;  
+      margin: 16px auto;  
+      color: #c5c5c5;  
+      line-height: 1.8;  
+    }  
+
+    .preview-grid {  
+      display: grid;  
+      grid-template-columns: repeat(3, minmax(0, 1fr));  
+      gap: 18px;  
+      max-width: 1100px;  
+      margin: 30px auto 0;  
+      text-align: left;  
+    }  
+
+    .preview-grid h3 {  
+      color: #d4af37;  
+    }  
+
+    .preview-grid p {  
+      color: #c5c5c5;  
+    }  
+
+    .section-link {  
+      display: inline-block;  
+      margin-top: 10px;  
+      font-weight: bold;  
+    }  
+
+    /* FOOTER */  
+    .footer-divider {  
+      width: 100%;  
+      max-width: 700px;  
+      height: 2px;  
+      border: 0;  
+      background: #d4af37;  
+      margin: 14px auto;  
+    }  
+
+    footer {  
+      text-align: center;  
+    }  
+
+    footer p {  
+      margin: 8px 0;  
+    }  
+
+    /* TABLET AND MOBILE */  
+    @media (max-width: 850px) {  
+      header nav {  
+        align-items: flex-start;  
+        flex-direction: column;  
+        gap: 12px;  
+      }  
+
+      .brand-logo {  
+        width: 44px;  
+        height: 44px;  
+      }  
+
+      .main-nav {  
+        width: 100%;  
+        align-items: stretch;  
+        flex-direction: column;  
+        gap: 0;  
+      }  
+
+      .main-nav > a,  
+      .main-nav summary {  
+        display: block;  
+        padding: 12px 0;  
+      }  
+
+      .main-nav > a::before,  
+      .main-nav summary::before {  
+        bottom: 4px;  
+        right: auto;  
+        width: 100%;  
+        max-width: 180px;  
+      }  
+
+      .dropdown {  
+        position: static;  
+        margin: 0 0 8px;  
+        box-shadow: none;  
+      }  
+
+      .preview-grid {  
+        grid-template-columns: 1fr;  
+      }  
+
+      .hero {  
+        min-height: 60vh;  
+      }  
+    }  
+
+    /* SMALL PHONES */  
+    @media (max-width: 400px) {  
+      .brand {  
+        font-size: .95rem;  
+        gap: 8px;  
+      }  
+
+      .brand-logo {  
+        width: 38px;  
+        height: 38px;  
+      }  
+
+      .brand-text small {  
+        font-size: .58rem;  
+        letter-spacing: 3px;  
+      }  
+
+      .hero h1 {  
+        font-size: 2.4rem;  
+      }  
+    }  
+
+    /* ADDED: SMOOTH DROPDOWN ANIMATION */  
+    .main-nav details[open] > .dropdown {  
+      animation: dropdownOpen 0.25s ease both;  
+      transform-origin: top;  
+    }  
+
+    .main-nav details.is-closing > .dropdown {  
+      animation: dropdownClose 0.22s ease both;  
+      pointer-events: none;  
+    }  
+
+    @keyframes dropdownOpen {  
+      from {  
+        opacity: 0;  
+        transform: translateY(-8px);  
+      }  
+      to {  
+        opacity: 1;  
+        transform: translateY(0);  
+      }  
+    }  
+
+    @keyframes dropdownClose {  
+      from {  
+        opacity: 1;  
+        transform: translateY(0);  
+      }  
+      to {  
+        opacity: 0;  
+        transform: translateY(-8px);  
+      }  
+    }  
+
+    .main-nav details[open]:not(.is-closing) .dropdown a {  
+      animation: menuItemFade 0.25s ease both;  
+    }  
+
+    .main-nav details[open] .dropdown a:nth-child(1) {  
+      animation-delay: 0.03s;  
+    }  
+
+    .main-nav details[open] .dropdown a:nth-child(2) {  
+      animation-delay: 0.06s;  
+    }  
+
+    .main-nav details[open] .dropdown a:nth-child(3) {  
+      animation-delay: 0.09s;  
+    }  
+
+    .main-nav details[open] .dropdown a:nth-child(4) {  
+      animation-delay: 0.12s;  
+    }  
+
+    @keyframes menuItemFade {  
+      from {  
+        opacity: 0;  
+        transform: translateY(-5px);  
+      }  
+      to {  
+        opacity: 1;  
+        transform: translateY(0);  
+      }  
+    }  
+
+    @media (prefers-reduced-motion: reduce) {  
+      .main-nav details[open] > .dropdown,  
+      .main-nav details[open] .dropdown a,  
+      .main-nav details.is-closing > .dropdown {  
+        animation-duration: 0.01ms;  
+      }  
+    }  
+
+    /* ADDED: BRAND QUICK ACCESS MENU */  
+    .brand-container {  
+      display: flex;  
+      align-items: center;  
+      gap: 8px;  
+      flex-shrink: 0;  
+      min-width: 0;  
+    }  
+
+    .brand-menu {  
+      position: relative;  
+      flex-shrink: 0;  
+    }  
+
+    .brand-menu > summary {  
+      display: flex;  
+      align-items: center;  
+      justify-content: center;  
+      width: 30px;  
+      height: 30px;  
+      padding: 0;  
+      list-style: none;  
+      cursor: pointer;  
+      color: #d4af37;  
+      border: 1px solid rgba(212, 175, 55, 0.55);  
+      border-radius: 50%;  
+      transition: background .2s ease, color .2s ease;  
+    }  
+
+    .brand-menu > summary::-webkit-details-marker {  
+      display: none;  
+    }  
+
+    .brand-menu > summary:hover,  
+    .brand-menu[open] > summary {  
+      background: #d4af37;  
+      color: #0b0b0b;  
+    }  
+
+    .brand-menu-arrow {  
+      display: inline-block;  
+      transition: transform .25s ease;  
+    }  
+
+    .brand-menu[open] .brand-menu-arrow {  
+      transform: rotate(180deg);  
+    }  
+
+    .brand-dropdown {  
+      position: absolute;  
+      top: calc(100% + 10px);  
+      left: 0;  
+      width: 225px;  
+      padding: 8px;  
+      background: #171717;  
+      border: 1px solid #8f752d;  
+      border-radius: 8px;  
+      box-shadow: 0 12px 25px #0008;  
+      z-index: 1100;  
+    }  
+
+    .brand-menu[open] .brand-dropdown {  
+      animation: brandMenuOpen .25s ease both;  
+      transform-origin: top left;  
+    }  
+
+    .brand-dropdown button {  
+      display: flex;  
+      align-items: center;  
+      gap: 10px;  
+      width: 100%;  
+      padding: 11px 12px;  
+      border: 0;  
+      border-radius: 5px;  
+      background: transparent;  
+      color: #f5f5f5;  
+      text-align: left;  
+      font: inherit;  
+      font-size: .9rem;  
+      cursor: pointer;  
+    }  
+
+    .brand-dropdown button span {  
+      width: 18px;  
+      color: #d4af37;  
+      text-align: center;  
+      flex-shrink: 0;  
+    }  
+
+    .brand-dropdown button:hover,  
+    .brand-dropdown button:focus-visible {  
+      background: #292316;  
+      color: #d4af37;  
+    }  
+
+    .brand-dropdown button:focus-visible,  
+    .brand-menu > summary:focus-visible {  
+      outline: 2px solid #f1d77a;  
+      outline-offset: 3px;  
+    }  
+
+    @keyframes brandMenuOpen {  
+      from {  
+        opacity: 0;  
+        transform: translateY(-7px);  
+      }  
+      to {  
+        opacity: 1;  
+        transform: translateY(0);  
+      }  
+    }  
+
+    @media (max-width: 400px) {  
+      .brand-dropdown {  
+        width: 205px;  
+      }  
+    }  
+
+    @media (prefers-reduced-motion: reduce) {  
+      .brand-menu[open] .brand-dropdown {  
+        animation: none;  
+      }  
+
+      .brand-menu-arrow {  
+        transition: none;  
+      }  
+    }  
+
+    /* ADDED: QUICK ACCESS MENU ITEM ANIMATIONS */  
+    .brand-menu[open]:not(.is-closing) .brand-dropdown button {  
+      animation: brandItemFade 0.25s ease both;  
+    }  
+
+    .brand-menu[open] .brand-dropdown button:nth-child(1) {  
+      animation-delay: 0.03s;  
+    }  
+
+    .brand-menu[open] .brand-dropdown button:nth-child(2) {  
+      animation-delay: 0.06s;  
+    }  
+
+    .brand-menu[open] .brand-dropdown button:nth-child(3) {  
+      animation-delay: 0.09s;  
+    }  
+
+    .brand-menu[open] .brand-dropdown button:nth-child(4) {  
+      animation-delay: 0.12s;  
+    }  
+
+    /* ADDED: QUICK ACCESS CLOSING ANIMATION */  
+    .brand-menu.is-closing .brand-dropdown {  
+      animation: brandMenuClose 0.22s ease both;  
+      pointer-events: none;  
+    }  
+
+    @keyframes brandItemFade {  
+      from {  
+        opacity: 0;  
+        transform: translateY(-5px);  
+      }  
+      to {  
+        opacity: 1;  
+        transform: translateY(0);  
+      }  
+    }  
+
+    @keyframes brandMenuClose {  
+      from {  
+        opacity: 1;  
+        transform: translateY(0);  
+      }  
+      to {  
+        opacity: 0;  
+        transform: translateY(-7px);  
+      }  
+    }  
+
+    @media (prefers-reduced-motion: reduce) {  
+      .brand-menu[open] .brand-dropdown button,  
+      .brand-menu.is-closing .brand-dropdown {  
+        animation-duration: 0.01ms;  
+        animation-delay: 0ms;  
+      }  
+    }  
+
+/* HERO BUTTON SPACING AND EQUAL SIZE */
+.hero-actions {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 16px;
+}
+
+.hero-actions .hero-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 200px;
+  min-height: 48px;
+  padding: 12px 16px;
+  box-sizing: border-box;
+  text-align: center;
+}
+
+@media (max-width: 460px) {
+  .hero-actions {
+    gap: 12px;
+  }
+
+  .hero-actions .hero-button {
+    width: min(100%, 260px);
+  }
+}
+
   </style>
 </head>
 <body>
-  <header>
+  <!-- HEADER -->
+  <header>  
     <nav aria-label="Main navigation">
-      <div class="brand-container">
-        <a class="brand" href="index.html" aria-label="CheckmaîtréX Chess Club Home">
-          <img class="brand-logo" src="logo.png" alt="CheckmaîtréX Chess Club logo" />
-          <span class="brand-text">
-            CHECKMAÎTRÉX
-            <small>CHESS CLUB</small>
-          </span>
-        </a>
+      <!-- CLUB LOGO AND NAME WITH QUICK ACCESS MENU -->  
+      <div class="brand-container">  
+        <a class="brand" href="index.html" aria-label="CheckmaîtréX Chess Club Home">  
+          <img  
+            class="brand-logo"  
+            src="logo.png"  
+            alt="CheckmaîtréX Chess Club logo"  
+          >  
 
-        <details class="brand-menu">
-          <summary aria-label="Open quick access menu" title="Quick Access">
-            <span class="brand-menu-arrow">▾</span>
-          </summary>
+          <span class="brand-text">  
+            CHECKMAÎTRÉX  
+            <small>CHESS CLUB</small>  
+          </span>  
+        </a>  
 
-          <div class="brand-dropdown">
-            <button type="button" data-feature="settings"><span aria-hidden="true">⚙</span>Settings</button>
-            <button type="button" data-feature="login"><span aria-hidden="true">♟</span>Login</button>
-            <button type="button" data-feature="install"><span aria-hidden="true">↓</span>Install App</button>
-            <button type="button" data-feature="report"><span aria-hidden="true">⚑</span>Report a Problem</button>
-            <button type="button" data-feature="about"><span aria-hidden="true">ⓘ</span>About This Website</button>
-          </div>
-        </details>
+        <details class="brand-menu">  
+          <summary aria-label="Open quick access menu" title="Quick Access">  
+            <span class="brand-menu-arrow">▾</span>  
+          </summary>  
+
+
+div class="brand-dropdown">
+  <button type="button" data-feature="settings">
+    <span aria-hidden="true">⚙</span>
+    Settings
+  </button>
+
+  <button type="button" data-feature="login">
+    <span aria-hidden="true">♟</span>
+    Login
+  </button>
+
+  <button type="button" data-feature="install">
+    <span aria-hidden="true">↓</span>
+    Install App
+  </button>
+
+  <button type="button" data-feature="report">
+    <span aria-hidden="true">⚑</span>
+    Report a Problem
+  </button>
+
+  <button type="button" data-feature="about">
+    <span aria-hidden="true">ⓘ</span>
+    About This Website
+  </button>
       </div>
 
-      <div class="main-nav">
-        <a class="active" href="index.html" aria-current="page">Home</a>
+      <!-- MAIN MENU -->  
+      <div class="main-nav">  
+
+        <a class="active" href="index.html" aria-current="page">Home</a>  
+
         <a href="ai-assistant.html">♟ CheckmaîtréX AI</a>
 
-        <details>
-          <summary>About Us</summary>
-          <div class="dropdown">
-            <a href="our-story.html">Our Story</a>
-            <a href="mission-vision.html">Mission &amp; Vision</a>
-            <a href="leadership.html">Leadership</a>
-          </div>
-        </details>
+        <details>  
+          <summary>About Us</summary>  
+          <div class="dropdown">  
+            <a href="our-story.html">Our Story</a>  
+            <a href="mission-vision.html">Mission &amp; Vision</a>  
+            <a href="leadership.html">Leadership</a>  
+          </div>  
+        </details>  
 
-        <details>
-          <summary>Activities</summary>
-          <div class="dropdown">
-            <a href="activities.html">All Activities</a>
-            <a href="events.html">Events</a>
-            <a href="development.html">Chess Development</a>
-            <a href="tournaments.html">Tournaments</a>
-          </div>
-        </details>
 
-        <details>
-          <summary>Club Highlights</summary>
-          <div class="dropdown">
-            <a href="highlights.html">All Highlights</a>
-            <a href="achievements.html">Achievements</a>
-            <a href="gallery.html">Club Gallery</a>
-            <a href="news.html">News &amp; Updates</a>
-          </div>
-        </details>
+<details>
+  <summary>Activities</summary>
+  <div class="dropdown">
+    <a href="activities.html">All Activities</a>
+    <a href="events.html">Events</a>
+    <a href="development.html">Chess Development</a>
+    <a href="tournaments.html">Tournaments</a>
+  </div>
+</details>
 
-        <details>
-          <summary>Join Us</summary>
-          <div class="dropdown">
-            <a href="membership.html">Membership</a>
-            <a href="faqs.html#faq">FAQs</a>
-            <a href="contact.html#contact">Contact Us</a>
-          </div>
-        </details>
-      </div>
+
+
+         <details>
+           <summary>Club Highlights</summary>
+           <div class="dropdown">
+             <a href="highlights.html">All Highlights</a>
+             <a href="achievements.html">Achievements</a>
+             <a href="gallery.html">Club Gallery</a>
+             <a href="news.html">News &amp; Updates</a>
+           </div>
+         </details>
+
+
+        <details>  
+          <summary>Join Us</summary>  
+          <div class="dropdown">  
+            <a href="membership.html">Membership</a>  
+            <a href="faqs.html#faq">FAQs</a>  
+            <a href="contact.html#contact">Contact Us</a>  
+          </div>  
+        </details>  
+
+      </div>  
     </nav>
   </header>
 
   <main>
-    <section class="hero">
-      <div class="eyebrow">Official Club Website</div>
-      <h1>Calculate. Conquer.<br>Checkmate.</h1>
-      <p>
-        Welcome to CheckmaîtréX Chess Club — where strategy sharpens the mind,
-        discipline builds character, and every move brings new opportunities to excel.
-      </p>
 
-      <div class="hero-actions">
-        <a class="button" href="#page-bottom">Discover Our Club</a>
-        <a class="button outline" href="contact.html#connect">Connect With Us</a>
-      </div>
-    </section>
 
-    <section class="welcome" id="page-bottom">
-      <div class="eyebrow">Welcome to CheckmaîtréX</div>
-      <h2>Where Strategy Meets Excellence</h2>
-      <p>
-        Chess is a game of vision, discipline, and decisive moves. Every match is an opportunity to learn,
-        improve, and grow together as players and as a community. Discover our club, activities, and community
-        through the pages of this website.
-      </p>
+<!-- HERO SECTION -->
+<section class="hero">
+  <div class="eyebrow">Official Club Website</div>
 
-      <div class="preview-grid">
-        <article class="card">
-          <h3>About Our Club</h3>
-          <p>Learn about our identity, values, and goals.</p>
-          <a class="section-link" href="our-story.html">Explore About Us →</a>
-        </article>
+  <h1>Calculate. Conquer.<br>Checkmate.</h1>
 
-        <article class="card">
-          <h3>Activities</h3>
-          <p>Discover club activities, events, and chess developments.</p>
-          <a class="section-link" href="activities.html">Explore Activities →</a>
-        </article>
+  <p>
+    Welcome to CheckmaîtréX Chess Club — where strategy
+    sharpens the mind, discipline builds character, and
+    every move brings new opportunities to excel.
+  </p>
 
-        <article class="card">
-          <h3>Join Our Community</h3>
-          <p>Find out how to connect with CheckmaîtréX.</p>
-          <a class="section-link" href="membership.html">Learn How to Join →</a>
-        </article>
-      </div>
+  <div class="hero-actions">
+    <a class="button hero-button" href="#page-bottom">
+      Discover Our Club
+    </a>
+
+    <a
+      class="button outline-button hero-button"
+      href="contact.html#connect"
+    >
+      Connect With Us
+    </a>
+  </div>
+</section>
+
+
+
+    <!-- WELCOME SECTION -->  
+    <section class="welcome">  
+      <div class="eyebrow">Welcome to CheckmaîtréX</div>  
+
+      <h2>Where Strategy Meets Excellence</h2>  
+
+      <p>  
+        Chess is a game of vision, discipline, and decisive moves.  
+        Every match is an opportunity to learn, improve, and grow  
+        together as players and as a community. Discover our club,  
+        activities, and community through the pages of this website.  
+      </p>  
+
+      <!-- HOMEPAGE PREVIEW CARDS -->  
+      <div class="preview-grid">  
+
+        <article class="card">  
+          <h3>About Our Club</h3>  
+          <p>Learn about our identity, values, and goals.</p>  
+          <a class="section-link" href="about.html">  
+            Explore About Us →  
+          </a>  
+        </article>  
+
+        <article class="card">  
+          <h3>Activities</h3>  
+          <p>Discover club activities, events, and chess developments.</p>  
+          <a class="section-link" href="activities.html">  
+            Explore Activities →  
+          </a>  
+        </article>  
+
+        <article class="card">  
+          <h3>Join Our Community</h3>  
+          <p>Find out how to connect with CheckmaîtréX.</p>  
+          <a class="section-link" href="membership.html">  
+            Learn How to Join →  
+          </a>  
+        </article>  
+
+      </div>  
     </section>
   </main>
 
-  <footer>
+  <!-- FOOTER -->    
+  <footer>  
     <p>© <span id="year"></span> CheckmaîtréX Chess Club</p>
-    <div class="footer-divider" aria-hidden="true"></div>
+    <div class="footer-divider" aria-hidden="true"></div>  
     <p>Calculate. Conquer. Checkmate.</p>
   </footer>
 
-  <script>
-    document.getElementById('year').textContent = new Date().getFullYear();
+  <!-- REPORT A PROBLEM MODAL -->    
+  <div class="report-modal" id="reportModal" hidden>  
+    <section  
+      class="report-modal-panel"  
+      role="dialog"  
+      aria-modal="true"  
+      aria-labelledby="reportModalTitle"  
+      tabindex="-1"  
+    >  
+      <button  
+        class="report-modal-close"  
+        type="button"  
+        aria-label="Close Report a Problem"  
+      >×</button>
+      <p class="report-eyebrow">CHECKMAÎTRÉX CHESS CLUB</p>  
+      <h2 id="reportModalTitle">Report a Problem</h2>  
+      <p class="report-intro">  
+        Help us improve the website. Tell us what happened  
+        and where you encountered the issue.  
+      </p>  
 
-    const allDetails = [
-      ...document.querySelectorAll('.main-nav details'),
-      ...document.querySelectorAll('.brand-menu')
-    ];
+      <div class="report-divider"></div>  
 
-    function closeMenu(menu) {
-      if (!menu || !menu.open || menu.classList.contains('is-closing')) return;
-      menu.classList.add('is-closing');
-      setTimeout(() => {
-        menu.removeAttribute('open');
-        menu.classList.remove('is-closing');
-      }, 220);
-    }
+      <form  
+        id="reportForm"  
+        action="https://formspree.io/f/xvkzdbpa"  
+        method="POST"  
+      >  
+        <label for="reportType">Problem Type <span>*</span></label>  
+        <select id="reportType" name="Problem Type" required>  
+          <option value="" disabled selected>Select a problem type</option>  
+          <option>Bug / Error</option>  
+          <option>Broken Link</option>  
+          <option>Display / Layout Issue</option>  
+          <option>Feature Not Working</option>  
+          <option>Installation Issue</option>  
+          <option>Suggestion / Improvement</option>  
+          <option>Security / Privacy Concern</option>  
+          <option>Other</option>  
+        </select>  
 
-    allDetails.forEach((detail) => {
-      detail.addEventListener('toggle', () => {
-        if (!detail.open) return;
-        allDetails.forEach((other) => {
-          if (other !== detail) closeMenu(other);
-        });
-      });
-    });
+        <label for="reportLocation">  
+          Where did the problem occur? <span>*</span>  
+        </label>  
+        <select id="reportLocation" name="Problem Location" required>  
+          <option value="" disabled selected>Select a location</option>  
+          <option>Homepage</option>  
+          <option>Header / Navigation</option>  
+          <option>Quick Access Menu</option>  
+          <option>About This Website</option>  
+          <option>Settings</option>  
+          <option>Install App</option>  
+          <option>Report a Problem</option>  
+          <option>Footer</option>  
+          <option>Other / Not Sure</option>  
+        </select>  
 
-    document.addEventListener('click', (event) => {
-      if (!event.target.closest('details')) {
-        allDetails.forEach(closeMenu);
-      }
-    });
+        <div id="reportExtraFields"></div>  
+
+        <div  
+          class="report-security-note"  
+          id="reportSecurityNote"  
+          hidden  
+        >  
+          Please do not include passwords, account credentials,  
+          or other sensitive personal information in your report.  
+        </div>  
+
+        <label for="reportDescription">  
+          Description <span>*</span>  
+        </label>  
+        <textarea  
+          id="reportDescription"  
+          name="Description"  
+          rows="5"  
+          placeholder="Describe the problem and what happened..."  
+          required  
+          maxlength="5000"  
+        ></textarea>  
+
+        <label for="reportEmail">  
+          Email <small>(optional)</small>  
+        </label>  
+        <input  
+          id="reportEmail"  
+          type="email"  
+          name="Email"  
+          placeholder="you@example.com"  
+          autocomplete="email"  
+        >  
+
+        <input  
+          type="hidden"  
+          name="_subject"  
+          value="New Report - CheckmaîtréX Chess Club"  
+        >  
+
+        <p class="report-privacy">  
+          Your email is optional. Please share only information  
+          needed to explain the issue.  
+        </p>  
+
+        <div  
+          class="report-status"  
+          id="reportStatus"  
+          role="status"  
+          aria-live="polite"  
+          hidden  
+        ></div>  
+
+        <div class="report-actions">  
+          <button  
+            type="button"  
+            class="report-cancel"  
+            id="reportCancel"  
+          >Cancel</button>  
+
+          <button type="submit" id="reportSubmit">  
+            Submit Report  
+          </button>  
+        </div>  
+      </form>  
+    </section>  
+  </div>    
+
+  <!-- ABOUT THIS WEBSITE MODAL -->    
+  <div class="about-modal" id="aboutModal" hidden>  
+    <section  
+      class="about-modal-panel"  
+      role="dialog"  
+      aria-modal="true"  
+      aria-labelledby="aboutModalTitle"  
+      tabindex="-1"  
+    >  
+      <button  
+        class="about-modal-close"  
+        type="button"  
+        aria-label="Close About This Website"  
+      >×</button>
+      <div class="about-modal-brand">  
+        <img  
+          src="logo.png"  
+          alt="CheckmaîtréX Chess Club logo"  
+        >  
+        <div>  
+          <p class="about-modal-eyebrow">CHECKMAÎTRÉX CHESS CLUB</p>  
+          <h2 id="aboutModalTitle">About This Website</h2>  
+          <p class="about-modal-subtitle">Official Club Website</p>  
+        </div>  
+      </div>  
+
+      <div class="about-modal-divider"></div>  
+
+      <div class="about-modal-content">  
+        <h3>Welcome to CheckmaîtréX Chess Club</h3>  
+        <p>  
+          The official website of CheckmaîtréX Chess Club,  
+          created to showcase our club identity, share our activities,  
+          and celebrate our chess community.  
+        </p>  
+
+        <div class="about-modal-details">  
+          <div class="about-modal-detail">  
+            <span class="about-modal-icon" aria-hidden="true">♞</span>  
+            <div>  
+              <span class="about-modal-label">WEBSITE NAME</span>  
+              <p>CheckmaîtréX Chess Club</p>  
+            </div>  
+          </div>  
+
+          <div class="about-modal-detail">  
+            <span class="about-modal-icon" aria-hidden="true">◆</span>  
+            <div>  
+              <span class="about-modal-label">PLATFORM</span>  
+              <p>Official Club Website</p>  
+            </div>  
+          </div>  
+
+          <div class="about-modal-detail">  
+            <span class="about-modal-icon" aria-hidden="true">✦</span>  
+            <div>  
+              <span class="about-modal-label">DESIGN THEME</span>  
+              <p>Black &amp; Gold</p>  
+            </div>  
+          </div>  
+        </div>  
+
+        <h3 class="about-modal-credits-title">  
+          Credits &amp; Acknowledgment  
+        </h3>  
+        <p class="about-modal-created">Website created by</p>  
+        <p class="about-modal-creator">El.ians Sotero</p>  
+        <p class="about-modal-acknowledgment">  
+          Dedicated to the love of chess, strategic thinking,  
+          and the CheckmaîtréX Chess Club community.  
+        </p>  
+      </div>  
+
+      <div class="about-modal-divider"></div>  
+
+      <footer class="about-modal-footer">  
+        <p>Calculate. Conquer. Checkmate.</p>  
+        <small>  
+          © <span id="aboutModalYear"></span>  
+          CheckmaîtréX Chess Club. All rights reserved.  
+        </small>  
+      </footer>  
+    </section>  
+  </div>    
+
+  <!-- JAVASCRIPT -->    
+  <script>  
+    // Automatically update the copyright year.  
+    document.getElementById("year").textContent =  
+      new Date().getFullYear();  
+
+    const menus = [  
+      ...document.querySelectorAll(".main-nav details")  
+    ];  
+
+    // Close a dropdown with animation.  
+    function closeMenu(menu) {  
+      if (!menu.open || menu.classList.contains("is-closing")) {  
+        return;  
+      }  
+
+      menu.classList.add("is-closing");  
+
+      window.setTimeout(() => {  
+        menu.open = false;  
+        menu.classList.remove("is-closing");  
+      }, 230);  
+    }  
+
+    // Handle dropdown clicks.  
+    menus.forEach((menu) => {  
+      const summary = menu.querySelector("summary");  
+
+      summary.addEventListener("click", (event) => {  
+        event.preventDefault();  
+
+        if (menu.classList.contains("is-closing")) {  
+          return;  
+        }  
+
+        if (menu.open) {  
+          closeMenu(menu);  
+          return;  
+        }  
+
+        // Close other dropdowns smoothly.  
+        menus.forEach((other) => {  
+          if (other !== menu && other.open) {  
+            closeMenu(other);  
+          }  
+        });  
+
+        menu.open = true;  
+      });  
+    });  
+
+    // Close dropdowns when clicking outside the menu.  
+    document.addEventListener("click", (event) => {  
+      if (!event.target.closest(".main-nav")) {  
+        menus.forEach((menu) => {  
+          if (menu.open) {  
+            closeMenu(menu);  
+          }  
+        });  
+      }  
+    });  
+
+    /* ABOUT THIS WEBSITE MODAL */  
+    const aboutModal = document.getElementById("aboutModal");  
+    const aboutModalPanel = aboutModal.querySelector(  
+      ".about-modal-panel"  
+    );  
+    const aboutModalClose = aboutModal.querySelector(  
+      ".about-modal-close"  
+    );  
+    const aboutModalYear = document.getElementById(  
+      "aboutModalYear"  
+    );  
+
+    let aboutModalTrigger = null;  
+    let aboutModalCloseTimer = null;  
+
+    // Automatically update the modal copyright year.  
+    aboutModalYear.textContent = new Date().getFullYear();  
+
+    function openAboutModal() {  
+      window.clearTimeout(aboutModalCloseTimer);  
+
+      aboutModalTrigger = document.querySelector(  
+        '[data-feature="about"]'  
+      );  
+
+      aboutModal.hidden = false;  
+      document.body.style.overflow = "hidden";  
+
+      requestAnimationFrame(() => {  
+        aboutModal.classList.add("is-visible");  
+        aboutModalClose.focus();  
+      });  
+    }  
+
+    function closeAboutModal() {  
+      if (  
+        aboutModal.hidden ||  
+        aboutModalCloseTimer !== null  
+      ) {  
+        return;  
+      }  
+
+      aboutModal.classList.remove("is-visible");  
+
+      aboutModalCloseTimer = window.setTimeout(() => {  
+        aboutModal.hidden = true;  
+        document.body.style.overflow = "";  
+        aboutModalCloseTimer = null;  
+
+        if (aboutModalTrigger) {  
+          aboutModalTrigger.focus();  
+        }  
+      }, 220);  
+    }  
+
+    aboutModalClose.addEventListener(  
+      "click",  
+      closeAboutModal  
+    );  
+
+    // Close when clicking the backdrop.  
+    aboutModal.addEventListener("click", (event) => {  
+      if (event.target === aboutModal) {  
+        closeAboutModal();  
+      }  
+    });  
+
+    // Close the modal with Escape.  
+    document.addEventListener("keydown", (event) => {  
+      if (  
+        event.key === "Escape" &&  
+        !aboutModal.hidden  
+      ) {  
+        closeAboutModal();  
+      }  
+    });  
+
+    // Keep keyboard focus inside the modal.  
+    aboutModal.addEventListener("keydown", (event) => {  
+      if (event.key !== "Tab") return;  
+
+      const focusable = [aboutModalClose];  
+      const first = focusable[0];  
+      const last = focusable[focusable.length - 1];  
+
+      if (  
+        event.shiftKey &&  
+        document.activeElement === first  
+      ) {  
+        event.preventDefault();  
+        last.focus();  
+      } else if (  
+        !event.shiftKey &&  
+        document.activeElement === last  
+      ) {  
+        event.preventDefault();  
+        first.focus();  
+      }  
+    });  
+
+    /* REPORT A PROBLEM MODAL */  
+    const reportModal = document.getElementById("reportModal");  
+    const reportPanel = reportModal.querySelector(".report-modal-panel");  
+    const reportClose = reportModal.querySelector(".report-modal-close");  
+    const reportCancel = document.getElementById("reportCancel");  
+    const reportForm = document.getElementById("reportForm");  
+    const reportType = document.getElementById("reportType");  
+    const reportDescription = document.getElementById("reportDescription");  
+    const reportExtraFields = document.getElementById("reportExtraFields");  
+    const reportSecurityNote = document.getElementById("reportSecurityNote");  
+    const reportStatus = document.getElementById("reportStatus");  
+    const reportSubmit = document.getElementById("reportSubmit");  
+
+    let reportModalTrigger = null;  
+    let reportCloseTimer = null;  
+    let reportSubmitting = false;  
+
+    function openReportModal() {  
+      window.clearTimeout(reportCloseTimer);  
+      reportCloseTimer = null;  
+
+      reportModalTrigger = document.querySelector(  
+        '[data-feature="report"]'  
+      );  
+
+      reportModal.hidden = false;  
+      document.body.style.overflow = "hidden";  
+
+      requestAnimationFrame(() => {  
+        reportModal.classList.add("is-visible");  
+        reportType.focus();  
+      });  
+    }  
+
+    function closeReportModal() {  
+      if (  
+        reportModal.hidden ||  
+        reportCloseTimer !== null ||  
+        reportSubmitting  
+      ) {  
+        return;  
+      }  
+
+      reportModal.classList.remove("is-visible");  
+
+      reportCloseTimer = window.setTimeout(() => {  
+        reportModal.hidden = true;  
+        document.body.style.overflow = "";  
+        reportCloseTimer = null;  
+
+        if (reportModalTrigger) {  
+          reportModalTrigger.focus();  
+        }  
+      }, 220);  
+    }  
+
+    reportClose.addEventListener("click", closeReportModal);  
+    reportCancel.addEventListener("click", closeReportModal);  
+
+    reportModal.addEventListener("click", (event) => {  
+      if (event.target === reportModal) {  
+        closeReportModal();  
+      }  
+    });  
+
+    document.addEventListener("keydown", (event) => {  
+      if (event.key === "Escape" && !reportModal.hidden) {  
+        closeReportModal();  
+      }  
+    });  
+
+    // Keep keyboard focus inside the Report modal.  
+    reportModal.addEventListener("keydown", (event) => {  
+      if (event.key !== "Tab") return;  
+
+      const focusable = [  
+        ...reportPanel.querySelectorAll(  
+          'button:not(:disabled), input:not(:disabled), ' +  
+          'select:not(:disabled), textarea:not(:disabled)'  
+        )  
+      ].filter((element) => element.offsetParent !== null);  
+
+      if (!focusable.length) return;  
+
+      const first = focusable[0];  
+      const last = focusable[focusable.length - 1];  
+
+      if (  
+        event.shiftKey &&  
+        document.activeElement === first  
+      ) {  
+        event.preventDefault();  
+        last.focus();  
+      } else if (  
+        !event.shiftKey &&  
+        document.activeElement === last  
+      ) {  
+        event.preventDefault();  
+        first.focus();  
+      }  
+    });  
+
+    // Change the extra fields based on the selected problem type.  
+    function updateReportFields() {  
+      const type = reportType.value;  
+
+      reportExtraFields.replaceChildren();  
+      reportSecurityNote.hidden =  
+        type !== "Security / Privacy Concern";  
+
+      if (type === "Suggestion / Improvement") {  
+        reportDescription.placeholder =  
+          "Describe your suggestion.";  
+      } else {  
+        reportDescription.placeholder =  
+          "Describe the problem and what happened...";  
+      }  
+
+      const extraOptions = {  
+        "Broken Link": {  
+          label: "Link or button name",  
+          name: "Link or Button Name",  
+          placeholder: "Name or URL of the broken link"  
+        },  
+        "Display / Layout Issue": {  
+          label: "Device or browser",  
+          name: "Device or Browser",  
+          placeholder: "e.g. Android phone, Chrome"  
+        },  
+        "Installation Issue": {  
+          label: "Device type",  
+          name: "Device Type",  
+          placeholder: "e.g. Android phone, iPhone, computer"  
+        }  
+      };  
+
+      const extra = extraOptions[type];  
+
+      if (!extra) return;  
+
+      const label = document.createElement("label");  
+      const input = document.createElement("input");  
+      const id = "reportExtraInput";  
+
+      label.htmlFor = id;  
+      label.textContent = extra.label + " (optional)";  
+
+      input.type = "text";  
+      input.id = id;  
+      input.name = extra.name;  
+      input.placeholder = extra.placeholder;  
+      input.maxLength = 300;  
+
+      reportExtraFields.append(label, input);  
+    }  
+
+    reportType.addEventListener("change", updateReportFields);  
+
+    // Submit the report through Formspree without leaving the website.  
+    reportForm.addEventListener("submit", async (event) => {  
+      event.preventDefault();  
+
+      if (reportSubmitting || !reportForm.reportValidity()) {  
+        return;  
+      }  
+
+      reportSubmitting = true;  
+      reportSubmit.disabled = true;  
+      reportCancel.disabled = true;  
+      reportClose.disabled = true;  
+      reportSubmit.textContent = "Submitting...";  
+
+      reportStatus.hidden = true;  
+      reportStatus.className = "report-status";  
+      reportStatus.textContent = "";  
+
+      try {  
+        const response = await fetch(reportForm.action, {  
+          method: "POST",  
+          body: new FormData(reportForm),  
+          headers: {  
+            Accept: "application/json"  
+          }  
+        });  
+
+        let result = {};  
+
+        try {  
+          result = await response.json();  
+        } catch {  
+          // A non-JSON response is handled as an unsuccessful submission.  
+        }  
+
+        if (!response.ok) {  
+          throw new Error(  
+            result.errors?.map((error) => error.message).join(" ") ||  
+            "The report could not be submitted. Please try again."  
+          );  
+        }  
+
+        reportStatus.textContent =  
+          "Thank you! Your report was submitted successfully.";  
+        reportStatus.classList.add("is-success");  
+        reportStatus.hidden = false;  
+
+        reportForm.reset();  
+        updateReportFields();  
+
+        reportSubmit.textContent = "Submitted";  
+
+        window.setTimeout(() => {  
+          if (!reportModal.hidden) {  
+            closeReportModal();  
+          }  
+        }, 1800);  
+      } catch (error) {  
+        reportStatus.textContent =  
+          error.message ||  
+          "Unable to submit your report. Check your connection and try again.";  
+
+        reportStatus.classList.add("is-error");  
+        reportStatus.hidden = false;  
+
+        reportSubmit.textContent = "Try Again";  
+      } finally {  
+        reportSubmitting = false;  
+        reportSubmit.disabled = false;  
+        reportCancel.disabled = false;  
+        reportClose.disabled = false;  
+
+        if (reportSubmit.textContent !== "Submitted") {  
+          reportSubmit.textContent = "Submit Report";  
+        }  
+      }  
+    });  
+
+    /* QUICK ACCESS MENU BEHAVIOR */  
+    const brandMenu = document.querySelector(".brand-menu");  
+
+    if (brandMenu) {  
+      // Smoothly close the Quick Access Menu.  
+      function closeBrandMenu() {  
+        if (  
+          !brandMenu.open ||  
+          brandMenu.classList.contains("is-closing")  
+        ) {  
+          return;  
+        }  
+
+        brandMenu.classList.add("is-closing");  
+
+        window.setTimeout(() => {  
+          brandMenu.open = false;  
+          brandMenu.classList.remove("is-closing");  
+        }, 220);  
+      }  
+
+      // Close the quick menu when clicking outside it.  
+      document.addEventListener("click", (event) => {  
+        if (!brandMenu.contains(event.target)) {  
+          closeBrandMenu();  
+        }  
+      });  
+
+      // Close the quick menu when Escape is pressed.  
+      document.addEventListener("keydown", (event) => {  
+        if (event.key === "Escape") {  
+          closeBrandMenu();  
+        }  
+      });  
+
+      // Quick Access feature actions.  
+      brandMenu.querySelectorAll("[data-feature]").forEach((button) => {  
+        button.addEventListener("click", () => {  
+          const feature = button.dataset.feature;  
+
+          // Allow the closing animation to finish.  
+          closeBrandMenu();  
+
+          window.setTimeout(() => {  
+            if (feature === "settings") {
+  window.location.href = "settings.html";
+            } 
+            if (feature === "login") {
+  window.location.href = "login.html";
+            }
+
+            if (feature === "install") {  
+              alert(  
+                "Install App\n\nApp installation will be available once the website is configured as an installable web app."  
+              );  
+            }  
+
+            if (feature === "report") {  
+              openReportModal();  
+            }  
+
+            if (feature === "about") {  
+              openAboutModal();  
+            }  
+          }, 220);  
+        });  
+      });  
+    }  
   </script>
-</body>
+  <script>  
+document.addEventListener("DOMContentLoaded", () => {  
+  // 1. Fade-in kapag binuksan ang page  
+  document.body.classList.add("page-loaded");  
+
+  // 2. Scroll reveal para sa sections at cards  
+  const revealItems = document.querySelectorAll(  
+    "main section, .hero, .welcome, .card, .preview-grid"  
+  );  
+
+  revealItems.forEach((item) => {  
+    item.classList.add("reveal");  
+  });  
+
+  if ("IntersectionObserver" in window) {  
+    const observer = new IntersectionObserver(  
+      (entries, currentObserver) => {  
+        entries.forEach((entry) => {  
+          if (entry.isIntersecting) {  
+            entry.target.classList.add("revealed");  
+            currentObserver.unobserve(entry.target);  
+          }  
+        });  
+      },  
+      { threshold: 0.12 }  
+    );  
+
+    revealItems.forEach((item) => observer.observe(item));  
+  } else {  
+    revealItems.forEach((item) => item.classList.add("revealed"));  
+  }  
+
+  // 3. Fade-out bago lumipat sa ibang HTML page  
+  document.querySelectorAll("a[href]").forEach((link) => {  
+    link.addEventListener("click", (event) => {  
+      if (  
+        event.defaultPrevented ||  
+        event.button !== 0 ||  
+        event.ctrlKey ||  
+        event.metaKey ||  
+        event.shiftKey ||  
+        event.altKey ||  
+        link.target === "_blank" ||  
+        link.hasAttribute("download")  
+      ) return;  
+
+      const url = new URL(link.href, window.location.href);  
+
+      if (  
+        url.origin !== window.location.origin ||  
+        url.pathname === window.location.pathname ||  
+        url.hash ||  
+        link.hasAttribute("data-no-transition")  
+      ) return;  
+
+      event.preventDefault();  
+      document.body.classList.add("page-leaving");  
+
+      setTimeout(() => {  
+        window.location.href = url.href;  
+      }, 220);  
+    });  
+  });  
+});  
+</script>
+
+<div id="page-bottom"></div>
+<script src="bfcache-fix.js"></script>
+<script src="site-animations.js"></script>
+
+</body>  
 </html>
