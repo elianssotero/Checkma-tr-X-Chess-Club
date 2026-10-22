@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#0b0b0b">
+  <meta name="description" content="Customize your CheckmaîtréX Chess Club experience.">
+  <title>Settings | CheckmaîtréX Chess Club</title>
+  <link rel="icon" href="logo.png" type="image/png">
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="enhancements.css">
+  <style>
+    .settings-header { position: sticky; top: 0; z-index: 1000; background: rgba(11,11,11,0.97); border-bottom: 1px solid rgba(212,175,55,0.35); backdrop-filter: blur(12px); }
+    .settings-header-inner { width: min(1200px, 92%); min-height: 72px; margin: 0 auto; display: flex; align-items: center; justify-content: space-between; gap: 20px; }
+    .settings-brand { display: flex; align-items: center; gap: 10px; color: var(--gold); text-decoration: none; font-weight: 800; letter-spacing: 1px; white-space: nowrap; }
+    .settings-brand img { width: 44px; height: 44px; object-fit: contain; }
+    .settings-brand small { display: block; color: #ddd; font-size: 10px; letter-spacing: 3px; margin-top: 2px; }
+    .settings-back { display: inline-flex; align-items: center; gap: 6px; padding: 8px 14px; border: 1px solid #8f752d; border-radius: 6px; color: var(--gold); text-decoration: none; font-size: 13px; font-weight: 600; transition: background 0.2s, color 0.2s; }
+    .settings-back:hover { background: var(--gold); color: #0b0b0b; }
+  </style>
+</head>
+<body>  <header class="settings-header">
+    <div class="settings-header-inner">
+      <a class="settings-brand" href="index.html">
+        <img src="logo.png" alt="CheckmaîtréX Chess Club logo">
+        <span>CHECKMAÎTRÉX<small>CHESS CLUB</small></span>
+      </a>
+      <a class="settings-back" href="index.html">&larr; Back to Home</a>
+    </div>
+  </header>
+
+  <div class="settings-page">
+    <div class="settings-hero">
+      <div class="eyebrow">Personalize Your Experience</div>
+      <h1>Settings</h1>
+      <p>Customize how CheckmaîtréX Chess Club looks and behaves. Your preferences are saved on this device.</p>
+    </div>
+
+    <div class="settings-section">
+      <h2>Appearance</h2>
+      <div class="settings-row">
+        <div class="settings-row-label"><strong>Theme</strong><small>Switch between dark and light mode</small></div>
+        <div class="settings-row-control">
+          <div class="theme-previews">
+            <div class="theme-preview dark active" id="themeDark" onclick="setTheme('dark')" title="Dark"></div>
+            <div class="theme-preview light" id="themeLight" onclick="setTheme('light')" title="Light"></div>
+          </div>
+        </div>
+      </div>
+      <div class="settings-row">
+        <div class="settings-row-label"><strong>Font Size</strong><small>Adjust text size for readability</small></div>
+        <div class="settings-row-control">
+          <div class="font-size-options">
+            <button class="font-size-btn" onclick="setFontSize('small', this)">A-</button>
+            <button class="font-size-btn active" onclick="setFontSize('medium', this)">A</button>
+            <button class="font-size-btn" onclick="setFontSize('large', this)">A+</button>
+            <button class="font-size-btn" onclick="setFontSize('xlarge', this)">A++</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="settings-section">
+      <h2>Animations &amp; Motion</h2>
+      <div class="settings-row">
+        <div class="settings-row-label"><strong>Page Animations</strong><small>Scroll reveal and page-load effects</small></div>
+        <div class="settings-row-control">
+          <label class="sa-toggle"><input type="checkbox" id="animationsToggle" checked onchange="setAnimations(this.checked)"><span class="slider"></span></label>
+        </div>
+      </div>
+    </div>
+
+    <div class="settings-section">
+      <h2>Language</h2>
+      <div class="settings-row">
+        <div class="settings-row-label"><strong>Display Language</strong><small>Choose your preferred language</small></div>
+        <div class="settings-row-control">
+          <select class="sa-select" id="languageSelect" onchange="setLanguage(this.value)">
+            <option value="en">English</option>
+            <option value="fil">Filipino</option>
+          </select>
+        </div>
+      </div>
+    </div>
+
+    <div class="settings-section">
+<h2>Animations &amp; Motion</h2>
+      <div class="settings-row">
+        <div class="settings-row-label"><strong>Page Animations</strong><small>Scroll reveal and page-load effects</small></div>
+        <div class="settings-row-control">
+          <label class="sa-toggle"><input type="checkbox" id="animationsToggle" checked onchange="setAnimations(this.checked)"><span class="slider"></span></label>
+        </div>
+      </div>
+    </div>
+
+    <div class="settings-section">
+      <h2>Language</h2>
+      <div class="settings-row">
+        <div class="settings-row-label"><strong>Display Language</strong><small>Choose your preferred language</small></div>
+        <div class="settings-row-control">
+          <select class="sa-select" id="languageSelect" onchange="setLanguage(this.value)">
+            <option value="en">English</option>
+            <option value="fil">Filipino</option>
+          </select>
+        </div>
+      </div>
+    </div>
+
+<div class="settings-section">
+      <h2>Notifications</h2>
+      <div class="settings-row">
+        <div class="settings-row-label"><strong>Event Reminders</strong><small>Get notified about upcoming club events</small></div>
+        <div class="settings-row-control"><label class="sa-toggle"><input type="checkbox" id="notifEvents" checked onchange="saveNotification('events', this.checked)"><span class="slider"></span></label></div>
+      </div>
+      <div class="settings-row">
+        <div class="settings-row-label"><strong>Tournament Updates</strong><small>Receive alerts about tournament announcements</small></div>
+        <div class="settings-row-control"><label class="sa-toggle"><input type="checkbox" id="notifTournaments" checked onchange="saveNotification('tournaments', this.checked)"><span class="slider"></span></label></div>
+      </div>
+      <div class="settings-row">
+        <div class="settings-row-label"><strong>Club News</strong><small>Stay updated with the latest club news</small></div>
+        <div class="settings-row-control"><label class="sa-toggle"><input type="checkbox" id="notifNews" onchange="saveNotification('news', this.checked)"><span class="slider"></span></label></div>
+      </div>
+    </div>
+
+<div class="settings-section">
+      <h2>AI Assistant</h2>
+      <div class="settings-row">
+        <div class="settings-row-label"><strong>Clear Chat History</strong><small>Delete all saved AI conversations on this device</small></div>
+        <div class="settings-row-control"><button class="sa-btn danger" onclick="clearAIHistory()">Clear</button></div>
+      </div>
+      <div class="settings-row">
+        <div class="settings-row-label"><strong>AI Suggestions</strong><small>Show suggested prompts on the AI welcome screen</small></div>
+        <div class="settings-row-control"><label class="sa-toggle"><input type="checkbox" id="aiSuggestions" checked onchange="saveAISetting('suggestions', this.checked)"><span class="slider"></span></label></div>
+      </div>
+    </div>
+
+    <div class="settings-section">
+      <h2>Privacy &amp; Data</h2>
+      <div class="settings-row">
+        <div class="settings-row-label"><strong>Clear All Settings</strong><small>Reset all preferences to default values</small></div>
+        <div class="settings-row-control"><button class="sa-btn danger" onclick="clearAllSettings()">Reset</button></div>
+      </div>
+      <div class="settings-row">
+        <div class="settings-row-label"><strong>Clear Browsing Data</strong><small>Clear localStorage, caches, and saved data</small></div>
+        <div class="settings-row-control"><button class="sa-btn danger" onclick="clearBrowsingData()">Clear</button></div>
+      </div>
+    </div>
+
+<div class="settings-section">
+      <h2>About</h2>
+      <div class="settings-about">
+        <p><strong>CheckmaîtréX Chess Club</strong></p>
+        <p>Official Club Website</p>
+        <p style="margin-top: 10px;">Calculate. Conquer. Checkmate.</p>
+        <p style="margin-top: 10px;">Version 1.0 &middot; &copy; 2026</p>
+      </div>
+    </div>
+  </div>
+
+  <script>
+(function () {
+      var theme = localStorage.getItem("checkmaitrex_theme") || "dark";
+      document.documentElement.setAttribute("data-theme", theme);
+      document.getElementById("themeDark").classList.toggle("active", theme === "dark");
+      document.getElementById("themeLight").classList.toggle("active", theme === "light");
+      var fontSize = localStorage.getItem("checkmaitrex_font_size") || "medium";
+      document.documentElement.setAttribute("data-font-size", fontSize);
+      document.querySelectorAll(".font-size-btn").forEach(function (btn) { btn.classList.remove("active"); });
+      var fontBtn = document.querySelector('.font-size-btn:nth-child(' + ({small:1,medium:2,large:3,xlarge:4}[fontSize] || 2) + ')');
+      if (fontBtn) fontBtn.classList.add("active");
+      var animations = localStorage.getItem("checkmaitrex_animations");
+      if (animations === "off") { document.documentElement.setAttribute("data-animations", "off"); document.getElementById("animationsToggle").checked = false; }
+      var lang = localStorage.getItem("checkmaitrex_language") || "en";
+      document.getElementById("languageSelect").value = lang;
+      ["events","tournaments","news"].forEach(function (key) {
+        var val = localStorage.getItem("checkmaitrex_notif_" + key);
+        var el = document.getElementById("notif" + key.charAt(0).toUpperCase() + key.slice(1));
+        if (el) el.checked = val !== "off";
+      });
+      var aiSug = localStorage.getItem("checkmaitrex_ai_suggestions");
+      if (aiSug === "off") document.getElementById("aiSuggestions").checked = false;
+    })();
+function setTheme(theme) {
+      document.documentElement.setAttribute("data-theme", theme);
+      localStorage.setItem("checkmaitrex_theme", theme);
+      document.getElementById("themeDark").classList.toggle("active", theme === "dark");
+      document.getElementById("themeLight").classList.toggle("active", theme === "light");
+    }
+    function setFontSize(size, btn) {
+      document.documentElement.setAttribute("data-font-size", size);
+      localStorage.setItem("checkmaitrex_font_size", size);
+      document.querySelectorAll(".font-size-btn").forEach(function (b) { b.classList.remove("active"); });
+      if (btn) btn.classList.add("active");
+    }
+    function setAnimations(enabled) {
+      if (enabled) { document.documentElement.removeAttribute("data-animations"); localStorage.setItem("checkmaitrex_animations", "on"); }
+      else { document.documentElement.setAttribute("data-animations", "off"); localStorage.setItem("checkmaitrex_animations", "off"); }
+    }
+    function setLanguage(lang) { localStorage.setItem("checkmaitrex_language", lang); }
+    function saveNotification(key, value) { localStorage.setItem("checkmaitrex_notif_" + key, value ? "on" : "off"); }
+    function saveAISetting(key, value) { localStorage.setItem("checkmaitrex_ai_" + key, value ? "on" : "off"); }
+    function clearAIHistory() { if (!confirm("Delete all AI chat conversations?")) return; localStorage.removeItem("checkmaitrex_conversations"); alert("AI chat history cleared."); }
+    function clearAllSettings() {
+      if (!confirm("Reset all settings to default?")) return;
+      localStorage.removeItem("checkmaitrex_theme"); localStorage.removeItem("checkmaitrex_font_size");
+      localStorage.removeItem("checkmaitrex_animations"); localStorage.removeItem("checkmaitrex_language");
+      localStorage.removeItem("checkmaitrex_notif_events"); localStorage.removeItem("checkmaitrex_notif_tournaments");
+      localStorage.removeItem("checkmaitrex_notif_news"); localStorage.removeItem("checkmaitrex_ai_suggestions");
+      location.reload();
+    }
+    function clearBrowsingData() { if (!confirm("Clear all browsing data?")) return; localStorage.clear(); location.reload(); }
+  </script>
+  <script src="bfcache-fix.js"></script>
+  <script src="site-animations.js"></script>
+</body>
+</html>
