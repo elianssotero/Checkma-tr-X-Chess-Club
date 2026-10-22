@@ -612,7 +612,7 @@
           </summary>  
 
           
-<div class="brand-dropdown">
+div class="brand-dropdown">
   <button type="button" data-feature="settings">
     <span aria-hidden="true">⚙</span>
     Settings
@@ -627,27 +627,17 @@
     <span aria-hidden="true">↓</span>
     Install App
   </button>
-  
-</div>
-  
 
-            <button type="button" data-feature="install">  
-              <span aria-hidden="true">↓</span>  
-              Install App  
-            </button>  
+  <button type="button" data-feature="report">
+    <span aria-hidden="true">⚑</span>
+    Report a Problem
+  </button>
 
-            <button type="button" data-feature="report">  
-              <span aria-hidden="true">⚑</span>  
-              Report a Problem  
-            </button>  
-
-            <button type="button" data-feature="about">  
-              <span aria-hidden="true">ⓘ</span>  
-              About This Website  
-            </button>  
-          </div>  
-        </details>  
-      </div>  
+  <button type="button" data-feature="about">
+    <span aria-hidden="true">ⓘ</span>
+    About This Website
+  </button>
+      </div>
 
       <!-- MAIN MENU -->  
       <div class="main-nav">  
@@ -1439,7 +1429,10 @@
             if (feature === "settings") {
   window.location.href = "settings.html";
             } 
-  
+            if (feature === "login") {
+  window.location.href = "login.html";
+            }
+            
             if (feature === "install") {  
               alert(  
                 "Install App\n\nApp installation will be available once the website is configured as an installable web app."  
