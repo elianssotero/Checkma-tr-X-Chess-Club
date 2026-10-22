@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#0b0b0b">
+  <meta name="description" content="Log in to your CheckmaîtréX Chess Club account.">
+  <title>Login | CheckmaîtréX Chess Club</title>
+  <link rel="icon" href="logo.png" type="image/png">
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="enhancements.css">
+</head>
+<body class="login-page">
+  <div class="login-card">
+    <div class="login-logo">
+      <img src="logo.png" alt="CheckmaîtréX Chess Club logo">
+      <h1>CHECKMAÎTRÉX</h1>
+      <p>Chess Club</p>
+    </div>
+    <div class="login-error" id="loginError">Invalid email or password. Please try again.</div>
+    <form id="loginForm" onsubmit="return handleLogin(event)">
+      <div class="login-field">
+        <label for="loginEmail">Email or Username</label>
+        <div class="login-input-wrap">
+          <input type="text" id="loginEmail" class="login-input" placeholder="you@example.com" required autocomplete="username">
+        </div>
+      </div>
+      <div class="login-field">
+        <label for="loginPassword">Password</label>
+        <div class="login-input-wrap">
+          <input type="password" id="loginPassword" class="login-input" placeholder="Enter your password" required autocomplete="current-password">
+          <button type="button" class="login-toggle-pw" onclick="togglePassword()" id="pwToggle" title="Show password">&#128065;</button>
+        </div>
+      </div>
+      <div class="login-options">
+        <label class="login-remember"><input type="checkbox" id="rememberMe">Remember me</label>
+        <a href="#" class="login-forgot" onclick="forgotPassword(); return false;">Forgot password?</a>
+      </div>
+      <button type="submit" class="login-btn">Log In</button>
+    </form>
+    <div class="login-divider">or</div>
+    <div class="login-register">Don't have an account? <a href="#" onclick="showRegister(); return false;">Sign up</a></div>
+    <a href="index.html" class="login-back">&larr; Back to Home</a>
+  </div>
+  <script>
+    function togglePassword() {
+      var input = document.getElementById("loginPassword");
+      var btn = document.getElementById("pwToggle");
+      if (input.type === "password") { input.type = "text"; btn.innerHTML = "&#128064;"; btn.title = "Hide password"; }
+      else { input.type = "password"; btn.innerHTML = "&#128065;"; btn.title = "Show password"; }
+    }
+    function handleLogin(e) {
+      e.preventDefault();
+      var email = document.getElementById("loginEmail").value.trim();
+      var password = document.getElementById("loginPassword").value;
+      var remember = document.getElementById("rememberMe").checked;
+      var errorEl = document.getElementById("loginError");
+      if (!email || !password) { errorEl.textContent = "Please fill in all fields."; errorEl.classList.add("show"); return false; }
+      if (password.length < 6) { errorEl.textContent = "Password must be at least 6 characters."; errorEl.classList.add("show"); return false; }
+      if (remember) { localStorage.setItem("checkmaitrex_logged_in", "true"); localStorage.setItem("checkmaitrex_user", email); }
+      else { sessionStorage.setItem("checkmaitrex_logged_in", "true"); sessionStorage.setItem("checkmaitrex_user", email); }
+      window.location.href = "index.html";
+      return false;
+    }
+    function forgotPassword() {
+      var email = document.getElementById("loginEmail").value.trim();
+      if (!email) { alert("Please enter your email address first."); return; }
+      alert("Password reset instructions sent to " + email + " (if an account exists).");
+    }
+    function showRegister() { alert("Registration is not yet available. Please contact the club to create an account."); }
+    (function () {
+      var savedUser = localStorage.getItem("checkmaitrex_user");
+      if (savedUser) { document.getElementById("loginEmail").value = savedUser; document.getElementById("rememberMe").checked = true; }
+    })();
+  </script>
+  <script src="bfcache-fix.js"></script>
+</body>
+</html>
