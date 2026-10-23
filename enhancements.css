@@ -371,3 +371,41 @@ html[data-theme="neo-chess"] .settings-row-label strong {
     scroll-behavior: auto !important;
   }
 }
+/* THEME CONSISTENCY FIX */
+html[data-theme] {
+  color-scheme: dark;
+}
+
+html[data-theme] body {
+  background-color: var(--black);
+  color: var(--white);
+}
+
+html[data-theme] .hero,
+html[data-theme] .welcome,
+html[data-theme] .card,
+html[data-theme] footer {
+  color: var(--white);
+}
+
+html[data-theme] .hero p,
+html[data-theme] .welcome p,
+html[data-theme] .card p,
+html[data-theme] footer p {
+  color: var(--muted);
+}
+
+html[data-theme] .hero .button {
+  color: var(--white);
+}
+
+html[data-theme] .hero .outline-button {
+  background: transparent;
+  border: 1px solid var(--gold);
+  color: var(--gold);
+}
+
+html[data-theme] .hero .button:focus-visible {
+  outline: 3px solid var(--light-gold);
+  outline-offset: 4px;
+}
