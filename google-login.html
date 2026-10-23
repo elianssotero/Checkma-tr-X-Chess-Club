@@ -1,0 +1,60 @@
+
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#0b0b0b">
+  <title>Google Login | CheckmaîtréX Chess Club</title>
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="enhancements.css">
+  <link rel="stylesheet" href="auth-pages.css">
+</head>
+<body>
+  <main class="auth-shell">
+    <section class="auth-card">
+      <div class="auth-brand">
+        <div class="auth-mark" aria-hidden="true">♟</div>
+        <h1>CHECKMAÎTRÉX</h1>
+        <p>Chess Club</p>
+      </div>
+
+      <h2>Google Login</h2>
+      <p class="auth-intro">
+        Use Google to sign in when the club's authentication service
+        has been configured.
+      </p>
+
+      <div class="auth-note">
+        <strong>Setup required:</strong> Google sign-in is not connected yet.
+        This preview will not sign you in or create a session. Your
+        membership application status is managed separately.
+      </div>
+
+      <button class="auth-action" type="button" id="googleButton">
+        Continue with Google
+      </button>
+
+      <div class="auth-status" id="authStatus" role="status">
+        Google authentication has not been configured. No sign-in was
+        attempted and no data was saved.
+      </div>
+
+      <div class="auth-links">
+        <a href="login-selection.html">Back to Login Options</a>
+        <a href="membership-application.html">Apply for Membership</a>
+      </div>
+
+      <a class="auth-home" href="index.html">← Back to Home</a>
+    </section>
+  </main>
+
+  <script src="site-animations.js"></script>
+  <script src="language.js"></script>
+  <script>
+    document.getElementById("googleButton").addEventListener("click", function () {
+      document.getElementById("authStatus").classList.add("show");
+    });
+  </script>
+</body>
+</html>
