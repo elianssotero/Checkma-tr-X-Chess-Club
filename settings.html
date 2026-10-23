@@ -552,7 +552,31 @@
         "This clears this website's local storage, including saved preferences and other local data. Continue?"
       )) return;
 
-      localStorage.clear();
+      
+function clearBrowsingData() {
+  const confirmed = confirm(
+    "Clear saved CheckmaîtréX website settings? " +
+    "This will reset your saved theme and preferences."
+  );
+
+  if (!confirmed) return;
+
+  const keys = [
+    "checkmaitrex_theme",
+    "checkmaitrex_font_size",
+    "checkmaitrex_animations",
+    "checkmaitrex_language",
+    "checkmaitrex_notif_events",
+    "checkmaitrex_notif_tournaments",
+    "checkmaitrex_notif_news",
+    "checkmaitrex_ai_suggestions"
+  ];
+
+  keys.forEach((key) => localStorage.removeItem(key));
+
+  location.reload();
+}
+
       location.reload();
     }
   </script>
