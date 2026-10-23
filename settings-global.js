@@ -32,15 +32,24 @@ try {
 
   // Apply the saved font size.
   var allowedSizes = ["small", "medium", "large", "xlarge"];
-  var savedSize = localStorage.getItem("checkmaitrex_font_size") || "medium";
-  var fontSize = allowedSizes.indexOf(savedSize) !== -1
-    ? savedSize
-    : "medium";
+  var savedSize = "medium";
+
+try {
+  savedSize = localStorage.getItem("checkmaitrex_font_size") || "medium";
+} catch (error) {
+  console.warn("Unable to load saved font size.", error);
+}
 
   root.setAttribute("data-font-size", fontSize);
 
   // Apply the animation preference.
-  var animations = localStorage.getItem("checkmaitrex_animations") || "on";
+  var animations = "on";
+
+try {
+  animations = localStorage.getItem("checkmaitrex_animations") || "on";
+} catch (error) {
+  console.warn("Unable to load animation preference.", error);
+}
 
   if (animations === "off") {
     root.setAttribute("data-animations", "off");
