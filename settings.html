@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -9,71 +10,257 @@
   <link rel="icon" href="logo.png" type="image/png">
   <link rel="stylesheet" href="style.css">
   <link rel="stylesheet" href="enhancements.css">
+
   <style>
-    .settings-header { position: sticky; top: 0; z-index: 1000; background: rgba(11,11,11,0.97); border-bottom: 1px solid rgba(212,175,55,0.35); backdrop-filter: blur(12px); }
-    .settings-header-inner { width: min(1200px, 92%); min-height: 72px; margin: 0 auto; display: flex; align-items: center; justify-content: space-between; gap: 20px; }
-    .settings-brand { display: flex; align-items: center; gap: 10px; color: var(--gold); text-decoration: none; font-weight: 800; letter-spacing: 1px; white-space: nowrap; }
-    .settings-brand img { width: 44px; height: 44px; object-fit: contain; }
-    .settings-brand small { display: block; color: #ddd; font-size: 10px; letter-spacing: 3px; margin-top: 2px; }
-    .settings-back { display: inline-flex; align-items: center; gap: 6px; padding: 8px 14px; border: 1px solid #8f752d; border-radius: 6px; color: var(--gold); text-decoration: none; font-size: 13px; font-weight: 600; transition: background 0.2s, color 0.2s; }
-    .settings-back:hover { background: var(--gold); color: #0b0b0b; }
+    .settings-header {
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+      background: var(--dark, #151515);
+      border-bottom: 1px solid rgba(212,175,55,.35);
+      backdrop-filter: blur(12px);
+    }
+
+    .settings-header-inner {
+      width: min(1200px, 92%);
+      min-height: 72px;
+      margin: 0 auto;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+    }
+
+    .settings-brand {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      color: var(--gold);
+      text-decoration: none;
+      font-weight: 800;
+      letter-spacing: 1px;
+      white-space: nowrap;
+    }
+
+    .settings-brand img {
+      width: 44px;
+      height: 44px;
+      object-fit: contain;
+    }
+
+    .settings-brand small {
+      display: block;
+      color: var(--muted, #b8b8b8);
+      font-size: 10px;
+      letter-spacing: 3px;
+      margin-top: 2px;
+    }
+
+    .settings-back {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 8px 14px;
+      border: 1px solid var(--gold);
+      border-radius: 6px;
+      color: var(--gold);
+      text-decoration: none;
+      font-size: 13px;
+      font-weight: 600;
+      transition: background .2s, color .2s;
+    }
+
+    .settings-back:hover {
+      background: var(--gold);
+      color: var(--black, #0b0b0b);
+    }
+
+    .settings-page {
+      max-width: 820px;
+      margin: 0 auto;
+      padding: 32px 20px 70px;
+    }
+
+    .settings-section {
+      background: var(--dark, #151515);
+      color: var(--white, #f5f5f5);
+      border-color: var(--gold, #d4af37);
+    }
+
+    .settings-row-label strong {
+      color: var(--white, #f5f5f5);
+    }
+
+    .settings-row-label small {
+      color: var(--muted, #b8b8b8);
+    }
+
+    .settings-row {
+      flex-wrap: wrap;
+    }
+
+    .settings-row-control {
+      max-width: 100%;
+    }
+
+    .sa-select {
+      max-width: 100%;
+    }
+
+    .settings-status {
+      min-height: 1.4em;
+      margin: 12px 0 0;
+      color: var(--muted, #b8b8b8);
+      font-size: 13px;
+    }
+
+    .settings-row button:focus-visible,
+    .settings-row select:focus-visible,
+    .settings-back:focus-visible {
+      outline: 2px solid var(--gold);
+      outline-offset: 3px;
+    }
+
+    @media (max-width: 480px) {
+      .settings-header-inner {
+        width: 94%;
+        min-height: 64px;
+        gap: 8px;
+      }
+
+      .settings-brand {
+        font-size: 12px;
+        letter-spacing: .5px;
+      }
+
+      .settings-brand img {
+        width: 34px;
+        height: 34px;
+      }
+
+      .settings-brand small {
+        font-size: 8px;
+        letter-spacing: 2px;
+      }
+
+      .settings-back {
+        padding: 8px 10px;
+        font-size: 12px;
+      }
+
+      .settings-page {
+        padding: 24px 12px 50px;
+      }
+
+      .settings-row {
+        align-items: flex-start;
+      }
+
+      .font-size-options {
+        flex-wrap: wrap;
+      }
+    }
   </style>
 </head>
-<body>  <header class="settings-header">
+
+<body>
+  <script src="settings-global.js"></script>
+
+  <header class="settings-header">
     <div class="settings-header-inner">
       <a class="settings-brand" href="index.html">
         <img src="logo.png" alt="CheckmaîtréX Chess Club logo">
         <span>CHECKMAÎTRÉX<small>CHESS CLUB</small></span>
       </a>
-      <a class="settings-back" href="index.html">&larr; Back to Home</a>
+
+      <a class="settings-back" href="index.html">
+        &larr; Back to Home
+      </a>
     </div>
   </header>
 
-  <div class="settings-page">
+  <main class="settings-page">
     <div class="settings-hero">
       <div class="eyebrow">Personalize Your Experience</div>
       <h1>Settings</h1>
       <p>Customize how CheckmaîtréX Chess Club looks and behaves. Your preferences are saved on this device.</p>
     </div>
 
-    <div class="settings-section">
+    <!-- APPEARANCE -->
+    <section class="settings-section">
       <h2>Appearance</h2>
+
       <div class="settings-row">
-        <div class="settings-row-label"><strong>Theme</strong><small>Switch between dark and light mode</small></div>
+        <div class="settings-row-label">
+          <strong>Website Theme</strong>
+          <small>Choose one of the 11 design concepts</small>
+        </div>
+
         <div class="settings-row-control">
-          <div class="theme-previews">
-            <div class="theme-preview dark active" id="themeDark" onclick="setTheme('dark')" title="Dark"></div>
-            <div class="theme-preview light" id="themeLight" onclick="setTheme('light')" title="Light"></div>
-          </div>
+          <select class="sa-select" id="themeSelect" onchange="setTheme(this.value)">
+            <option value="dark">00 — Original Black &amp; Gold</option>
+            <option value="emerald">01 — Emerald Classic</option>
+            <option value="royal-gold">02 — Royal Gold</option>
+            <option value="clean-minimal">03 — Clean Minimal</option>
+            <option value="midnight-arena">04 — Midnight Arena</option>
+            <option value="warm-wood">05 — Warm Wood</option>
+            <option value="glass-layers">06 — Glass Layers</option>
+            <option value="tournament-pro">07 — Tournament Pro</option>
+            <option value="modern-editorial">08 — Modern Editorial</option>
+            <option value="soft-modern">09 — Soft Modern</option>
+            <option value="neo-chess">10 — Neo Chess</option>
+          </select>
         </div>
       </div>
+
       <div class="settings-row">
-        <div class="settings-row-label"><strong>Font Size</strong><small>Adjust text size for readability</small></div>
+        <div class="settings-row-label">
+          <strong>Font Size</strong>
+          <small>Adjust text size for readability</small>
+        </div>
+
         <div class="settings-row-control">
           <div class="font-size-options">
-            <button class="font-size-btn" onclick="setFontSize('small', this)">A-</button>
-            <button class="font-size-btn active" onclick="setFontSize('medium', this)">A</button>
-            <button class="font-size-btn" onclick="setFontSize('large', this)">A+</button>
-            <button class="font-size-btn" onclick="setFontSize('xlarge', this)">A++</button>
+            <button type="button" class="font-size-btn" onclick="setFontSize('small', this)">A-</button>
+            <button type="button" class="font-size-btn" onclick="setFontSize('medium', this)">A</button>
+            <button type="button" class="font-size-btn" onclick="setFontSize('large', this)">A+</button>
+            <button type="button" class="font-size-btn" onclick="setFontSize('xlarge', this)">A++</button>
           </div>
         </div>
       </div>
-    </div>
 
-    <div class="settings-section">
+      <p class="settings-status" id="settingsStatus" role="status" aria-live="polite"></p>
+    </section>
+
+    <!-- ANIMATIONS -->
+    <section class="settings-section">
       <h2>Animations &amp; Motion</h2>
+
       <div class="settings-row">
-        <div class="settings-row-label"><strong>Page Animations</strong><small>Scroll reveal and page-load effects</small></div>
+        <div class="settings-row-label">
+          <strong>Page Animations</strong>
+          <small>Enable or disable supported page effects</small>
+        </div>
+
         <div class="settings-row-control">
-          <label class="sa-toggle"><input type="checkbox" id="animationsToggle" checked onchange="setAnimations(this.checked)"><span class="slider"></span></label>
+          <label class="sa-toggle">
+            <input type="checkbox" id="animationsToggle" checked onchange="setAnimations(this.checked)">
+            <span class="slider"></span>
+          </label>
         </div>
       </div>
-    </div>
+    </section>
 
-    <div class="settings-section">
+    <!-- LANGUAGE -->
+    <section class="settings-section">
       <h2>Language</h2>
+
       <div class="settings-row">
-        <div class="settings-row-label"><strong>Display Language</strong><small>Choose your preferred language</small></div>
+        <div class="settings-row-label">
+          <strong>Display Language</strong>
+          <small>Choose your preferred language</small>
+        </div>
+
         <div class="settings-row-control">
           <select class="sa-select" id="languageSelect" onchange="setLanguage(this.value)">
             <option value="en">English</option>
@@ -81,140 +268,296 @@
           </select>
         </div>
       </div>
-    </div>
 
-    <div class="settings-section">
-<h2>Animations &amp; Motion</h2>
-      <div class="settings-row">
-        <div class="settings-row-label"><strong>Page Animations</strong><small>Scroll reveal and page-load effects</small></div>
-        <div class="settings-row-control">
-          <label class="sa-toggle"><input type="checkbox" id="animationsToggle" checked onchange="setAnimations(this.checked)"><span class="slider"></span></label>
-        </div>
-      </div>
-    </div>
+      <p class="settings-status">Note: Saving a language preference does not automatically translate every page. Translation support must be implemented separately.</p>
+    </section>
 
-    <div class="settings-section">
-      <h2>Language</h2>
-      <div class="settings-row">
-        <div class="settings-row-label"><strong>Display Language</strong><small>Choose your preferred language</small></div>
-        <div class="settings-row-control">
-          <select class="sa-select" id="languageSelect" onchange="setLanguage(this.value)">
-            <option value="en">English</option>
-            <option value="fil">Filipino</option>
-          </select>
-        </div>
-      </div>
-    </div>
-
-<div class="settings-section">
+    <!-- NOTIFICATIONS -->
+    <section class="settings-section">
       <h2>Notifications</h2>
-      <div class="settings-row">
-        <div class="settings-row-label"><strong>Event Reminders</strong><small>Get notified about upcoming club events</small></div>
-        <div class="settings-row-control"><label class="sa-toggle"><input type="checkbox" id="notifEvents" checked onchange="saveNotification('events', this.checked)"><span class="slider"></span></label></div>
-      </div>
-      <div class="settings-row">
-        <div class="settings-row-label"><strong>Tournament Updates</strong><small>Receive alerts about tournament announcements</small></div>
-        <div class="settings-row-control"><label class="sa-toggle"><input type="checkbox" id="notifTournaments" checked onchange="saveNotification('tournaments', this.checked)"><span class="slider"></span></label></div>
-      </div>
-      <div class="settings-row">
-        <div class="settings-row-label"><strong>Club News</strong><small>Stay updated with the latest club news</small></div>
-        <div class="settings-row-control"><label class="sa-toggle"><input type="checkbox" id="notifNews" onchange="saveNotification('news', this.checked)"><span class="slider"></span></label></div>
-      </div>
-    </div>
 
-<div class="settings-section">
+      <div class="settings-row">
+        <div class="settings-row-label">
+          <strong>Event Reminders</strong>
+          <small>Save your preference for club event reminders</small>
+        </div>
+
+        <div class="settings-row-control">
+          <label class="sa-toggle">
+            <input type="checkbox" id="notifEvents" checked onchange="saveNotification('events', this.checked)">
+            <span class="slider"></span>
+          </label>
+        </div>
+      </div>
+
+      <div class="settings-row">
+        <div class="settings-row-label">
+          <strong>Tournament Updates</strong>
+          <small>Save your preference for tournament updates</small>
+        </div>
+
+        <div class="settings-row-control">
+          <label class="sa-toggle">
+            <input type="checkbox" id="notifTournaments" checked onchange="saveNotification('tournaments', this.checked)">
+            <span class="slider"></span>
+          </label>
+        </div>
+      </div>
+
+      <div class="settings-row">
+        <div class="settings-row-label">
+          <strong>Club News</strong>
+          <small>Save your preference for club news</small>
+        </div>
+
+        <div class="settings-row-control">
+          <label class="sa-toggle">
+            <input type="checkbox" id="notifNews" onchange="saveNotification('news', this.checked)">
+            <span class="slider"></span>
+          </label>
+        </div>
+      </div>
+    </section>
+
+    <!-- AI ASSISTANT -->
+    <section class="settings-section">
       <h2>AI Assistant</h2>
-      <div class="settings-row">
-        <div class="settings-row-label"><strong>Clear Chat History</strong><small>Delete all saved AI conversations on this device</small></div>
-        <div class="settings-row-control"><button class="sa-btn danger" onclick="clearAIHistory()">Clear</button></div>
-      </div>
-      <div class="settings-row">
-        <div class="settings-row-label"><strong>AI Suggestions</strong><small>Show suggested prompts on the AI welcome screen</small></div>
-        <div class="settings-row-control"><label class="sa-toggle"><input type="checkbox" id="aiSuggestions" checked onchange="saveAISetting('suggestions', this.checked)"><span class="slider"></span></label></div>
-      </div>
-    </div>
 
-    <div class="settings-section">
+      <div class="settings-row">
+        <div class="settings-row-label">
+          <strong>Clear Chat History</strong>
+          <small>Delete saved AI conversations on this device</small>
+        </div>
+
+        <div class="settings-row-control">
+          <button type="button" class="sa-btn danger" onclick="clearAIHistory()">Clear</button>
+        </div>
+      </div>
+
+      <div class="settings-row">
+        <div class="settings-row-label">
+          <strong>AI Suggestions</strong>
+          <small>Show suggested prompts on the AI welcome screen</small>
+        </div>
+
+        <div class="settings-row-control">
+          <label class="sa-toggle">
+            <input type="checkbox" id="aiSuggestions" checked onchange="saveAISetting('suggestions', this.checked)">
+            <span class="slider"></span>
+          </label>
+        </div>
+      </div>
+    </section>
+
+    <!-- PRIVACY -->
+    <section class="settings-section">
       <h2>Privacy &amp; Data</h2>
-      <div class="settings-row">
-        <div class="settings-row-label"><strong>Clear All Settings</strong><small>Reset all preferences to default values</small></div>
-        <div class="settings-row-control"><button class="sa-btn danger" onclick="clearAllSettings()">Reset</button></div>
-      </div>
-      <div class="settings-row">
-        <div class="settings-row-label"><strong>Clear Browsing Data</strong><small>Clear localStorage, caches, and saved data</small></div>
-        <div class="settings-row-control"><button class="sa-btn danger" onclick="clearBrowsingData()">Clear</button></div>
-      </div>
-    </div>
 
-<div class="settings-section">
+      <div class="settings-row">
+        <div class="settings-row-label">
+          <strong>Clear All Settings</strong>
+          <small>Reset saved preferences to their defaults</small>
+        </div>
+
+        <div class="settings-row-control">
+          <button type="button" class="sa-btn danger" onclick="clearAllSettings()">Reset</button>
+        </div>
+      </div>
+
+      <div class="settings-row">
+        <div class="settings-row-label">
+          <strong>Clear Browsing Data</strong>
+          <small>Clear local storage and supported website caches</small>
+        </div>
+
+        <div class="settings-row-control">
+          <button type="button" class="sa-btn danger" onclick="clearBrowsingData()">Clear</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- ABOUT -->
+    <section class="settings-section">
       <h2>About</h2>
+
       <div class="settings-about">
         <p><strong>CheckmaîtréX Chess Club</strong></p>
         <p>Official Club Website</p>
-        <p style="margin-top: 10px;">Calculate. Conquer. Checkmate.</p>
-        <p style="margin-top: 10px;">Version 1.0 &middot; &copy; 2026</p>
+        <p style="margin-top:10px">Calculate. Conquer. Checkmate.</p>
+        <p style="margin-top:10px">Version 1.0 &middot; &copy; 2026</p>
       </div>
-    </div>
-  </div>
+    </section>
+  </main>
 
   <script>
-(function () {
-      var theme = localStorage.getItem("checkmaitrex_theme") || "dark";
-      document.documentElement.setAttribute("data-theme", theme);
-      document.getElementById("themeDark").classList.toggle("active", theme === "dark");
-      document.getElementById("themeLight").classList.toggle("active", theme === "light");
-      var fontSize = localStorage.getItem("checkmaitrex_font_size") || "medium";
-      document.documentElement.setAttribute("data-font-size", fontSize);
-      document.querySelectorAll(".font-size-btn").forEach(function (btn) { btn.classList.remove("active"); });
-      var fontBtn = document.querySelector('.font-size-btn:nth-child(' + ({small:1,medium:2,large:3,xlarge:4}[fontSize] || 2) + ')');
-      if (fontBtn) fontBtn.classList.add("active");
-      var animations = localStorage.getItem("checkmaitrex_animations");
-      if (animations === "off") { document.documentElement.setAttribute("data-animations", "off"); document.getElementById("animationsToggle").checked = false; }
+    (function () {
+      var root = document.documentElement;
+
+      var allowedThemes = [
+        "dark", "emerald", "royal-gold", "clean-minimal",
+        "midnight-arena", "warm-wood", "glass-layers",
+        "tournament-pro", "modern-editorial", "soft-modern",
+        "neo-chess"
+      ];
+
+      var savedTheme = localStorage.getItem("checkmaitrex_theme") || "dark";
+      if (allowedThemes.indexOf(savedTheme) === -1) {
+        savedTheme = "dark";
+      }
+
+      root.setAttribute("data-theme", savedTheme);
+      document.getElementById("themeSelect").value = savedTheme;
+
+      var allowedSizes = ["small", "medium", "large", "xlarge"];
+      var savedSize = localStorage.getItem("checkmaitrex_font_size") || "medium";
+
+      if (allowedSizes.indexOf(savedSize) === -1) {
+        savedSize = "medium";
+      }
+
+      root.setAttribute("data-font-size", savedSize);
+
+      document.querySelectorAll(".font-size-btn").forEach(function (btn) {
+        btn.classList.remove("active");
+      });
+
+      var sizeIndex = allowedSizes.indexOf(savedSize);
+      var sizeButtons = document.querySelectorAll(".font-size-btn");
+      if (sizeButtons[sizeIndex]) {
+        sizeButtons[sizeIndex].classList.add("active");
+      }
+
+      var animations = localStorage.getItem("checkmaitrex_animations") || "on";
+      document.getElementById("animationsToggle").checked = animations !== "off";
+
+      if (animations === "off") {
+        root.setAttribute("data-animations", "off");
+      } else {
+        root.removeAttribute("data-animations");
+      }
+
       var lang = localStorage.getItem("checkmaitrex_language") || "en";
-      document.getElementById("languageSelect").value = lang;
-      ["events","tournaments","news"].forEach(function (key) {
+      document.getElementById("languageSelect").value =
+        lang === "fil" ? "fil" : "en";
+
+      ["events", "tournaments", "news"].forEach(function (key) {
         var val = localStorage.getItem("checkmaitrex_notif_" + key);
-        var el = document.getElementById("notif" + key.charAt(0).toUpperCase() + key.slice(1));
+        var el = document.getElementById(
+          "notif" + key.charAt(0).toUpperCase() + key.slice(1)
+        );
         if (el) el.checked = val !== "off";
       });
-      var aiSug = localStorage.getItem("checkmaitrex_ai_suggestions");
-      if (aiSug === "off") document.getElementById("aiSuggestions").checked = false;
+
+      var aiSuggestions = localStorage.getItem("checkmaitrex_ai_suggestions");
+      document.getElementById("aiSuggestions").checked = aiSuggestions !== "off";
     })();
-function setTheme(theme) {
+
+    function setTheme(theme) {
+      var allowedThemes = [
+        "dark", "emerald", "royal-gold", "clean-minimal",
+        "midnight-arena", "warm-wood", "glass-layers",
+        "tournament-pro", "modern-editorial", "soft-modern",
+        "neo-chess"
+      ];
+
+      if (allowedThemes.indexOf(theme) === -1) {
+        theme = "dark";
+      }
+
       document.documentElement.setAttribute("data-theme", theme);
       localStorage.setItem("checkmaitrex_theme", theme);
-      document.getElementById("themeDark").classList.toggle("active", theme === "dark");
-      document.getElementById("themeLight").classList.toggle("active", theme === "light");
+
+      var status = document.getElementById("settingsStatus");
+      if (status) {
+        var selected = document.getElementById("themeSelect");
+        status.textContent = "Theme preference saved: " +
+          selected.options[selected.selectedIndex].text + ".";
+      }
     }
+
     function setFontSize(size, btn) {
+      var allowedSizes = ["small", "medium", "large", "xlarge"];
+      if (allowedSizes.indexOf(size) === -1) return;
+
       document.documentElement.setAttribute("data-font-size", size);
       localStorage.setItem("checkmaitrex_font_size", size);
-      document.querySelectorAll(".font-size-btn").forEach(function (b) { b.classList.remove("active"); });
+
+      document.querySelectorAll(".font-size-btn").forEach(function (b) {
+        b.classList.remove("active");
+      });
+
       if (btn) btn.classList.add("active");
     }
+
     function setAnimations(enabled) {
-      if (enabled) { document.documentElement.removeAttribute("data-animations"); localStorage.setItem("checkmaitrex_animations", "on"); }
-      else { document.documentElement.setAttribute("data-animations", "off"); localStorage.setItem("checkmaitrex_animations", "off"); }
+      var value = enabled ? "on" : "off";
+
+      if (enabled) {
+        document.documentElement.removeAttribute("data-animations");
+      } else {
+        document.documentElement.setAttribute("data-animations", "off");
+      }
+
+      localStorage.setItem("checkmaitrex_animations", value);
     }
-    function setLanguage(lang) { localStorage.setItem("checkmaitrex_language", lang); }
-    function saveNotification(key, value) { localStorage.setItem("checkmaitrex_notif_" + key, value ? "on" : "off"); }
-    function saveAISetting(key, value) { localStorage.setItem("checkmaitrex_ai_" + key, value ? "on" : "off"); }
-    function clearAIHistory() { if (!confirm("Delete all AI chat conversations?")) return; localStorage.removeItem("checkmaitrex_conversations"); alert("AI chat history cleared."); }
+
+    function setLanguage(lang) {
+      if (lang !== "en" && lang !== "fil") return;
+      localStorage.setItem("checkmaitrex_language", lang);
+    }
+
+    function saveNotification(key, value) {
+      var allowed = ["events", "tournaments", "news"];
+      if (allowed.indexOf(key) === -1) return;
+
+      localStorage.setItem(
+        "checkmaitrex_notif_" + key,
+        value ? "on" : "off"
+      );
+    }
+
+    function saveAISetting(key, value) {
+      if (key !== "suggestions") return;
+      localStorage.setItem("checkmaitrex_ai_" + key, value ? "on" : "off");
+    }
+
+    function clearAIHistory() {
+      if (!confirm("Delete all saved AI chat conversations on this device?")) return;
+
+      localStorage.removeItem("checkmaitrex_conversations");
+      alert("AI chat history cleared from this device.");
+    }
+
     function clearAllSettings() {
-      if (!confirm("Reset all settings to default?")) return;
-      localStorage.removeItem("checkmaitrex_theme"); localStorage.removeItem("checkmaitrex_font_size");
-      localStorage.removeItem("checkmaitrex_animations"); localStorage.removeItem("checkmaitrex_language");
-      localStorage.removeItem("checkmaitrex_notif_events"); localStorage.removeItem("checkmaitrex_notif_tournaments");
-      localStorage.removeItem("checkmaitrex_notif_news"); localStorage.removeItem("checkmaitrex_ai_suggestions");
+      if (!confirm("Reset all settings to their default values?")) return;
+
+      [
+        "checkmaitrex_theme",
+        "checkmaitrex_font_size",
+        "checkmaitrex_animations",
+        "checkmaitrex_language",
+        "checkmaitrex_notif_events",
+        "checkmaitrex_notif_tournaments",
+        "checkmaitrex_notif_news",
+        "checkmaitrex_ai_suggestions"
+      ].forEach(function (key) {
+        localStorage.removeItem(key);
+      });
+
       location.reload();
     }
-    function clearBrowsingData() { if (!confirm("Clear all browsing data?")) return; localStorage.clear(); location.reload(); }
+
+    function clearBrowsingData() {
+      if (!confirm(
+        "This clears this website's local storage, including saved preferences and other local data. Continue?"
+      )) return;
+
+      localStorage.clear();
+      location.reload();
+    }
   </script>
+
   <script src="bfcache-fix.js"></script>
   <script src="site-animations.js"></script>
-<script src="bfcache-fix.js"></script>
-<script src="site-animations.js"></script>
-  <script src="settings-global.js"></script>
-
 </body>
 </html>
