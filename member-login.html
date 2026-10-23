@@ -21,17 +21,17 @@
 
       <h2>Member Login</h2>
       <p class="auth-intro">
-        This page is prepared for member sign-in. Secure credential
-        validation must be connected before login can be enabled.
+        Sign in using the email address and password registered
+        with your CheckmaîtréX account.
       </p>
 
       <form id="memberLoginForm">
         <div class="auth-field">
-          <label for="memberEmail">Email or username</label>
+          <label for="memberEmail">Email address</label>
           <input
             id="memberEmail"
             name="memberEmail"
-            type="text"
+            type="email"
             autocomplete="username"
             required
             placeholder="you@example.com">
@@ -48,11 +48,13 @@
             placeholder="Enter your password">
         </div>
 
-        <button class="auth-action" type="submit">Log In</button>
+        <button class="auth-action" id="loginButton" type="submit">
+          Log In
+        </button>
 
-        <div class="auth-status" id="authStatus" role="status">
-          Secure member authentication has not been connected.
-          No login occurred and no credentials were stored.
+        <div class="auth-status" id="authStatus"
+             role="status" aria-live="polite">
+          Enter your account details to sign in.
         </div>
       </form>
 
@@ -67,14 +69,55 @@
 
   <script src="site-animations.js"></script>
   <script src="language.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="supabase-client.js"></script>
+
   <script>
-    document.getElementById("memberLoginForm").addEventListener("submit", function (event) {
+    const loginForm = document.getElementById("memberLoginForm");
+    const authStatus = document.getElementById("authStatus");
+    const loginButton = document.getElementById("loginButton");
+
+    loginForm.addEventListener("submit", async function (event) {
       event.preventDefault();
-      document.getElementById("authStatus").classList.add("show");
+
+      const email = document.getElementById("memberEmail").value.trim();
+      const password = document.getElementById("memberPassword").value;
+
+      if (!window.clubSupabase) {
+        authStatus.textContent =
+          "Login service is unavailable. Please try again later.";
+        authStatus.classList.add("show");
+        return;
+      }
+
+      loginButton.disabled = true;
+      loginButton.textContent = "Signing in...";
+      authStatus.textContent = "Checking your credentials...";
+      authStatus.classList.add("show");
+
+      try {
+        const { data, error } =
+          await window.clubSupabase.auth.signInWithPassword({
+            email,
+            password
+          });
+
+        if (error) throw error;
+
+        authStatus.textContent =
+          "Login successful! Redirecting...";
+
+        window.location.href = "membership-application.html";
+      } catch (error) {
+        authStatus.textContent =
+          error.message === "Invalid login credentials"
+            ? "Incorrect email or password."
+            : "Unable to sign in. Check your details and try again.";
+
+        loginButton.disabled = false;
+        loginButton.textContent = "Log In";
+      }
     });
   </script>
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<script src="supabase-client.js"></script>
-
 </body>
 </html>
