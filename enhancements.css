@@ -124,3 +124,250 @@ html[data-animations="off"] .page-load-animate { animation: none !important; }
   .login-card { padding: 32px 22px; }
   .settings-row { flex-direction: column; align-items: flex-start; gap: 10px; }
 }
+/* =========================================
+   CHECKMAITRÉX — GLOBAL THEME SYSTEM
+   Works with settings-global.js
+   ========================================= */
+
+/* Original Black & Gold */
+:root,
+html[data-theme="dark"] {
+  color-scheme: dark;
+  --black: #0b0b0b;
+  --dark: #151515;
+  --gold: #d4af37;
+  --light-gold: #f1d77a;
+  --white: #f5f5f5;
+  --muted: #b8b8b8;
+  --theme-border: rgba(212, 175, 55, .25);
+  --theme-panel: #141414;
+  --theme-input: #171717;
+  --theme-button-text: #0b0b0b;
+}
+
+/* 01 — Emerald Classic */
+html[data-theme="emerald"] {
+  color-scheme: dark;
+  --black: #101713;
+  --dark: #17251d;
+  --gold: #42c78a;
+  --light-gold: #91edbd;
+  --white: #f0f8f2;
+  --muted: #b0c7b8;
+  --theme-border: rgba(66, 199, 138, .3);
+  --theme-panel: #1b2c22;
+  --theme-input: #122019;
+  --theme-button-text: #0b2116;
+}
+
+/* 02 — Royal Gold */
+html[data-theme="royal-gold"] {
+  color-scheme: dark;
+  --black: #080e1c;
+  --dark: #101a32;
+  --gold: #d9b85f;
+  --light-gold: #f5dfa0;
+  --white: #f3f5fb;
+  --muted: #b5bfd4;
+  --theme-border: rgba(217, 184, 95, .3);
+  --theme-panel: #14203a;
+  --theme-input: #0b1428;
+  --theme-button-text: #101a32;
+}
+
+/* 03 — Clean Minimal */
+html[data-theme="clean-minimal"] {
+  color-scheme: light;
+  --black: #f4f5f7;
+  --dark: #ffffff;
+  --gold: #287b54;
+  --light-gold: #3d9a70;
+  --white: #202a33;
+  --muted: #5f6b75;
+  --theme-border: #dce4df;
+  --theme-panel: #ffffff;
+  --theme-input: #f7f9f8;
+  --theme-button-text: #ffffff;
+}
+
+/* 04 — Midnight Arena */
+html[data-theme="midnight-arena"] {
+  color-scheme: dark;
+  --black: #0b0d0f;
+  --dark: #141719;
+  --gold: #c4ff39;
+  --light-gold: #e1ff9b;
+  --white: #f2f5ed;
+  --muted: #abb4a4;
+  --theme-border: rgba(196, 255, 57, .25);
+  --theme-panel: #171b1d;
+  --theme-input: #0e1112;
+  --theme-button-text: #141719;
+}
+
+/* 05 — Warm Wood */
+html[data-theme="warm-wood"] {
+  color-scheme: light;
+  --black: #f0e5d2;
+  --dark: #e4d2b8;
+  --gold: #805333;
+  --light-gold: #a87548;
+  --white: #302319;
+  --muted: #685342;
+  --theme-border: rgba(128, 83, 51, .3);
+  --theme-panel: #f8f0e3;
+  --theme-input: #fffaf1;
+  --theme-button-text: #ffffff;
+}
+
+/* 06 — Glass Layers */
+html[data-theme="glass-layers"] {
+  color-scheme: dark;
+  --black: #10191e;
+  --dark: #1a292f;
+  --gold: #79d4c5;
+  --light-gold: #b1eee4;
+  --white: #edf8f7;
+  --muted: #b1c9c9;
+  --theme-border: rgba(121, 212, 197, .3);
+  --theme-panel: #20343b;
+  --theme-input: #142329;
+  --theme-button-text: #102725;
+}
+
+/* 07 — Tournament Pro */
+html[data-theme="tournament-pro"] {
+  color-scheme: light;
+  --black: #edf2f8;
+  --dark: #ffffff;
+  --gold: #244b75;
+  --light-gold: #4777a8;
+  --white: #192b40;
+  --muted: #5d7085;
+  --theme-border: #d4dfeb;
+  --theme-panel: #ffffff;
+  --theme-input: #f3f6fa;
+  --theme-button-text: #ffffff;
+}
+
+/* 08 — Modern Editorial */
+html[data-theme="modern-editorial"] {
+  color-scheme: light;
+  --black: #faf7f0;
+  --dark: #f0ece2;
+  --gold: #454b69;
+  --light-gold: #666e96;
+  --white: #252735;
+  --muted: #686875;
+  --theme-border: #ded9ce;
+  --theme-panel: #fffdf8;
+  --theme-input: #f7f3eb;
+  --theme-button-text: #ffffff;
+}
+
+/* 09 — Soft Modern */
+html[data-theme="soft-modern"] {
+  color-scheme: light;
+  --black: #e9eee8;
+  --dark: #f8faf7;
+  --gold: #55785c;
+  --light-gold: #789b7e;
+  --white: #26372b;
+  --muted: #647568;
+  --theme-border: #d4dfd4;
+  --theme-panel: #f8faf7;
+  --theme-input: #edf2ec;
+  --theme-button-text: #ffffff;
+}
+
+/* 10 — Neo Chess */
+html[data-theme="neo-chess"] {
+  color-scheme: light;
+  --black: #f4eddf;
+  --dark: #fffaf0;
+  --gold: #3159d8;
+  --light-gold: #6685f0;
+  --white: #252a38;
+  --muted: #666d7e;
+  --theme-border: #d9dced;
+  --theme-panel: #fffaf0;
+  --theme-input: #f8f3e9;
+  --theme-button-text: #ffffff;
+}
+
+/* Apply theme colors to common website components */
+html[data-theme] body {
+  background-color: var(--black);
+  color: var(--white);
+}
+
+html[data-theme] header,
+html[data-theme] footer,
+html[data-theme] .topbar,
+html[data-theme] .card,
+html[data-theme] .settings-section,
+html[data-theme] .login-card {
+  background-color: var(--theme-panel);
+  color: var(--white);
+  border-color: var(--theme-border);
+}
+
+html[data-theme] h1,
+html[data-theme] h2,
+html[data-theme] h3,
+html[data-theme] .settings-hero h1,
+html[data-theme] .settings-section h2 {
+  color: var(--gold);
+}
+
+html[data-theme] p,
+html[data-theme] small {
+  color: var(--muted);
+}
+
+html[data-theme] a {
+  color: var(--gold);
+}
+
+html[data-theme] .sa-select,
+html[data-theme] .font-size-btn,
+html[data-theme] .login-input {
+  background-color: var(--theme-input);
+  color: var(--white);
+  border-color: var(--theme-border);
+}
+
+html[data-theme] .sa-btn,
+html[data-theme] .login-btn,
+html[data-theme] .font-size-btn.active {
+  border-color: var(--gold);
+}
+
+html[data-theme] .login-btn,
+html[data-theme] .font-size-btn.active {
+  background: var(--gold);
+  color: var(--theme-button-text);
+}
+
+html[data-theme] .settings-row {
+  border-bottom-color: var(--theme-border);
+}
+
+/* Keep text readable when the selected theme is light */
+html[data-theme="clean-minimal"] .settings-row-label strong,
+html[data-theme="warm-wood"] .settings-row-label strong,
+html[data-theme="tournament-pro"] .settings-row-label strong,
+html[data-theme="modern-editorial"] .settings-row-label strong,
+html[data-theme="soft-modern"] .settings-row-label strong,
+html[data-theme="neo-chess"] .settings-row-label strong {
+  color: var(--white);
+}
+
+/* Respect reduced-motion preferences */
+@media (prefers-reduced-motion: reduce) {
+  html:not([data-animations="on"]) *,
+  html:not([data-animations="on"]) *::before,
+  html:not([data-animations="on"]) *::after {
+    scroll-behavior: auto !important;
+  }
+}
