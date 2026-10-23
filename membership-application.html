@@ -19,9 +19,10 @@
         <p>Chess Club</p>
       </div>
 
-      <h2>Membership Application</h2>
+      <h2>Apply for Membership</h2>
       <p class="auth-intro">
-        Submit your details for manual review by the club administration.
+        Sign in with your verified account before submitting
+        your membership application.
       </p>
 
       <form id="applicationForm">
@@ -31,10 +32,10 @@
             id="appName"
             name="appName"
             type="text"
+            maxlength="120"
             autocomplete="name"
             required
-            maxlength="120"
-            placeholder="Your full name">
+            placeholder="Enter your full name">
         </div>
 
         <div class="auth-field">
@@ -43,31 +44,24 @@
             id="membershipId"
             name="membershipId"
             type="text"
-            required
             maxlength="80"
-            placeholder="Enter your Membership ID">
+            required
+            placeholder="Enter your membership ID">
         </div>
 
-        <div class="auth-note">
-          Submitting this demo form does not send or save an application.
-          A secure database and admin review workflow must be configured
-          before applications can be received. Every real application
-          remains pending until an administrator reviews it.
-        </div>
-
-        <button class="auth-action" type="submit">
-          Review Application
+        <button class="auth-action" id="applicationButton" type="submit">
+          Submit Application
         </button>
 
-        <div class="auth-status" id="applicationStatus" role="status">
-          This is a preview only. Your details were not transmitted or saved.
-          Contact the club administrator to submit an official application.
+        <div class="auth-status" id="applicationStatus"
+             role="status" aria-live="polite">
+          Your application has not been submitted.
         </div>
       </form>
 
       <div class="auth-links">
-        <a href="login-selection.html">Login Options</a>
-        <a href="membership.html">Membership Information</a>
+        <a href="member-login.html">Member Login</a>
+        <a href="login-selection.html">Back to Login Options</a>
       </div>
 
       <a class="auth-home" href="index.html">← Back to Home</a>
@@ -76,14 +70,102 @@
 
   <script src="site-animations.js"></script>
   <script src="language.js"></script>
-  <script>
-    document.getElementById("applicationForm").addEventListener("submit", function (event) {
-      event.preventDefault();
-      document.getElementById("applicationStatus").classList.add("show");
-    });
-  </script>
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<script src="supabase-client.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="supabase-client.js"></script>
 
+  <script>
+    const applicationForm =
+      document.getElementById("applicationForm");
+    const applicationStatus =
+      document.getElementById("applicationStatus");
+    const applicationButton =
+      document.getElementById("applicationButton");
+
+    async function checkSession() {
+      if (!window.clubSupabase) {
+        applicationStatus.textContent =
+          "The login service is unavailable. Please try again later.";
+        applicationStatus.classList.add("show");
+        return;
+      }
+
+      const { data, error } =
+        await window.clubSupabase.auth.getSession();
+
+      if (error || !data.session) {
+        applicationStatus.textContent =
+          "Please log in first before applying.";
+        applicationStatus.classList.add("show");
+        applicationButton.disabled = true;
+      }
+    }
+
+    applicationForm.addEventListener("submit", async function (event) {
+      event.preventDefault();
+
+      if (!window.clubSupabase) {
+        applicationStatus.textContent =
+          "The login service is unavailable. Please try again later.";
+        applicationStatus.classList.add("show");
+        return;
+      }
+
+      applicationButton.disabled = true;
+      applicationButton.textContent = "Submitting...";
+      applicationStatus.textContent = "Submitting your application...";
+      applicationStatus.classList.add("show");
+
+      try {
+        const { data: sessionData, error: sessionError } =
+          await window.clubSupabase.auth.getSession();
+
+        if (sessionError || !sessionData.session) {
+          applicationStatus.textContent =
+            "Please log in before submitting your application.";
+          return;
+        }
+
+        const fullName =
+          document.getElementById("appName").value.trim();
+        const membershipId =
+          document.getElementById("membershipId").value.trim();
+
+        const { error } = await window.clubSupabase.rpc(
+          "submit_membership_application",
+          {
+            p_full_name: fullName,
+            p_membership_id: membershipId
+          }
+        );
+
+        if (error) throw error;
+
+        applicationStatus.textContent =
+          "Application submitted successfully! Your status is pending review.";
+        applicationForm.reset();
+      } catch (error) {
+        const message = error.message || "";
+
+        if (message.includes("pending application")) {
+          applicationStatus.textContent =
+            "You already have an application waiting for review.";
+        } else if (message.includes("membership ID is already in use")) {
+          applicationStatus.textContent =
+            "That membership ID is already in use. Please check it.";
+        } else if (message.includes("verify your email")) {
+          applicationStatus.textContent =
+            "Please verify your email before applying.";
+        } else {
+          applicationStatus.textContent =
+            "Could not submit your application. Please check your details and try again.";
+        }
+      } finally {
+        applicationButton.disabled = false;
+        applicationButton.textContent = "Submit Application";
+      }
+    });
+
+    checkSession();
+  </script>
 </body>
 </html>
