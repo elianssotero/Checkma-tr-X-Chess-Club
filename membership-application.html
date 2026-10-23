@@ -1,0 +1,86 @@
+
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#0b0b0b">
+  <title>Membership Application | CheckmaîtréX Chess Club</title>
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="enhancements.css">
+  <link rel="stylesheet" href="auth-pages.css">
+</head>
+<body>
+  <main class="auth-shell">
+    <section class="auth-card">
+      <div class="auth-brand">
+        <div class="auth-mark" aria-hidden="true">♟</div>
+        <h1>CHECKMAÎTRÉX</h1>
+        <p>Chess Club</p>
+      </div>
+
+      <h2>Membership Application</h2>
+      <p class="auth-intro">
+        Submit your details for manual review by the club administration.
+      </p>
+
+      <form id="applicationForm">
+        <div class="auth-field">
+          <label for="appName">Full name</label>
+          <input
+            id="appName"
+            name="appName"
+            type="text"
+            autocomplete="name"
+            required
+            maxlength="120"
+            placeholder="Your full name">
+        </div>
+
+        <div class="auth-field">
+          <label for="membershipId">Membership ID</label>
+          <input
+            id="membershipId"
+            name="membershipId"
+            type="text"
+            required
+            maxlength="80"
+            placeholder="Enter your Membership ID">
+        </div>
+
+        <div class="auth-note">
+          Submitting this demo form does not send or save an application.
+          A secure database and admin review workflow must be configured
+          before applications can be received. Every real application
+          remains pending until an administrator reviews it.
+        </div>
+
+        <button class="auth-action" type="submit">
+          Review Application
+        </button>
+
+        <div class="auth-status" id="applicationStatus" role="status">
+          This is a preview only. Your details were not transmitted or saved.
+          Contact the club administrator to submit an official application.
+        </div>
+      </form>
+
+      <div class="auth-links">
+        <a href="login-selection.html">Login Options</a>
+        <a href="membership.html">Membership Information</a>
+      </div>
+
+      <a class="auth-home" href="index.html">← Back to Home</a>
+    </section>
+  </main>
+
+  <script src="site-animations.js"></script>
+  <script src="language.js"></script>
+  <script>
+    document.getElementById("applicationForm").addEventListener("submit", function (event) {
+      event.preventDefault();
+      document.getElementById("applicationStatus").classList.add("show");
+    });
+  </script>
+</body>
+</html>
