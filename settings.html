@@ -547,21 +547,14 @@
       location.reload();
     }
 
-    function clearBrowsingData() {
-      if (!confirm(
-        "This clears this website's local storage, including saved preferences and other local data. Continue?"
-      )) return;
-
-      
+    
 function clearBrowsingData() {
-  const confirmed = confirm(
+  if (!confirm(
     "Clear saved CheckmaîtréX website settings? " +
     "This will reset your saved theme and preferences."
-  );
+  )) return;
 
-  if (!confirmed) return;
-
-  const keys = [
+  var keys = [
     "checkmaitrex_theme",
     "checkmaitrex_font_size",
     "checkmaitrex_animations",
@@ -572,16 +565,9 @@ function clearBrowsingData() {
     "checkmaitrex_ai_suggestions"
   ];
 
-  keys.forEach((key) => localStorage.removeItem(key));
+  keys.forEach(function (key) {
+    localStorage.removeItem(key);
+  });
 
   location.reload();
 }
-
-      location.reload();
-    }
-  </script>
-
-  <script src="bfcache-fix.js"></script>
-  <script src="site-animations.js"></script>
-</body>
-</html>
