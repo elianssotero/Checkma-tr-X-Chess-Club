@@ -17,7 +17,13 @@
   ];
 
   // Apply the saved theme, or keep the original design by default.
-  var savedTheme = localStorage.getItem("checkmaitrex_theme") || "dark";
+  var savedTheme = "dark";
+
+try {
+  savedTheme = localStorage.getItem("checkmaitrex_theme") || "dark";
+} catch (error) {
+  console.warn("Unable to load saved theme.", error);
+}
   var theme = allowedThemes.indexOf(savedTheme) !== -1
     ? savedTheme
     : "dark";
