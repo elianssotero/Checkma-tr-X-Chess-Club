@@ -1,0 +1,77 @@
+
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#0b0b0b">
+  <title>Member Login | CheckmaîtréX Chess Club</title>
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="enhancements.css">
+  <link rel="stylesheet" href="auth-pages.css">
+</head>
+<body>
+  <main class="auth-shell">
+    <section class="auth-card">
+      <div class="auth-brand">
+        <div class="auth-mark" aria-hidden="true">♟</div>
+        <h1>CHECKMAÎTRÉX</h1>
+        <p>Chess Club</p>
+      </div>
+
+      <h2>Member Login</h2>
+      <p class="auth-intro">
+        This page is prepared for member sign-in. Secure credential
+        validation must be connected before login can be enabled.
+      </p>
+
+      <form id="memberLoginForm">
+        <div class="auth-field">
+          <label for="memberEmail">Email or username</label>
+          <input
+            id="memberEmail"
+            name="memberEmail"
+            type="text"
+            autocomplete="username"
+            required
+            placeholder="you@example.com">
+        </div>
+
+        <div class="auth-field">
+          <label for="memberPassword">Password</label>
+          <input
+            id="memberPassword"
+            name="memberPassword"
+            type="password"
+            autocomplete="current-password"
+            required
+            placeholder="Enter your password">
+        </div>
+
+        <button class="auth-action" type="submit">Log In</button>
+
+        <div class="auth-status" id="authStatus" role="status">
+          Secure member authentication has not been connected.
+          No login occurred and no credentials were stored.
+        </div>
+      </form>
+
+      <div class="auth-links">
+        <a href="login-selection.html">Back to Login Options</a>
+        <a href="membership-application.html">Apply for Membership</a>
+      </div>
+
+      <a class="auth-home" href="index.html">← Back to Home</a>
+    </section>
+  </main>
+
+  <script src="site-animations.js"></script>
+  <script src="language.js"></script>
+  <script>
+    document.getElementById("memberLoginForm").addEventListener("submit", function (event) {
+      event.preventDefault();
+      document.getElementById("authStatus").classList.add("show");
+    });
+  </script>
+</body>
+</html>
