@@ -1,0 +1,361 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Submit a membership disconnection request to CheckmaitréX Chess Club.">
+  <title>Membership Disconnection Request | CheckmaitréX Chess Club</title>
+
+  <style>
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      padding: 24px 16px;
+      background: #101827;
+      color: #f3f4f6;
+      font-family: Arial, sans-serif;
+    }
+
+    main {
+      max-width: 620px;
+      margin: 30px auto;
+      padding: 24px;
+      background: #1e293b;
+      border: 1px solid #334155;
+      border-radius: 14px;
+    }
+
+    h1 { font-size: 1.65rem; }
+    p { line-height: 1.6; color: #d1d5db; }
+
+    label {
+      display: block;
+      margin: 18px 0 8px;
+      font-weight: bold;
+    }
+
+    textarea {
+      width: 100%;
+      min-height: 130px;
+      padding: 12px;
+      border: 1px solid #64748b;
+      border-radius: 8px;
+      font: inherit;
+      resize: vertical;
+    }
+
+    button, .link-button {
+      display: inline-block;
+      margin-top: 16px;
+      padding: 12px 16px;
+      border: 0;
+      border-radius: 8px;
+      background: #38bdf8;
+      color: #082f49;
+      font-weight: bold;
+      text-decoration: none;
+      cursor: pointer;
+    }
+
+    button:disabled {
+      opacity: .6;
+      cursor: not-allowed;
+    }
+
+    .secondary {
+      background: #475569;
+      color: white;
+    }
+
+    #notice {
+      margin-top: 16px;
+      overflow-wrap: anywhere;
+    }
+
+    .hidden { display: none !important; }
+    .warning { color: #fbbf24; }
+    .success { color: #86efac; }
+    .error { color: #fca5a5; }
+
+    a { color: #7dd3fc; }
+  </style>
+</head>
+
+<body>
+<main>
+  <h1>Membership Disconnection Request</h1>
+
+  <p>
+    Use this form to request disconnection from CheckmaitréX Chess Club.
+    Submitting this form does not immediately cancel your membership.
+    An administrator must review your request.
+  </p>
+
+  <section id="loadingSection" aria-live="polite">
+    Checking your sign-in and membership status...
+  </section>
+
+  <section id="blockedSection" class="hidden">
+    <h2>Access unavailable</h2>
+    <p id="blockedMessage">
+      You cannot access this form.
+    </p>
+    <a class="link-button" href="./login-selection.html">
+      Go to Login
+    </a>
+  </section>
+
+  <section id="formSection" class="hidden">
+    <p id="memberInfo"></p>
+
+    <form id="requestForm">
+      <label for="reason">Reason for your request</label>
+      <textarea
+        id="reason"
+        name="reason"
+        minlength="5"
+        maxlength="2000"
+        required
+        placeholder="Please explain why you want to disconnect from the club."
+      ></textarea>
+
+      <p>
+        Please review your reason before submitting. Your request will
+        remain pending until an administrator reviews it.
+      </p>
+
+      <button id="submitButton" type="submit">
+        Submit Request
+      </button>
+      <a class="link-button secondary" href="./login-selection.html">
+        Cancel
+      </a>
+    </form>
+  </section>
+
+  <section id="pendingSection" class="hidden">
+    <h2>Request already submitted</h2>
+    <p>
+      You already have a pending disconnection request. Please wait for
+      an administrator to review it.
+    </p>
+    <a class="link-button" href="./login-selection.html">
+      Return to Login Selection
+    </a>
+  </section>
+
+  <p id="notice" role="status" aria-live="polite"></p>
+</main>
+
+<!-- Uses the project's existing Supabase client setup. -->
+<script src="./supabase-client.js"></script>
+
+<script type="module">
+  const loadingSection = document.getElementById("loadingSection");
+  const blockedSection = document.getElementById("blockedSection");
+  const blockedMessage = document.getElementById("blockedMessage");
+  const formSection = document.getElementById("formSection");
+  const pendingSection = document.getElementById("pendingSection");
+  const requestForm = document.getElementById("requestForm");
+  const submitButton = document.getElementById("submitButton");
+  const notice = document.getElementById("notice");
+  const memberInfo = document.getElementById("memberInfo");
+  const reasonInput = document.getElementById("reason");
+
+  let supabase = null;
+  let signedInUserId = null;
+  let submitting = false;
+
+  function showOnly(section) {
+    [
+      loadingSection,
+      blockedSection,
+      formSection,
+      pendingSection
+    ].forEach((element) => element.classList.add("hidden"));
+
+    section.classList.remove("hidden");
+  }
+
+  function showNotice(message, type = "") {
+    notice.textContent = message;
+    notice.className = type;
+  }
+
+  function blockAccess(message) {
+    blockedMessage.textContent = message;
+    showOnly(blockedSection);
+  }
+
+  async function initializePage() {
+    try {
+      supabase = window.clubSupabase;
+
+      if (!supabase) {
+        throw new Error(
+          "Supabase client was not initialized. Check supabase-client.js."
+        );
+      }
+
+      const { data: sessionData, error: sessionError } =
+        await supabase.auth.getSession();
+
+      if (sessionError) throw sessionError;
+
+      const user = sessionData?.session?.user;
+
+      if (!user) {
+        blockAccess(
+          "Please sign in first. Only approved club members can submit a request."
+        );
+        return;
+      }
+
+      signedInUserId = user.id;
+
+      const { data: profile, error: profileError } = await supabase
+        .from("member_profiles")
+        .select("membership_status, membership_id, full_name")
+        .eq("user_id", user.id)
+        .maybeSingle();
+
+      if (profileError) throw profileError;
+
+      if (profile?.membership_status !== "approved") {
+        blockAccess(
+          "Your account does not have an approved membership. This form is available only to approved members."
+        );
+        return;
+      }
+
+      memberInfo.textContent =
+        "Signed in as " + (profile.full_name || user.email || "Club member") +
+        (profile.membership_id
+          ? " · Membership ID: " + profile.membership_id
+          : "");
+
+      // Check whether this member already has a pending request.
+      const { data: pendingRequest, error: pendingError } = await supabase
+        .from("membership_disconnection_requests")
+        .select("id")
+        .eq("user_id", user.id)
+        .eq("status", "pending")
+        .limit(1)
+        .maybeSingle();
+
+      if (pendingError) throw pendingError;
+
+      if (pendingRequest) {
+        showOnly(pendingSection);
+        return;
+      }
+
+      showOnly(formSection);
+    } catch (error) {
+      console.error("Disconnection page initialization failed:", error);
+
+      blockAccess(
+        "We could not verify your account. Please try again later or return to the login page."
+      );
+
+      showNotice(
+        "Account verification failed. No request was submitted.",
+        "error"
+      );
+    }
+  }
+
+  requestForm.addEventListener("submit", async (event) => {
+    event.preventDefault();
+
+    if (submitting || !supabase || !signedInUserId) return;
+
+    const reason = reasonInput.value.trim();
+
+    if (reason.length < 5 || reason.length > 2000) {
+      showNotice(
+        "Please enter a reason between 5 and 2000 characters.",
+        "error"
+      );
+      return;
+    }
+
+    submitting = true;
+    submitButton.disabled = true;
+    showNotice("Submitting your request...");
+
+    try {
+      // Re-check the active session at submission time.
+      const { data: sessionData, error: sessionError } =
+        await supabase.auth.getSession();
+
+      if (sessionError) throw sessionError;
+
+      const currentUser = sessionData?.session?.user;
+
+      if (!currentUser || currentUser.id !== signedInUserId) {
+        blockAccess(
+          "Your sign-in session has changed or expired. Please sign in again."
+        );
+        return;
+      }
+
+      // The database RLS policy independently checks identity,
+      // approved membership, pending status, and review fields.
+      const { error: insertError } = await supabase
+        .from("membership_disconnection_requests")
+        .insert({
+          user_id: currentUser.id,
+          reason,
+          status: "pending",
+          reviewed_by: null,
+          reviewed_at: null
+        });
+
+      if (insertError) {
+        if (insertError.code === "23505") {
+          showOnly(pendingSection);
+          return;
+        }
+
+        throw insertError;
+      }
+
+      requestForm.reset();
+      showOnly(pendingSection);
+
+      showNotice(
+        "Your request was submitted successfully and is awaiting review.",
+        "success"
+      );
+    } catch (error) {
+      console.error("Disconnection request submission failed:", error);
+
+      showNotice(
+        error?.code === "42501"
+          ? "Submission denied by database security. Confirm that your membership is approved and the RLS policy is configured correctly."
+          : "Your request could not be submitted. Please check your connection and try again.",
+        "error"
+      );
+    } finally {
+      submitting = false;
+      submitButton.disabled = false;
+    }
+  });
+
+  // A sign-out in another tab or an expired session removes access.
+  if (window.clubSupabase) {
+    window.clubSupabase.auth.onAuthStateChange((event, session) => {
+      if (event === "SIGNED_OUT" || !session?.user) {
+        signedInUserId = null;
+        blockAccess("You are signed out. Please sign in to continue.");
+      }
+    });
+  }
+
+  initializePage();
+</script>
+</body>
+</html>
