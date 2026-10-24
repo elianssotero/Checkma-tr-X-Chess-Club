@@ -1592,8 +1592,55 @@ document.addEventListener("DOMContentLoaded", () => {
 <script src="settings-global.js"></script>
 <script src="language.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<script src="supabase-client.js"></script>
-  
+<script src="supabase-client.js"></script> 
+<script>
+(() => {
+  const button = document.getElementById("adminMenuButton");
+  const panel = document.getElementById("adminMenuPanel");
+  const client = window.clubSupabase;
+
+  if (!button || !panel || !client) return;
+
+  async function checkAdmin() {
+    button.hidden = true;
+    panel.hidden = true;
+
+    try {
+      const { data: sessionData, error: sessionError } =
+        await client.auth.getSession();
+
+      if (sessionError || !sessionData.session) return;
+
+      const { data, error } = await client.rpc("is_club_admin");
+
+      if (!error && data === true) {
+        button.hidden = false;
+      }
+    } catch (error) {
+      console.error("Admin verification failed.");
+    }
+  }
+
+  button.addEventListener("click", () => {
+    panel.hidden = !panel.hidden;
+    button.setAttribute("aria-expanded", String(!panel.hidden));
+  });
+
+  document.addEventListener("click", (event) => {
+    if (!button.contains(event.target) && !panel.contains(event.target)) {
+      panel.hidden = true;
+      button.setAttribute("aria-expanded", "false");
+    }
+  });
+
+  checkAdmin();
+
+  client.auth.onAuthStateChange(() => {
+    setTimeout(checkAdmin, 0);
+  });
+})();
+</script>
+ 
 </body>
 
 </html>
