@@ -585,6 +585,63 @@
   }
 }
 
+
+/* ADMIN HAMBURGER MENU */
+header nav {
+  position: relative;
+}
+
+.admin-menu-button[hidden],
+.admin-menu-panel[hidden] {
+  display: none !important;
+}
+
+.admin-menu-button {
+  position: absolute;
+  top: 0;
+  right: 0;
+  z-index: 1200;
+  width: 42px;
+  height: 42px;
+  border: 1px solid #d4af37;
+  border-radius: 8px;
+  background: #171717;
+  color: #d4af37;
+  font-size: 25px;
+  cursor: pointer;
+}
+
+.admin-menu-button:hover {
+  background: #d4af37;
+  color: #0b0b0b;
+}
+
+.admin-menu-panel {
+  position: absolute;
+  top: 50px;
+  right: 0;
+  z-index: 1201;
+  min-width: 190px;
+  padding: 8px;
+  background: #171717;
+  border: 1px solid #8f752d;
+  border-radius: 8px;
+  box-shadow: 0 12px 25px #0008;
+}
+
+.admin-menu-panel a {
+  display: block;
+  padding: 12px;
+  color: #f5f5f5;
+  text-decoration: none;
+  border-radius: 5px;
+}
+
+.admin-menu-panel a:hover {
+  background: #292316;
+  color: #d4af37;
+}
+
   </style>
 </head>
 <body>
