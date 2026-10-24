@@ -7,34 +7,10 @@
   <meta name="theme-color" content="#0b0b0b">
   <meta name="description" content="Choose a login option for CheckmaîtréX Chess Club.">
   <title>Login Selection | CheckmaîtréX Chess Club</title>
+
   <link rel="stylesheet" href="style.css">
   <link rel="stylesheet" href="enhancements.css">
   <link rel="stylesheet" href="auth-pages.css">
-
-  <style>
-    .auth-status {
-      margin: 16px 0;
-      padding: 12px;
-      border: 1px solid #8f752d;
-      border-radius: 8px;
-      color: #f5f5f5;
-      background: #171717;
-      font-size: .92rem;
-    }
-
-    .auth-status[hidden],
-    .auth-action[hidden] {
-      display: none !important;
-    }
-
-    .auth-status strong {
-      color: #d4af37;
-    }
-
-    .auth-action.is-current {
-      border-color: #d4af37;
-    }
-  </style>
 </head>
 
 <body>
@@ -47,27 +23,42 @@
       </div>
 
       <h2>Choose how to continue</h2>
-      <p class="auth-intro">
-        Select a sign-in option. You can browse the public club website
-        without signing in.
+      <p class="auth-intro" id="authMessage" aria-live="polite">
+        Checking your sign-in status...
       </p>
 
-      <div id="accountStatus" class="auth-status" role="status" hidden></div>
-
       <div class="auth-actions">
-        <a id="googleAction" class="auth-action" href="google-login.html">
+        <!-- Makikita lang kapag walang Google session -->
+        <a class="auth-action" href="google-login.html" id="googleAction" hidden>
           <span aria-hidden="true">G</span>
           <span id="googleLabel">Continue with Google</span>
         </a>
 
-        <a id="memberAction" class="auth-action secondary"
-           href="member-login.html">
+        <!-- Lalabas kapag may Google session -->
+        <button class="auth-action" id="googleSignedIn" type="button" hidden>
+          <span aria-hidden="true">G</span>
+          <span>Signed in with Google</span>
+        </button>
+
+        <!-- Sign out control; Google section lang ang magpapakita nito -->
+        <button class="auth-action secondary" id="signOutButton" type="button" hidden>
+          Sign Out
+        </button>
+
+        <!-- Lalabas lang kapag naka-Google sign-in at hindi pa approved -->
+        <a class="auth-action secondary" href="member-login.html" id="memberAction" hidden>
           <span aria-hidden="true">♟</span>
-          <span id="memberLabel">Member Login</span>
+          Member Login
         </a>
 
-        <a id="applyAction" class="auth-action secondary"
-           href="membership-application.html">
+        <!-- Status label lang; hindi napipindot -->
+        <div class="auth-action secondary" id="memberSignedIn" hidden aria-live="polite">
+          <span aria-hidden="true">✓</span>
+          Signed in as a Member
+        </div>
+
+        <!-- Lalabas lang kung wala pang application -->
+        <a class="auth-action secondary" href="membership-application.html" id="applyAction" hidden>
           Apply for Membership
         </a>
       </div>
@@ -85,105 +76,175 @@
 
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script src="supabase-client.js"></script>
-  <script src="site-animations.js"></script>
-  <script src="language.js"></script>
 
   <script>
-    document.addEventListener("DOMContentLoaded", async () => {
-      const statusBox = document.getElementById("accountStatus");
-      const googleLabel = document.getElementById("googleLabel");
-      const memberLabel = document.getElementById("memberLabel");
+    document.addEventListener("DOMContentLoaded", () => {
       const googleAction = document.getElementById("googleAction");
+      const googleSignedIn = document.getElementById("googleSignedIn");
+      const signOutButton = document.getElementById("signOutButton");
       const memberAction = document.getElementById("memberAction");
+      const memberSignedIn = document.getElementById("memberSignedIn");
       const applyAction = document.getElementById("applyAction");
-
-      function showStatus(message) {
-        statusBox.textContent = message;
-        statusBox.hidden = false;
-      }
+      const authMessage = document.getElementById("authMessage");
 
       if (!window.clubSupabase) {
-        showStatus("Unable to connect to the sign-in service. Please refresh.");
+        authMessage.textContent =
+          "Unable to connect to the sign-in service. Please refresh the page.";
+        console.error("Supabase client is not initialized.");
         return;
       }
 
-      try {
-        const { data, error } =
-          await window.clubSupabase.auth.getSession();
+      const supabase = window.clubSupabase;
+      let currentUserId = null;
+      let refreshNumber = 0;
 
-        if (error) throw error;
+      function hideAllActions() {
+        googleAction.hidden = true;
+        googleSignedIn.hidden = true;
+        signOutButton.hidden = true;
+        memberAction.hidden = true;
+        memberSignedIn.hidden = true;
+        applyAction.hidden = true;
+      }
+
+      async function updateButtons() {
+        const thisRefresh = ++refreshNumber;
+        hideAllActions();
+        authMessage.textContent = "Checking your sign-in status...";
+
+        const { data, error } = await supabase.auth.getSession();
+
+        if (thisRefresh !== refreshNumber) return;
+
+        if (error) {
+          authMessage.textContent =
+            "Could not check your sign-in status. Please refresh the page.";
+          console.error("Session check failed:", error);
+          return;
+        }
 
         const user = data.session?.user;
 
         if (!user) {
-          showStatus("You are not signed in.");
+          currentUserId = null;
+          googleAction.hidden = false;
+          authMessage.textContent =
+            "Sign in with Google to access membership options.";
           return;
         }
 
-        googleLabel.textContent = "Signed in with Google";
-        googleAction.classList.add("is-current");
+        currentUserId = user.id;
+        googleSignedIn.hidden = false;
+        authMessage.textContent = "You are signed in with Google.";
 
-        const displayName =
-          user.user_metadata?.full_name ||
-          user.user_metadata?.name ||
-          user.email ||
-          "your account";
+        // Check whether this same Supabase user is an approved member.
+        const { data: profile, error: profileError } = await supabase
+          .from("member_profiles")
+          .select("status")
+          .eq("user_id", user.id)
+          .maybeSingle();
 
-        showStatus("Signed in as " + displayName + ".");
-
-        // Read membership status for this signed-in account.
-        const { data: profile, error: profileError } =
-          await window.clubSupabase
-            .from("member_profiles")
-            .select("status")
-            .eq("user_id", user.id)
-            .maybeSingle();
+        if (thisRefresh !== refreshNumber) return;
 
         if (profileError) {
-          console.error("Membership status lookup failed:", profileError);
-          showStatus(
-            "Signed in with Google. Membership status could not be checked yet."
-          );
+          console.error("Member status check failed:", profileError);
+          memberAction.hidden = false;
+          authMessage.textContent =
+            "Google sign-in is active, but membership status could not be checked.";
           return;
         }
 
         if (profile?.status === "approved") {
-          memberLabel.textContent = "Signed in as a Member";
-          memberAction.classList.add("is-current");
-          applyAction.hidden = true;
-          showStatus("Signed in as " + displayName + " — approved member.");
+          memberSignedIn.hidden = false;
+          authMessage.textContent =
+            "Your account is approved as a club member.";
           return;
         }
 
-        // Check whether the user already has an application.
-        const { data: application, error: applicationError } =
-          await window.clubSupabase
-            .from("membership_applications")
-            .select("status")
-            .eq("user_id", user.id)
-            .maybeSingle();
+        // Not approved: allow Member Login and check application status.
+        memberAction.hidden = false;
+
+        const { data: applications, error: applicationError } = await supabase
+          .from("membership_applications")
+          .select("status")
+          .eq("user_id", user.id)
+          .order("created_at", { ascending: false })
+          .limit(1);
+
+        if (thisRefresh !== refreshNumber) return;
 
         if (applicationError) {
-          console.error("Application lookup failed:", applicationError);
-          showStatus(
-            "Signed in with Google. We could not check your application status."
-          );
+          console.error("Application status check failed:", applicationError);
+          authMessage.textContent =
+            "Google sign-in is active, but application status could not be checked.";
           return;
         }
 
-        if (application?.status === "pending") {
-          applyAction.hidden = true;
-          showStatus("Your membership application is pending review.");
-        } else if (application?.status === "rejected") {
-          showStatus("Your previous application was rejected. Contact the club administration for next steps.");
+        const application = applications?.[0];
+
+        if (!application) {
+          applyAction.hidden = false;
+          authMessage.textContent =
+            "You are signed in. You may apply for club membership.";
+        } else if (application.status === "pending") {
+          authMessage.textContent =
+            "Your membership application is awaiting review.";
+        } else if (application.status === "rejected") {
+          authMessage.textContent =
+            "Your previous application was not approved. Contact the club administration for next steps.";
         } else {
-          showStatus("Signed in with Google. You can apply for membership.");
+          // Hide Apply if an application already exists.
+          authMessage.textContent =
+            "Your membership application is already recorded.";
         }
-      } catch (error) {
-        console.error("Account status error:", error);
-        showStatus("Could not load your account status. Please refresh.");
       }
+
+      googleSignedIn.addEventListener("click", () => {
+        signOutButton.hidden = !signOutButton.hidden;
+      });
+
+      signOutButton.addEventListener("click", async () => {
+        const confirmed = window.confirm(
+          "Are you sure you want to sign out?"
+        );
+
+        if (!confirmed) return;
+
+        signOutButton.disabled = true;
+        signOutButton.textContent = "Signing out...";
+
+        const { error } = await supabase.auth.signOut();
+
+        signOutButton.disabled = false;
+        signOutButton.textContent = "Sign Out";
+
+        if (error) {
+          authMessage.textContent = "Sign out failed. Please try again.";
+          console.error("Sign out failed:", error);
+          return;
+        }
+
+        await updateButtons();
+      });
+
+      // Refresh button states after sign-in or sign-out.
+      supabase.auth.onAuthStateChange((event, session) => {
+        const newUserId = session?.user?.id ?? null;
+
+        if (event === "SIGNED_IN" ||
+            event === "SIGNED_OUT" ||
+            newUserId !== currentUserId) {
+          window.setTimeout(() => {
+            updateButtons();
+          }, 0);
+        }
+      });
+
+      updateButtons();
     });
   </script>
+
+  <script src="site-animations.js"></script>
+  <script src="language.js"></script>
 </body>
 </html>
