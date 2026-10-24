@@ -5,9 +5,8 @@
  *
  * File: admin/disconnection-requests.js
  *
- * Read-only request list.
- * Approval/rejection will be enabled after secure review RPCs
- * and membership-history logging are implemented.
+ * Uses the secure Supabase RPC for admin review.
+ * Membership changes and history logging are handled by the database.
  */
 
 import {
@@ -22,8 +21,8 @@ export async function renderMembershipSection(container) {
     <header>
       <h2>Membership Disconnection Requests</h2>
       <p>
-        Review requests from members who want to leave or disconnect
-        from the club. This page is currently read-only.
+        Review requests from members who want to disconnect
+        from the club.
       </p>
     </header>
 
@@ -43,16 +42,16 @@ export async function renderMembershipSection(container) {
 
     const { data, error } = await supabase
       .from("membership_disconnection_requests")
-      .select("id, user_id, reason, status, requested_at, reviewed_at, review_note")
+      .select(
+        "id, user_id, reason, status, requested_at, reviewed_by, reviewed_at, review_note"
+      )
       .order("requested_at", { ascending: false });
 
     if (error) throw error;
 
     if (!data || data.length === 0) {
       message.textContent = "No disconnection requests found.";
-      list.innerHTML = `
-        <p>No requests to display right now.</p>
-      `;
+      list.innerHTML = "<p>No requests to display right now.</p>";
       return;
     }
 
@@ -83,60 +82,160 @@ export async function renderMembershipSection(container) {
         ? escapeHTML(formatDate(request.reviewed_at))
         : "Not reviewed";
 
+      const reviewedBy = request.reviewed_by
+        ? escapeHTML(request.reviewed_by)
+        : "Not reviewed";
+
+      const actions = status === "pending"
+        ? `
+          <div class="disconnection-review-actions"
+               style="margin-top: 16px;">
+            <label for="review-note-${escapeHTML(request.id)}">
+              Review note (optional)
+            </label>
+
+            <textarea
+              id="review-note-${escapeHTML(request.id)}"
+              data-review-note="${escapeHTML(request.id)}"
+              rows="3"
+              maxlength="2000"
+              style="display:block;width:100%;margin:8px 0;"
+              placeholder="Write a note for the member..."
+            ></textarea>
+
+            <button
+              type="button"
+              data-review-decision="approve"
+              data-request-id="${escapeHTML(request.id)}"
+            >
+              Approve Disconnection
+            </button>
+
+            <button
+              type="button"
+              data-review-decision="reject"
+              data-request-id="${escapeHTML(request.id)}"
+              style="margin-left:8px;"
+            >
+              Reject Request
+            </button>
+          </div>
+        `
+        : `
+          <p><em>This request has already been reviewed.</em></p>
+        `;
+
       return `
-        <article class="mum-card" style="margin-top: 16px;">
+        <article class="mum-card" style="margin-top:16px;">
           <div>
             <span class="mum-badge ${badgeClass}">
               ${escapeHTML(status)}
             </span>
           </div>
 
-          <h3 style="margin-top: 12px;">Disconnection Request</h3>
+          <h3 style="margin-top:12px;">Disconnection Request</h3>
 
-          <p>
-            <strong>Request ID:</strong>
-            ${escapeHTML(request.id)}
-          </p>
+          <p><strong>Request ID:</strong> ${escapeHTML(request.id)}</p>
+          <p><strong>Member User ID:</strong> ${escapeHTML(request.user_id)}</p>
+          <p><strong>Reason:</strong> ${reason}</p>
+          <p><strong>Requested:</strong> ${requestedAt}</p>
+          <p><strong>Reviewed:</strong> ${reviewedAt}</p>
+          <p><strong>Reviewed by:</strong> ${reviewedBy}</p>
+          <p><strong>Review note:</strong> ${reviewNote}</p>
 
-          <p>
-            <strong>Member User ID:</strong>
-            ${escapeHTML(request.user_id)}
-          </p>
-
-          <p>
-            <strong>Reason:</strong> ${reason}
-          </p>
-
-          <p>
-            <strong>Requested:</strong> ${requestedAt}
-          </p>
-
-          <p>
-            <strong>Reviewed:</strong> ${reviewedAt}
-          </p>
-
-          <p>
-            <strong>Review note:</strong> ${reviewNote}
-          </p>
-
-          ${
-            status === "pending"
-              ? `<p>
-                   <em>
-                     Review actions are not enabled yet. No membership
-                     records have been changed.
-                   </em>
-                 </p>`
-              : ""
-          }
+          ${actions}
         </article>
       `;
     }).join("");
+
+    // Use one delegated listener for the current request list.
+    list.addEventListener("click", async (event) => {
+      const button = event.target.closest("button[data-review-decision]");
+
+      if (!button || !list.contains(button) || button.disabled) {
+        return;
+      }
+
+      const requestId = button.dataset.requestId;
+      const decision = button.dataset.reviewDecision;
+
+      if (!requestId || !["approve", "reject"].includes(decision)) {
+        showToast("Invalid review action.", "error");
+        return;
+      }
+
+      const noteField = list.querySelector(
+        `[data-review-note="${CSS.escape(requestId)}"]`
+      );
+
+      const reviewNote = noteField?.value.trim() || null;
+
+      const actionLabel = decision === "approve"
+        ? "approve this disconnection request"
+        : "reject this disconnection request";
+
+      if (!window.confirm(`Are you sure you want to ${actionLabel}?`)) {
+        return;
+      }
+
+      const buttons = list.querySelectorAll(
+        `button[data-request-id="${CSS.escape(requestId)}"]`
+      );
+
+      buttons.forEach((item) => {
+        item.disabled = true;
+      });
+
+      message.textContent = `Processing request ${requestId}...`;
+
+      try {
+        const { data: result, error: rpcError } = await supabase.rpc(
+          "review_membership_disconnection_request",
+          {
+            p_request_id: Number(requestId),
+            p_decision: decision,
+            p_review_note: reviewNote
+          }
+        );
+
+        if (rpcError) throw rpcError;
+
+        if (!result || result.success !== true) {
+          throw new Error("The database did not confirm the review.");
+        }
+
+        showToast(
+          decision === "approve"
+            ? "Disconnection approved. Membership status updated."
+            : "Disconnection request rejected.",
+          "success"
+        );
+
+        // Reload from the database to display the saved status.
+        await renderMembershipSection(container);
+      } catch (reviewError) {
+        console.error("Failed to review disconnection request:", reviewError);
+
+        showToast(
+          reviewError?.message ||
+            "Could not process the disconnection request.",
+          "error"
+        );
+
+        message.textContent =
+          "Review failed. The request list may be refreshed and tried again.";
+
+        buttons.forEach((item) => {
+          item.disabled = false;
+        });
+      }
+    });
 
   } catch (error) {
     console.error("Failed to load disconnection requests:", error);
 
     message.textContent = "Unable to load disconnection requests.";
+
     list.innerHTML = `
       <p>
         Check your connection, administrator access, and Supabase RLS
@@ -152,5 +251,6 @@ export async function renderMembershipSection(container) {
 }
 
 export function cleanupMembershipSection() {
-  // No event listeners or background operations are created.
+  // The review listener is attached to the rendered list element.
+  // Re-rendering replaces that element and its listener.
 }
