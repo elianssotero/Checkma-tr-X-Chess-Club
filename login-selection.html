@@ -154,11 +154,11 @@
         if (thisRefresh !== refreshNumber) return;
 
         if (profileError) {
-          console.error("Member status check failed:", profileError);
-          memberAction.hidden = false;
-          authMessage.textContent =
-            "Google sign-in is active, but membership status could not be checked.";
-          return;
+  console.error("Member status check failed:", profileError);
+  memberAction.hidden = false;
+  authMessage.textContent =
+    "Could not verify membership status: " + profileError.message;
+  return;
         }
 
         if (profile?.status === "approved") {
@@ -181,10 +181,10 @@
         if (thisRefresh !== refreshNumber) return;
 
         if (applicationError) {
-          console.error("Application status check failed:", applicationError);
-          authMessage.textContent =
-            "Google sign-in is active, but application status could not be checked.";
-          return;
+  console.error("Application status check failed:", applicationError);
+  authMessage.textContent =
+    "Could not check application status: " + applicationError.message;
+  return;
         }
 
         const application = applications?.[0];
