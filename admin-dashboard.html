@@ -895,44 +895,68 @@
     }
 
     function renderNavigation() {
-      categoryNavigation.innerHTML = categories.map(category => {
-        const expanded = expandedCategory === category.id;
-        const selected = category.options.some(
-          option => option[0] === currentPage
-        );
-
-        return `
-          <section>
-            <button
-              class="category-toggle ${selected ? "active" : ""}"
-              data-category="${category.id}"
-              aria-expanded="${expanded}"
-              aria-controls="subnav-${category.id}"
-            >
-              <span class="nav-icon">${category.icon}</span>
-              <span class="nav-text">${category.name}</span>
-              <span class="chevron">›</span>
-            </button>
-
-            <div
-              class="subnav"
-              id="subnav-${category.id}"
-              ${expanded ? "" : "hidden"}
-            >
-              ${category.options.map(option => `
-                <button
-                  class="sub-item ${currentPage === option[0] ? "active" : ""}"
-                  data-page="${escapeHTML(option[0])}"
-                >
-                  <span class="sub-dot"></span>
-                  <span>${escapeHTML(option[0])}</span>
-                </button>
-              `).join("")}
-            </div>
-          </section>
-        `;
-      }).join("");
+    
+function renderNavigation() {
+  categoryNavigation.innerHTML = categories.map(category => {
+    if (category.standalone) {
+      return `
+        <section>
+          <button
+            class="nav-item ${
+              currentPage === "membership-management" ? "active" : ""
+            }"
+            data-page="membership-management"
+            aria-current="${
+              currentPage === "membership-management" ? "page" : "false"
+            }"
+          >
+            <span class="nav-icon">${category.icon}</span>
+            <span class="nav-text">${escapeHTML(category.name)}</span>
+          </button>
+        </section>
+      `;
     }
+
+    const expanded = expandedCategory === category.id;
+    const selected = category.options.some(
+      option => option[0] === currentPage
+    );
+
+    return `
+      <section>
+        <button
+          class="category-toggle ${selected ? "active" : ""}"
+          data-category="${category.id}"
+          aria-expanded="${expanded}"
+          aria-controls="subnav-${category.id}"
+        >
+          <span class="nav-icon">${category.icon}</span>
+          <span class="nav-text">${escapeHTML(category.name)}</span>
+          <span class="chevron">›</span>
+        </button>
+
+        <div
+          class="subnav"
+          id="subnav-${category.id}"
+          ${expanded ? "" : "hidden"}
+        >
+          ${category.options.map(option => `
+            <button
+              class="sub-item ${
+                currentPage === option[0] ? "active" : ""
+              }"
+              data-page="${escapeHTML(option[0])}"
+            >
+              <span class="sub-dot"></span>
+              <span>${escapeHTML(option[0])}</span>
+            </button>
+          `).join("")}
+        </div>
+      </section>
+    `;
+  }).join("");
+}
+
 
     function footerHTML() {
       return `
