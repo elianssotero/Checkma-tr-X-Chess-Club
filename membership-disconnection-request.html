@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -99,9 +98,7 @@
 
   <section id="blockedSection" class="hidden">
     <h2>Access unavailable</h2>
-    <p id="blockedMessage">
-      You cannot access this form.
-    </p>
+    <p id="blockedMessage">You cannot access this form.</p>
     <a class="link-button" href="./login-selection.html">
       Go to Login
     </a>
@@ -112,6 +109,7 @@
 
     <form id="requestForm">
       <label for="reason">Reason for your request</label>
+
       <textarea
         id="reason"
         name="reason"
@@ -129,6 +127,7 @@
       <button id="submitButton" type="submit">
         Submit Request
       </button>
+
       <a class="link-button secondary" href="./login-selection.html">
         Cancel
       </a>
@@ -149,7 +148,6 @@
   <p id="notice" role="status" aria-live="polite"></p>
 </main>
 
-<!-- Uses the project's existing Supabase client setup. -->
 <script src="./supabase-client.js"></script>
 
 <script type="module">
@@ -164,9 +162,11 @@
   const memberInfo = document.getElementById("memberInfo");
   const reasonInput = document.getElementById("reason");
 
-  let supabase = null;
+  const supabase = window.clubSupabase || null;
+
   let signedInUserId = null;
   let submitting = false;
+  let initializationVersion = 0;
 
   function showOnly(section) {
     [
@@ -189,22 +189,66 @@
     showOnly(blockedSection);
   }
 
+  function readableError(error) {
+    if (!error) return "Unknown error";
+    return [
+      error.message,
+      error.code ? "Code: " + error.code : "",
+      error.details || "",
+      error.hint || ""
+    ].filter(Boolean).join(" | ");
+  }
+
+  async function getVerifiedUser() {
+    if (!supabase) {
+      throw new Error(
+        "Supabase client is unavailable. Check supabase-client.js and its load order."
+      );
+    }
+
+    // First check whether a session exists in this browser.
+    const {
+      data: sessionData,
+      error: sessionError
+    } = await supabase.auth.getSession();
+
+    if (sessionError) throw sessionError;
+
+    const sessionUser = sessionData?.session?.user;
+
+    if (!sessionUser) return null;
+
+    // Verify the authenticated user with Supabase Auth.
+    const {
+      data: userData,
+      error: userError
+    } = await supabase.auth.getUser();
+
+    if (userError) throw userError;
+
+    const verifiedUser = userData?.user;
+
+    if (!verifiedUser) return null;
+
+    // Make sure both results refer to the same account.
+    if (verifiedUser.id !== sessionUser.id) {
+      throw new Error("The active authentication session changed.");
+    }
+
+    return verifiedUser;
+  }
+
   async function initializePage() {
+    const currentVersion = ++initializationVersion;
+
+    signedInUserId = null;
+    showNotice("");
+    showOnly(loadingSection);
+
     try {
-      supabase = window.clubSupabase;
+      const user = await getVerifiedUser();
 
-      if (!supabase) {
-        throw new Error(
-          "Supabase client was not initialized. Check supabase-client.js."
-        );
-      }
-
-      const { data: sessionData, error: sessionError } =
-        await supabase.auth.getSession();
-
-      if (sessionError) throw sessionError;
-
-      const user = sessionData?.session?.user;
+      if (currentVersion !== initializationVersion) return;
 
       if (!user) {
         blockAccess(
@@ -213,39 +257,82 @@
         return;
       }
 
-      signedInUserId = user.id;
+      const verifiedUserId = user.id;
 
-      const { data: profile, error: profileError } = await supabase
+      // Read only the signed-in user's own membership profile.
+      const {
+        data: profile,
+        error: profileError
+      } = await supabase
         .from("member_profiles")
         .select("membership_status, membership_id, full_name")
-        .eq("user_id", user.id)
+        .eq("user_id", verifiedUserId)
         .maybeSingle();
 
-      if (profileError) throw profileError;
+      if (profileError) {
+        console.error(
+          "Member profile query failed:",
+          readableError(profileError)
+        );
+        throw new Error(
+          "We could not read your membership profile. Check the member_profiles SELECT policy and the database connection."
+        );
+      }
 
-      if (profile?.membership_status !== "approved") {
+      if (currentVersion !== initializationVersion) return;
+
+      if (!profile) {
         blockAccess(
-          "Your account does not have an approved membership. This form is available only to approved members."
+          "We could not find a membership profile linked to this signed-in account. Please return to login or contact a club administrator."
         );
         return;
       }
 
+      if (
+        String(profile.membership_status || "").trim().toLowerCase()
+        !== "approved"
+      ) {
+        blockAccess(
+          "Your membership is not approved. This form is available only to approved club members."
+        );
+        return;
+      }
+
+      // Do not grant access solely because a profile was read.
+      // Supabase RLS must independently enforce approval on INSERT.
+      signedInUserId = verifiedUserId;
+
       memberInfo.textContent =
-        "Signed in as " + (profile.full_name || user.email || "Club member") +
+        "Signed in as " +
+        (profile.full_name || user.email || "Club member") +
         (profile.membership_id
           ? " · Membership ID: " + profile.membership_id
           : "");
 
-      // Check whether this member already has a pending request.
-      const { data: pendingRequest, error: pendingError } = await supabase
+      // Check for an existing pending request.
+      const {
+        data: pendingRequest,
+        error: pendingError
+      } = await supabase
         .from("membership_disconnection_requests")
         .select("id")
-        .eq("user_id", user.id)
+        .eq("user_id", verifiedUserId)
         .eq("status", "pending")
         .limit(1)
         .maybeSingle();
 
-      if (pendingError) throw pendingError;
+      if (pendingError) {
+        console.error(
+          "Pending request query failed:",
+          readableError(pendingError)
+        );
+
+        throw new Error(
+          "We verified your membership, but could not check existing disconnection requests. Check the table's SELECT policy and database connection."
+        );
+      }
+
+      if (currentVersion !== initializationVersion) return;
 
       if (pendingRequest) {
         showOnly(pendingSection);
@@ -254,14 +341,22 @@
 
       showOnly(formSection);
     } catch (error) {
-      console.error("Disconnection page initialization failed:", error);
+      if (currentVersion !== initializationVersion) return;
 
-      blockAccess(
-        "We could not verify your account. Please try again later or return to the login page."
+      console.error(
+        "Disconnection page initialization failed:",
+        readableError(error)
       );
 
+      signedInUserId = null;
+
+      blockAccess(
+        "We could not complete account verification. Your membership has not been changed, and no request was submitted."
+      );
+
+      // Give a useful next step without exposing sensitive details.
       showNotice(
-        "Account verification failed. No request was submitted.",
+        "Please refresh the page. If the problem continues, check the browser console for the specific error and verify the Supabase RLS policies.",
         "error"
       );
     }
@@ -287,23 +382,44 @@
     showNotice("Submitting your request...");
 
     try {
-      // Re-check the active session at submission time.
-      const { data: sessionData, error: sessionError } =
-        await supabase.auth.getSession();
-
-      if (sessionError) throw sessionError;
-
-      const currentUser = sessionData?.session?.user;
+      // Re-verify the authenticated identity before submitting.
+      const currentUser = await getVerifiedUser();
 
       if (!currentUser || currentUser.id !== signedInUserId) {
+        signedInUserId = null;
+
         blockAccess(
-          "Your sign-in session has changed or expired. Please sign in again."
+          "Your sign-in session has expired or changed. Please sign in again."
         );
         return;
       }
 
-      // The database RLS policy independently checks identity,
-      // approved membership, pending status, and review fields.
+      // Re-check approval in case the membership status changed.
+      const {
+        data: profile,
+        error: profileError
+      } = await supabase
+        .from("member_profiles")
+        .select("membership_status")
+        .eq("user_id", currentUser.id)
+        .maybeSingle();
+
+      if (profileError) throw profileError;
+
+      if (
+        String(profile?.membership_status || "").trim().toLowerCase()
+        !== "approved"
+      ) {
+        signedInUserId = null;
+
+        blockAccess(
+          "Your membership is no longer approved. You cannot submit a request."
+        );
+        return;
+      }
+
+      // The database must independently validate identity,
+      // approved membership, and the permitted request fields.
       const { error: insertError } = await supabase
         .from("membership_disconnection_requests")
         .insert({
@@ -315,28 +431,50 @@
         });
 
       if (insertError) {
+        console.error(
+          "Disconnection request insert failed:",
+          readableError(insertError)
+        );
+
         if (insertError.code === "23505") {
           showOnly(pendingSection);
+          showNotice(
+            "A pending request already exists for your account.",
+            "warning"
+          );
           return;
         }
 
-        throw insertError;
+        if (insertError.code === "42501") {
+          showNotice(
+            "The database denied this submission. Confirm that the approved-member INSERT policy is active and that no other permissive INSERT policy bypasses it.",
+            "error"
+          );
+          return;
+        }
+
+        showNotice(
+          "The request could not be submitted. Please check your connection and try again.",
+          "error"
+        );
+        return;
       }
 
       requestForm.reset();
       showOnly(pendingSection);
 
       showNotice(
-        "Your request was submitted successfully and is awaiting review.",
+        "Your request was submitted successfully and is awaiting administrator review.",
         "success"
       );
     } catch (error) {
-      console.error("Disconnection request submission failed:", error);
+      console.error(
+        "Disconnection request submission failed:",
+        readableError(error)
+      );
 
       showNotice(
-        error?.code === "42501"
-          ? "Submission denied by database security. Confirm that your membership is approved and the RLS policy is configured correctly."
-          : "Your request could not be submitted. Please check your connection and try again.",
+        "The request could not be submitted because verification or a database operation failed. Please refresh and try again.",
         "error"
       );
     } finally {
@@ -345,10 +483,12 @@
     }
   });
 
-  // A sign-out in another tab or an expired session removes access.
-  if (window.clubSupabase) {
-    window.clubSupabase.auth.onAuthStateChange((event, session) => {
-      if (event === "SIGNED_OUT" || !session?.user) {
+  if (supabase) {
+    // Ignore INITIAL_SESSION here; initializePage() handles the initial
+    // session check itself. This avoids blocking the page during startup.
+    supabase.auth.onAuthStateChange((event) => {
+      if (event === "SIGNED_OUT") {
+        initializationVersion++;
         signedInUserId = null;
         blockAccess("You are signed out. Please sign in to continue.");
       }
