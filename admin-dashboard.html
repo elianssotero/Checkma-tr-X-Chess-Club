@@ -797,22 +797,16 @@
   <!-- Main dashboard JavaScript -->
   <script>
     const categories = [
-      {
-        id: "membership",
-        icon: "♙",
-        name: "Membership & User Management",
-        description: "Manage membership applications, approved members, roles, and member requests.",
-        options: [
-          ["Membership Applications", "♧"],
-          ["Approved Members", "✓"],
-          ["Pending Applications", "◷"],
-          ["Rejected Applications", "×"],
-          ["Membership Disconnection Requests", "↗"],
-          ["Member Directory", "☷"],
-          ["Member Roles & Permissions", "♜"],
-          ["Membership History", "◴"]
-        ]
-      },
+      
+{
+  id: "membership",
+  icon: "♙",
+  name: "Membership & User Management",
+  description: "Manage membership applications and member records.",
+  standalone: true,
+  options: []
+},
+
       {
         id: "website",
         icon: "▣",
