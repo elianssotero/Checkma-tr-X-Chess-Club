@@ -1,0 +1,536 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#101827">
+  <title>Admin Dashboard | CheckmaîtréX Chess Club</title>
+
+  <style>
+    :root {
+      --bg: #0b1120;
+      --panel: #111c2e;
+      --panel-hover: #1a2940;
+      --border: #26364c;
+      --text: #edf3fc;
+      --muted: #91a2ba;
+      --accent: #75a7ff;
+      --sidebar-width: 270px;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      font-family: system-ui, -apple-system, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+    }
+
+    button, a { font: inherit; }
+
+    button { cursor: pointer; }
+
+    .layout { min-height: 100vh; }
+
+    .sidebar {
+      position: fixed;
+      inset: 0 auto 0 0;
+      width: var(--sidebar-width);
+      padding: 22px 15px;
+      overflow-y: auto;
+      background: #0e1727;
+      border-right: 1px solid var(--border);
+      z-index: 10;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 4px 8px 22px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .brand-icon {
+      display: grid;
+      place-items: center;
+      width: 42px;
+      height: 42px;
+      background: #203b63;
+      border-radius: 12px;
+      font-size: 23px;
+    }
+
+    .brand strong { display: block; font-size: 14px; }
+    .brand small { color: var(--muted); font-size: 10px; }
+
+    .nav-label {
+      margin: 23px 9px 10px;
+      color: var(--muted);
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 1.4px;
+    }
+
+    .nav-item, .category-toggle, .sub-link {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      width: 100%;
+      border: 0;
+      border-radius: 9px;
+      text-align: left;
+      text-decoration: none;
+      color: var(--muted);
+      background: transparent;
+    }
+
+    .nav-item, .category-toggle {
+      padding: 11px 10px;
+      font-size: 13px;
+    }
+
+    .nav-item:hover, .category-toggle:hover,
+    .sub-link:hover {
+      color: var(--text);
+      background: var(--panel-hover);
+    }
+
+    .nav-item.active, .sub-link.active {
+      color: var(--accent);
+      background: #1b2e49;
+    }
+
+    .category-toggle .arrow {
+      margin-left: auto;
+      transition: transform .2s;
+    }
+
+    .category-toggle[aria-expanded="true"] .arrow {
+      transform: rotate(90deg);
+    }
+
+    .submenu {
+      display: none;
+      padding: 3px 0 8px 17px;
+    }
+
+    .submenu.open { display: block; }
+
+    .sub-link {
+      padding: 9px 10px;
+      font-size: 12px;
+      line-height: 1.4;
+    }
+
+    .sidebar-footer {
+      margin: 25px 5px 5px;
+      padding: 13px;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      color: var(--muted);
+      font-size: 11px;
+      line-height: 1.7;
+    }
+
+    .main {
+      min-height: 100vh;
+      margin-left: var(--sidebar-width);
+    }
+
+    .topbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 15px;
+      padding: 17px 28px;
+      border-bottom: 1px solid var(--border);
+      background: #0e1727;
+    }
+
+    .topbar h2 { margin: 0; font-size: 17px; }
+    .topbar small { color: var(--muted); }
+
+    .admin-label {
+      padding: 7px 11px;
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      color: var(--accent);
+      font-size: 11px;
+      white-space: nowrap;
+    }
+
+    .content { padding: 30px; max-width: 1250px; margin: auto; }
+
+    .eyebrow {
+      color: var(--accent);
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+    }
+
+    h1 { margin: 8px 0; font-size: clamp(25px, 4vw, 34px); }
+    .intro { max-width: 650px; color: var(--muted); line-height: 1.7; }
+
+    .section-heading {
+      margin: 32px 0 15px;
+      font-size: 17px;
+    }
+
+    .overview-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 15px;
+      margin-top: 25px;
+    }
+
+    .overview-card, .category-card, .placeholder {
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      background: var(--panel);
+    }
+
+    .overview-card { padding: 19px; }
+    .overview-card .symbol { font-size: 24px; }
+    .overview-card h3 { margin: 13px 0 7px; font-size: 14px; }
+    .overview-card p { margin: 0; color: var(--muted); font-size: 12px; line-height: 1.6; }
+
+    .category-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 15px;
+    }
+
+    .category-card {
+      display: block;
+      padding: 19px;
+      color: var(--text);
+      text-align: left;
+      transition: border-color .2s, background .2s;
+    }
+
+    .category-card:hover {
+      border-color: var(--accent);
+      background: var(--panel-hover);
+    }
+
+    .category-card .symbol { font-size: 25px; }
+    .category-card h3 { margin: 13px 0 7px; font-size: 15px; }
+    .category-card p { margin: 0; color: var(--muted); font-size: 12px; line-height: 1.6; }
+    .category-card .view { display: block; margin-top: 16px; color: var(--accent); font-size: 12px; }
+
+    .placeholder {
+      margin-top: 25px;
+      padding: 35px 22px;
+      text-align: center;
+    }
+
+    .placeholder .symbol { font-size: 42px; }
+    .placeholder h2 { margin: 15px 0 8px; }
+    .placeholder p { max-width: 500px; margin: auto; color: var(--muted); line-height: 1.7; }
+    .coming-soon {
+      display: inline-block;
+      margin-top: 18px;
+      padding: 7px 12px;
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      color: var(--accent);
+      font-size: 11px;
+    }
+
+    .back-button {
+      margin-top: 22px;
+      padding: 10px 15px;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      color: var(--text);
+      background: var(--panel-hover);
+    }
+
+    .mobile-menu { display: none; }
+
+    @media (max-width: 900px) {
+      .sidebar {
+        transform: translateX(-100%);
+        transition: transform .2s;
+        box-shadow: 12px 0 30px #0005;
+      }
+
+      .sidebar.visible { transform: translateX(0); }
+      .main { margin-left: 0; }
+      .mobile-menu { display: inline-block; }
+      .topbar { padding: 15px 18px; }
+      .content { padding: 22px 18px; }
+      .overview-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    }
+
+    @media (max-width: 540px) {
+      .category-grid, .overview-grid { grid-template-columns: 1fr; }
+      .admin-label { font-size: 10px; }
+    }
+  </style>
+</head>
+
+<body>
+<div class="layout">
+  <aside class="sidebar" id="sidebar">
+    <div class="brand">
+      <div class="brand-icon">♟</div>
+      <div>
+        <strong>CheckmaîtréX</strong>
+        <small>ADMIN CONTROL CENTER</small>
+      </div>
+    </div>
+
+    <div class="nav-label">MAIN MENU</div>
+
+    <button class="nav-item active" data-page="overview">
+      ◫ &nbsp; Dashboard Overview
+    </button>
+
+    <div class="nav-label">MANAGEMENT</div>
+    <nav id="categoryNavigation"></nav>
+
+    <div class="sidebar-footer">
+      <strong>Structure Preview</strong><br>
+      Admin pages are placeholders for now. Actual features will be added later.
+    </div>
+  </aside>
+
+  <main class="main">
+    <header class="topbar">
+      <div style="display:flex;align-items:center;gap:12px">
+        <button class="back-button mobile-menu" id="menuButton" aria-label="Toggle navigation">☰</button>
+        <div>
+          <h2 id="pageHeading">Dashboard Overview</h2>
+          <small>CheckmaîtréX Chess Club</small>
+        </div>
+      </div>
+      <span class="admin-label">Admin Layout Preview</span>
+    </header>
+
+    <section class="content" id="pageContent" aria-live="polite"></section>
+  </main>
+</div>
+
+<script>
+  const categories = [
+    {
+      id: "membership",
+      icon: "♟",
+      name: "Membership & User Management",
+      description: "Accounts, membership applications and member status.",
+      items: [
+        "Membership Applications", "Approved Members",
+        "Pending Applications", "Rejected Applications",
+        "Membership Disconnection Requests", "Member Directory",
+        "Member Roles & Permissions", "Membership History"
+      ]
+    },
+    {
+      id: "website",
+      icon: "▦",
+      name: "Website Management",
+      description: "Website pages, layout, navigation and appearance.",
+      items: [
+        "Homepage Manager", "Pages & Sections",
+        "Navigation Menu Manager", "Header & Footer",
+        "Website Appearance & Themes", "Media Library",
+        "Gallery Manager", "Website Components", "Custom Pages"
+      ]
+    },
+    {
+      id: "chess-club",
+      icon: "♜",
+      name: "Chess Club Operations",
+      description: "Tournaments, club events and chess programs.",
+      items: [
+        "Tournament Management", "Club Events",
+        "Event Registrations", "Chess Programs & Training",
+        "Player Rankings", "Match & Results Management",
+        "Club Calendar", "Club Information"
+      ]
+    },
+    {
+      id: "communications",
+      icon: "✉",
+      name: "Content & Communications",
+      description: "News, announcements and communication tools.",
+      items: [
+        "Announcements", "News & Articles",
+        "Featured Content", "Contact Inquiries",
+        "Notifications", "Newsletter Management",
+        "FAQ Manager", "Testimonials & Feedback"
+      ]
+    },
+    {
+      id: "system",
+      icon: "⚙",
+      name: "System, Security & Analytics",
+      description: "Administration, monitoring, reports and settings.",
+      items: [
+        "Admin Accounts", "Admin Roles & Permissions",
+        "Activity & Audit Logs", "Website Analytics",
+        "Reports & Exports", "General System Settings",
+        "Security & Access Monitoring", "Backup & Recovery",
+        "Integrations & API Settings"
+      ]
+    }
+  ];
+
+  const navigation = document.getElementById("categoryNavigation");
+  const content = document.getElementById("pageContent");
+  const heading = document.getElementById("pageHeading");
+  const sidebar = document.getElementById("sidebar");
+
+  function renderNavigation() {
+    navigation.innerHTML = categories.map(category => `
+      <div>
+        <button class="category-toggle" data-toggle="${category.id}"
+          aria-expanded="false">
+          <span>${category.icon}</span>
+          <span>${category.name}</span>
+          <span class="arrow">›</span>
+        </button>
+        <div class="submenu" id="submenu-${category.id}">
+          ${category.items.map(item => `
+            <button class="sub-link"
+              data-category="${category.id}"
+              data-item="${item}">${item}</button>
+          `).join("")}
+        </div>
+      </div>
+    `).join("");
+  }
+
+  function renderOverview() {
+    heading.textContent = "Dashboard Overview";
+
+    content.innerHTML = `
+      <div class="eyebrow">Control Center</div>
+      <h1>Welcome to Admin Dashboard</h1>
+      <p class="intro">
+        Your central navigation space for managing the CheckmaîtréX Chess Club
+        website. Select a category to explore its planned administrative pages.
+      </p>
+
+      <div class="overview-grid">
+        <article class="overview-card">
+          <div class="symbol">♟</div>
+          <h3>Membership & Users</h3>
+          <p>Planned member and account management tools.</p>
+        </article>
+        <article class="overview-card">
+          <div class="symbol">▦</div>
+          <h3>Website Management</h3>
+          <p>Planned website structure and appearance tools.</p>
+        </article>
+        <article class="overview-card">
+          <div class="symbol">♜</div>
+          <h3>Chess Club Operations</h3>
+          <p>Planned tournament, event and club activity tools.</p>
+        </article>
+      </div>
+
+      <h2 class="section-heading">Explore Management Categories</h2>
+      <div class="category-grid">
+        ${categories.map(category => `
+          <button class="category-card" data-open-category="${category.id}">
+            <div class="symbol">${category.icon}</div>
+            <h3>${category.name}</h3>
+            <p>${category.description}</p>
+            <span class="view">View sub-options →</span>
+          </button>
+        `).join("")}
+      </div>
+    `;
+  }
+
+  function renderPlaceholder(category, item) {
+    heading.textContent = item;
+
+    content.innerHTML = `
+      <div class="eyebrow">${category.name}</div>
+      <h1>${item}</h1>
+      <p class="intro">${category.description}</p>
+
+      <div class="placeholder">
+        <div class="symbol">${category.icon}</div>
+        <h2>Feature Coming Soon</h2>
+        <p>
+          This page is part of the planned Admin Dashboard structure.
+          Its actual functionality will be added in a future development stage.
+        </p>
+        <span class="coming-soon">PLACEHOLDER ONLY</span>
+        <br>
+        <button class="back-button" data-back>← Back to Dashboard</button>
+      </div>
+    `;
+  }
+
+  function openCategory(categoryId) {
+    const submenu = document.getElementById("submenu-" + categoryId);
+    if (!submenu) return;
+
+    const toggle = document.querySelector(`[data-toggle="${categoryId}"]`);
+    const isOpen = submenu.classList.toggle("open");
+    toggle.setAttribute("aria-expanded", String(isOpen));
+  }
+
+  renderNavigation();
+  renderOverview();
+
+  document.addEventListener("click", event => {
+    const toggle = event.target.closest("[data-toggle]");
+    if (toggle) {
+      openCategory(toggle.dataset.toggle);
+      return;
+    }
+
+    const categoryCard = event.target.closest("[data-open-category]");
+    if (categoryCard) {
+      const categoryId = categoryCard.dataset.openCategory;
+      openCategory(categoryId);
+      const category = categories.find(item => item.id === categoryId);
+      renderPlaceholder(category, category.name);
+      return;
+    }
+
+    const subLink = event.target.closest("[data-item]");
+    if (subLink) {
+      const category = categories.find(
+        item => item.id === subLink.dataset.category
+      );
+
+      document.querySelectorAll(".sub-link").forEach(link => {
+        link.classList.remove("active");
+      });
+      subLink.classList.add("active");
+
+      renderPlaceholder(category, subLink.dataset.item);
+
+      if (window.innerWidth <= 900) {
+        sidebar.classList.remove("visible");
+      }
+      return;
+    }
+
+    if (event.target.closest("[data-back]") ||
+        event.target.closest('[data-page="overview"]')) {
+      document.querySelectorAll(".sub-link").forEach(link => {
+        link.classList.remove("active");
+      });
+      renderOverview();
+      return;
+    }
+
+    if (event.target.closest("#menuButton")) {
+      sidebar.classList.toggle("visible");
+    }
+  });
+</script>
+</body>
+</html>
