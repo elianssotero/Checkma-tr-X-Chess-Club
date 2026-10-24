@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -99,9 +100,7 @@
   <section id="blockedSection" class="hidden">
     <h2>Access unavailable</h2>
     <p id="blockedMessage">You cannot access this form.</p>
-    <a class="link-button" href="./login-selection.html">
-      Go to Login
-    </a>
+    <a class="link-button" href="./login-selection.html">Go to Login</a>
   </section>
 
   <section id="formSection" class="hidden">
@@ -124,9 +123,7 @@
         remain pending until an administrator reviews it.
       </p>
 
-      <button id="submitButton" type="submit">
-        Submit Request
-      </button>
+      <button id="submitButton" type="submit">Submit Request</button>
 
       <a class="link-button secondary" href="./login-selection.html">
         Cancel
@@ -192,6 +189,7 @@
 
   function readableError(error) {
     if (!error) return "Unknown error";
+
     return [
       error.message,
       error.code ? "Code: " + error.code : "",
@@ -207,7 +205,6 @@
       );
     }
 
-    // First check whether a session exists in this browser.
     const {
       data: sessionData,
       error: sessionError
@@ -219,7 +216,6 @@
 
     if (!sessionUser) return null;
 
-    // Verify the authenticated user with Supabase Auth.
     const {
       data: userData,
       error: userError
@@ -231,7 +227,6 @@
 
     if (!verifiedUser) return null;
 
-    // Make sure both results refer to the same account.
     if (verifiedUser.id !== sessionUser.id) {
       throw new Error("The active authentication session changed.");
     }
@@ -260,7 +255,6 @@
 
       const verifiedUserId = user.id;
 
-      // Read only the signed-in user's own membership profile.
       const {
         data: profile,
         error: profileError
@@ -275,8 +269,9 @@
           "Member profile query failed:",
           readableError(profileError)
         );
+
         throw new Error(
-          "We could not read your membership profile. Check the member_profiles SELECT policy and the database connection."
+          "We could not read your membership profile. Check the member_profiles SELECT policy and database connection."
         );
       }
 
@@ -299,8 +294,6 @@
         return;
       }
 
-      // Do not grant access solely because a profile was read.
-      // Supabase RLS must independently enforce approval on INSERT.
       signedInUserId = verifiedUserId;
 
       memberInfo.textContent =
@@ -310,7 +303,6 @@
           ? " · Membership ID: " + profile.membership_id
           : "");
 
-      // Check for an existing pending request.
       const {
         data: pendingRequest,
         error: pendingError
@@ -342,9 +334,6 @@
 
       showOnly(formSection);
     } catch (error) {
-      
-        
-    } catch (error) {
       if (currentVersion !== initializationVersion) return;
 
       console.error("Disconnection page initialization failed:", {
@@ -369,7 +358,6 @@
     }
   }
 
-
   requestForm.addEventListener("submit", async (event) => {
     event.preventDefault();
 
@@ -390,7 +378,6 @@
     showNotice("Submitting your request...");
 
     try {
-      // Re-verify the authenticated identity before submitting.
       const currentUser = await getVerifiedUser();
 
       if (!currentUser || currentUser.id !== signedInUserId) {
@@ -402,7 +389,6 @@
         return;
       }
 
-      // Re-check approval in case the membership status changed.
       const {
         data: profile,
         error: profileError
@@ -426,8 +412,6 @@
         return;
       }
 
-      // The database must independently validate identity,
-      // approved membership, and the permitted request fields.
       const { error: insertError } = await supabase
         .from("membership_disconnection_requests")
         .insert({
@@ -492,8 +476,6 @@
   });
 
   if (supabase) {
-    // Ignore INITIAL_SESSION here; initializePage() handles the initial
-    // session check itself. This avoids blocking the page during startup.
     supabase.auth.onAuthStateChange((event) => {
       if (event === "SIGNED_OUT") {
         initializationVersion++;
