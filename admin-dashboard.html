@@ -591,6 +591,54 @@ body:not(.admin-authorized) .layout {
   <script>
     const categories = [
       {
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="supabase-client.js"></script>
+  <script>
+    (async function verifyAdminAccess() {
+      const gate = document.getElementById("adminGate");
+      const message = document.getElementById("adminGateMessage");
+      const returnLink = document.getElementById("adminGateLink");
+
+      function denyAccess(text) {
+        message.textContent = text;
+        returnLink.hidden = false;
+      }
+
+      try {
+        if (!window.clubSupabase) {
+          throw new Error("Supabase client is not available.");
+        }
+
+        const { data, error } =
+          await window.clubSupabase.auth.getSession();
+
+        if (error) throw error;
+
+        if (!data.session) {
+          denyAccess("Please sign in with your administrator account first.");
+          return;
+        }
+
+        const { data: isAdmin, error: adminError } =
+          await window.clubSupabase.rpc("is_club_admin");
+
+        if (adminError) throw adminError;
+
+        if (isAdmin !== true) {
+          denyAccess("Access denied. This account is not a club administrator.");
+          return;
+        }
+
+        document.body.classList.add("admin-authorized");
+        gate.hidden = true;
+      } catch (error) {
+        console.error("Admin access verification failed:", error);
+        denyAccess("Unable to verify access. Please try again later.");
+      }
+    })();
+  </script>
+
         id: "membership",
         icon: "♙",
         name: "Membership & User Management",
