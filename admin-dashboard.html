@@ -895,8 +895,7 @@
     }
 
     function renderNavigation() {
-    
-function renderNavigation() {
+   
   categoryNavigation.innerHTML = categories.map(category => {
     if (category.standalone) {
       return `
@@ -1211,6 +1210,7 @@ function renderNavigation() {
     }
 
     
+
 function openPage(page) {
   if (page === "membership-management") {
     window.location.href = "membership-user-management.html";
@@ -1219,25 +1219,23 @@ function openPage(page) {
 
   currentPage = page;
 
+  const category = categories.find(item =>
+    item.options.some(option => option[0] === page)
+  );
+
+  if (category) expandedCategory = category.id;
+
+  breadcrumb.textContent =
+    page === "overview" ? "Dashboard Overview" : page;
+
+  content.innerHTML =
+    page === "overview" ? overviewHTML() : pageHTML(page);
+
+  renderNavigation();
+  closeMobileMenu();
+  window.scrollTo({ top: 0, behavior: "smooth" });
 }
 
-
-      const category = categories.find(item =>
-        item.options.some(option => option[0] === page)
-      );
-
-      if (category) expandedCategory = category.id;
-
-      breadcrumb.textContent =
-        page === "overview" ? "Dashboard Overview" : page;
-
-      content.innerHTML =
-        page === "overview" ? overviewHTML() : pageHTML(page);
-
-      renderNavigation();
-      closeMobileMenu();
-      window.scrollTo({ top: 0, behavior: "smooth" });
-    }
 
     function closeMobileMenu() {
       document.body.classList.remove("sidebar-open");
