@@ -1,4 +1,3 @@
-
 <!doctype html>
 <html lang="en">
 <head>
@@ -21,23 +20,15 @@
 
       <h2>Google Login</h2>
       <p class="auth-intro">
-        Use Google to sign in when the club's authentication service
-        has been configured.
+        Sign in securely with your Google account to access the club website.
       </p>
-
-      <div class="auth-note">
-        <strong>Setup required:</strong> Google sign-in is not connected yet.
-        This preview will not sign you in or create a session. Your
-        membership application status is managed separately.
-      </div>
 
       <button class="auth-action" type="button" id="googleButton">
         Continue with Google
       </button>
 
-      <div class="auth-status" id="authStatus" role="status">
-        Google authentication has not been configured. No sign-in was
-        attempted and no data was saved.
+      <div class="auth-status" id="authStatus" role="status" aria-live="polite">
+        Ready to sign in.
       </div>
 
       <div class="auth-links">
@@ -49,11 +40,40 @@
     </section>
   </main>
 
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="supabase-client.js"></script>
   <script src="site-animations.js"></script>
   <script src="language.js"></script>
   <script>
-    document.getElementById("googleButton").addEventListener("click", function () {
-      document.getElementById("authStatus").classList.add("show");
+    const googleButton = document.getElementById("googleButton");
+    const authStatus = document.getElementById("authStatus");
+
+    googleButton.addEventListener("click", async function () {
+      if (!window.clubSupabase) {
+        authStatus.textContent =
+          "Login is unavailable. Please check the Supabase client setup.";
+        authStatus.classList.add("show");
+        return;
+      }
+
+      googleButton.disabled = true;
+      authStatus.textContent = "Connecting to Google...";
+      authStatus.classList.add("show");
+
+      try {
+        const { error } = await window.clubSupabase.auth.signInWithOAuth({
+          provider: "google",
+          options: {
+            redirectTo: window.location.origin + "/index.html"
+          }
+        });
+
+        if (error) throw error;
+      } catch (error) {
+        authStatus.textContent =
+          error.message || "Google sign-in failed. Please try again.";
+        googleButton.disabled = false;
+      }
     });
   </script>
 </body>
