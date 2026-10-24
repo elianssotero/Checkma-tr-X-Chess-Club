@@ -1,3 +1,4 @@
+
 <!doctype html>
 <html lang="en">
 <head>
@@ -9,7 +10,33 @@
   <link rel="stylesheet" href="style.css">
   <link rel="stylesheet" href="enhancements.css">
   <link rel="stylesheet" href="auth-pages.css">
+
+  <style>
+    .auth-status {
+      margin: 16px 0;
+      padding: 12px;
+      border: 1px solid #8f752d;
+      border-radius: 8px;
+      color: #f5f5f5;
+      background: #171717;
+      font-size: .92rem;
+    }
+
+    .auth-status[hidden],
+    .auth-action[hidden] {
+      display: none !important;
+    }
+
+    .auth-status strong {
+      color: #d4af37;
+    }
+
+    .auth-action.is-current {
+      border-color: #d4af37;
+    }
+  </style>
 </head>
+
 <body>
   <main class="auth-shell">
     <section class="auth-card">
@@ -25,14 +52,22 @@
         without signing in.
       </p>
 
+      <div id="accountStatus" class="auth-status" role="status" hidden></div>
+
       <div class="auth-actions">
-        <a class="auth-action" href="google-login.html">
-          <span aria-hidden="true">G</span> Continue with Google
+        <a id="googleAction" class="auth-action" href="google-login.html">
+          <span aria-hidden="true">G</span>
+          <span id="googleLabel">Continue with Google</span>
         </a>
-        <a class="auth-action secondary" href="member-login.html">
-          <span aria-hidden="true">♟</span> Member Login
+
+        <a id="memberAction" class="auth-action secondary"
+           href="member-login.html">
+          <span aria-hidden="true">♟</span>
+          <span id="memberLabel">Member Login</span>
         </a>
-        <a class="auth-action secondary" href="membership-application.html">
+
+        <a id="applyAction" class="auth-action secondary"
+           href="membership-application.html">
           Apply for Membership
         </a>
       </div>
@@ -48,7 +83,107 @@
     </section>
   </main>
 
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="supabase-client.js"></script>
   <script src="site-animations.js"></script>
   <script src="language.js"></script>
+
+  <script>
+    document.addEventListener("DOMContentLoaded", async () => {
+      const statusBox = document.getElementById("accountStatus");
+      const googleLabel = document.getElementById("googleLabel");
+      const memberLabel = document.getElementById("memberLabel");
+      const googleAction = document.getElementById("googleAction");
+      const memberAction = document.getElementById("memberAction");
+      const applyAction = document.getElementById("applyAction");
+
+      function showStatus(message) {
+        statusBox.textContent = message;
+        statusBox.hidden = false;
+      }
+
+      if (!window.clubSupabase) {
+        showStatus("Unable to connect to the sign-in service. Please refresh.");
+        return;
+      }
+
+      try {
+        const { data, error } =
+          await window.clubSupabase.auth.getSession();
+
+        if (error) throw error;
+
+        const user = data.session?.user;
+
+        if (!user) {
+          showStatus("You are not signed in.");
+          return;
+        }
+
+        googleLabel.textContent = "Signed in with Google";
+        googleAction.classList.add("is-current");
+
+        const displayName =
+          user.user_metadata?.full_name ||
+          user.user_metadata?.name ||
+          user.email ||
+          "your account";
+
+        showStatus("Signed in as " + displayName + ".");
+
+        // Read membership status for this signed-in account.
+        const { data: profile, error: profileError } =
+          await window.clubSupabase
+            .from("member_profiles")
+            .select("status")
+            .eq("user_id", user.id)
+            .maybeSingle();
+
+        if (profileError) {
+          console.error("Membership status lookup failed:", profileError);
+          showStatus(
+            "Signed in with Google. Membership status could not be checked yet."
+          );
+          return;
+        }
+
+        if (profile?.status === "approved") {
+          memberLabel.textContent = "Signed in as a Member";
+          memberAction.classList.add("is-current");
+          applyAction.hidden = true;
+          showStatus("Signed in as " + displayName + " — approved member.");
+          return;
+        }
+
+        // Check whether the user already has an application.
+        const { data: application, error: applicationError } =
+          await window.clubSupabase
+            .from("membership_applications")
+            .select("status")
+            .eq("user_id", user.id)
+            .maybeSingle();
+
+        if (applicationError) {
+          console.error("Application lookup failed:", applicationError);
+          showStatus(
+            "Signed in with Google. We could not check your application status."
+          );
+          return;
+        }
+
+        if (application?.status === "pending") {
+          applyAction.hidden = true;
+          showStatus("Your membership application is pending review.");
+        } else if (application?.status === "rejected") {
+          showStatus("Your previous application was rejected. Contact the club administration for next steps.");
+        } else {
+          showStatus("Signed in with Google. You can apply for membership.");
+        }
+      } catch (error) {
+        console.error("Account status error:", error);
+        showStatus("Could not load your account status. Please refresh.");
+      }
+    });
+  </script>
 </body>
 </html>
