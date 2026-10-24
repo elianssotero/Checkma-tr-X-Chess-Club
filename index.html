@@ -707,16 +707,23 @@ header nav {
         </div>
       </details>
     </div>
-    <button
-      type="button"
-      id="adminMenuButton"
-      class="admin-menu-button"
-      aria-label="Open administrator menu"
-      aria-expanded="false"
-      hidden
-    >
-      ☰
-    </button>
+    
+<button
+  type="button"
+  id="adminMenuButton"
+  class="admin-menu-button"
+  aria-label="Open administrator menu"
+  aria-controls="adminMenuPanel"
+  aria-expanded="false"
+  hidden
+>
+  <span class="hamburger-lines" aria-hidden="true">
+    <span></span>
+    <span></span>
+    <span></span>
+  </span>
+</button>
+
 
     <div id="adminMenuPanel" class="admin-menu-panel" hidden>
       <a href="admin-dashboard.html">♛ Admin Dashboard</a>
