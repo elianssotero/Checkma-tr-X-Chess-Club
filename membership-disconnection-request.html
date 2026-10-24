@@ -344,23 +344,31 @@
       if (currentVersion !== initializationVersion) return;
 
       console.error(
-        "Disconnection page initialization failed:",
-        readableError(error)
-      );
+      
+    } catch (error) {
+      if (currentVersion !== initializationVersion) return;
+
+      console.error("Disconnection page initialization failed:", {
+        message: error?.message,
+        code: error?.code,
+        details: error?.details,
+        hint: error?.hint
+      });
 
       signedInUserId = null;
 
       blockAccess(
-        "We could not complete account verification. Your membership has not been changed, and no request was submitted."
+        "Account verification failed: " +
+        (error?.message || "Unknown error") +
+        (error?.code ? " (Code: " + error.code + ")" : "")
       );
 
-      // Give a useful next step without exposing sensitive details.
       showNotice(
-        "Please refresh the page. If the problem continues, check the browser console for the specific error and verify the Supabase RLS policies.",
+        "No request was submitted. Please share the displayed error so we can identify the cause.",
         "error"
       );
     }
-  }
+
 
   requestForm.addEventListener("submit", async (event) => {
     event.preventDefault();
