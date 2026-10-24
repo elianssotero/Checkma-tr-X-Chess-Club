@@ -586,6 +586,7 @@
 }
 
 
+
 /* ADMIN HAMBURGER MENU */
 header nav {
   position: relative;
@@ -601,40 +602,81 @@ header nav {
   top: 0;
   right: 0;
   z-index: 1200;
-  width: 42px;
-  height: 42px;
-  border: 1px solid #d4af37;
-  border-radius: 8px;
+
+  width: 44px;
+  height: 44px;
+  padding: 0;
+  box-sizing: border-box;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
   background: #171717;
+  border: 1px solid #d4af37;
+  border-radius: 9px;
   color: #d4af37;
-  font-size: 25px;
+
   cursor: pointer;
+  box-shadow: 0 3px 8px #0005;
+  transition: background .2s ease, border-color .2s ease;
+}
+
+.hamburger-lines {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+  width: 20px;
+}
+
+.hamburger-lines span {
+  display: block;
+  width: 20px;
+  height: 2px;
+  flex: 0 0 2px;
+
+  background: currentColor;
+  border-radius: 2px;
 }
 
 .admin-menu-button:hover {
   background: #d4af37;
-  color: #0b0b0b;
+  color: #111;
+}
+
+.admin-menu-button:focus-visible {
+  outline: 2px solid #f5d76e;
+  outline-offset: 3px;
 }
 
 .admin-menu-panel {
   position: absolute;
-  top: 50px;
+  top: 52px;
   right: 0;
   z-index: 1201;
-  min-width: 190px;
-  padding: 8px;
+
+  min-width: 200px;
+  padding: 6px;
+  box-sizing: border-box;
+
   background: #171717;
   border: 1px solid #8f752d;
-  border-radius: 8px;
-  box-shadow: 0 12px 25px #0008;
+  border-radius: 10px;
+  box-shadow: 0 10px 25px #0008;
 }
 
 .admin-menu-panel a {
-  display: block;
-  padding: 12px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+
+  padding: 12px 14px;
   color: #f5f5f5;
   text-decoration: none;
-  border-radius: 5px;
+  border-radius: 6px;
+  white-space: nowrap;
 }
 
 .admin-menu-panel a:hover {
@@ -642,9 +684,6 @@ header nav {
   color: #d4af37;
 }
 
-  </style>
-</head>
-<body>
   <!-- HEADER -->
  
 <!-- HEADER -->
