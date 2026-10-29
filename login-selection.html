@@ -1,0 +1,346 @@
+
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#0b0b0b">
+  <meta name="description" content="Choose a login option for CheckmaîtréX Chess Club.">
+  <title>Login Selection | CheckmaîtréX Chess Club</title>
+
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="enhancements.css">
+  <link rel="stylesheet" href="auth-pages.css">
+
+  <style>
+    [hidden] {
+      display: none !important;
+    }
+
+    #memberSignedIn {
+      cursor: default;
+    }
+
+    #disconnectionAction {
+      text-decoration: none;
+    }
+
+    .auth-action:disabled {
+      opacity: 0.65;
+      cursor: not-allowed;
+    }
+  </style>
+</head>
+
+<body>
+  <main class="auth-shell">
+    <section class="auth-card">
+      <div class="auth-brand">
+        <div class="auth-mark" aria-hidden="true">♟</div>
+        <h1>CHECKMAÎTRÉX</h1>
+        <p>Chess Club</p>
+      </div>
+
+      <h2>Choose how to continue</h2>
+
+      <p class="auth-intro" id="authMessage" aria-live="polite">
+        Checking your sign-in status...
+      </p>
+
+      <div class="auth-actions">
+
+        <!-- Google login: visible when signed out -->
+        <a class="auth-action"
+           href="google-login.html"
+           id="googleAction"
+           hidden>
+          <span aria-hidden="true">G</span>
+          <span>Continue with Google</span>
+        </a>
+
+        <!-- Google signed-in status -->
+        <button class="auth-action"
+                id="googleSignedIn"
+                type="button"
+                hidden>
+          <span aria-hidden="true">G</span>
+          <span>Signed in with Google</span>
+        </button>
+
+        <!-- Sign out control -->
+        <button class="auth-action secondary"
+                id="signOutButton"
+                type="button"
+                hidden>
+          Sign Out
+        </button>
+
+        <!-- Member login: only when not an approved member -->
+        <a class="auth-action secondary"
+           href="member-login.html"
+           id="memberAction"
+           hidden>
+          <span aria-hidden="true">♟</span>
+          <span>Member Login</span>
+        </a>
+
+        <!-- Approved member status -->
+        <div class="auth-action secondary"
+             id="memberSignedIn"
+             hidden
+             aria-live="polite">
+          <span aria-hidden="true">✓</span>
+          <span>Signed in as a Member</span>
+        </div>
+
+        <!-- Membership ID display -->
+        <div class="auth-action secondary"
+             id="membershipIdDisplay"
+             hidden>
+          <span aria-hidden="true">🪪</span>
+          <span id="membershipIdText"></span>
+        </div>
+
+        <!-- Disconnection request: approved members only -->
+        <a class="auth-action secondary"
+           href="membership-disconnection-request.html"
+           id="disconnectionAction"
+           hidden>
+          <span aria-hidden="true">📄</span>
+          <span>Membership Disconnection Request</span>
+        </a>
+
+        <!-- Apply only when there is no existing application -->
+        <a class="auth-action secondary"
+           href="membership-application.html"
+           id="applyAction"
+           hidden>
+          Apply for Membership
+        </a>
+
+      </div>
+
+      <p class="auth-small">
+        Membership applications are reviewed by the club administration.
+      </p>
+
+      <div class="auth-links">
+        <a href="index.html">Back to Home</a>
+        <a href="membership.html">Membership Information</a>
+      </div>
+    </section>
+  </main>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="supabase-client.js"></script>
+
+  <script>
+    document.addEventListener("DOMContentLoaded", () => {
+      const googleAction = document.getElementById("googleAction");
+      const googleSignedIn = document.getElementById("googleSignedIn");
+      const signOutButton = document.getElementById("signOutButton");
+      const memberAction = document.getElementById("memberAction");
+      const memberSignedIn = document.getElementById("memberSignedIn");
+      const membershipIdDisplay =
+        document.getElementById("membershipIdDisplay");
+      const membershipIdText =
+        document.getElementById("membershipIdText");
+      const disconnectionAction =
+        document.getElementById("disconnectionAction");
+      const applyAction = document.getElementById("applyAction");
+      const authMessage = document.getElementById("authMessage");
+
+      if (!window.clubSupabase) {
+        authMessage.textContent =
+          "Unable to connect to the sign-in service. Please refresh the page.";
+        console.error("Supabase client is not initialized.");
+        return;
+      }
+
+      const supabase = window.clubSupabase;
+      let currentUserId = null;
+      let refreshNumber = 0;
+      let signOutInProgress = false;
+
+      function hideAllActions() {
+        googleAction.hidden = true;
+        googleSignedIn.hidden = true;
+        signOutButton.hidden = true;
+        memberAction.hidden = true;
+        memberSignedIn.hidden = true;
+        membershipIdDisplay.hidden = true;
+        disconnectionAction.hidden = true;
+        applyAction.hidden = true;
+      }
+
+      async function updateButtons() {
+        const thisRefresh = ++refreshNumber;
+
+        hideAllActions();
+        authMessage.textContent = "Checking your sign-in status...";
+
+        const { data, error } = await supabase.auth.getSession();
+
+        if (thisRefresh !== refreshNumber) return;
+
+        if (error) {
+          authMessage.textContent =
+            "Could not check your sign-in status. Please refresh the page.";
+          console.error("Session check failed:", error);
+          return;
+        }
+
+        const user = data.session?.user;
+
+        if (!user) {
+          currentUserId = null;
+          googleAction.hidden = false;
+          authMessage.textContent =
+            "Sign in with Google to access membership options.";
+          return;
+        }
+
+        currentUserId = user.id;
+        googleSignedIn.hidden = false;
+
+        // Check approved membership for the current Supabase user.
+        const {
+          data: profile,
+          error: profileError
+        } = await supabase
+          .from("member_profiles")
+          .select("membership_status, membership_id")
+          .eq("user_id", user.id)
+          .maybeSingle();
+
+        if (thisRefresh !== refreshNumber) return;
+
+        if (profileError) {
+          console.error("Member status check failed:", profileError);
+          authMessage.textContent =
+            "Could not verify membership status. Please refresh and try again.";
+          return;
+        }
+
+        if (profile?.membership_status === "approved") {
+          memberSignedIn.hidden = false;
+
+          if (profile.membership_id) {
+            membershipIdText.textContent =
+              "Membership ID: " + profile.membership_id;
+            membershipIdDisplay.hidden = false;
+          }
+
+          disconnectionAction.hidden = false;
+          authMessage.textContent =
+            "Your account is approved as a club member.";
+          return;
+        }
+
+        // Not an approved member: show Member Login.
+        memberAction.hidden = false;
+
+        // Check the latest membership application, if any.
+        const {
+          data: applications,
+          error: applicationError
+        } = await supabase
+          .from("membership_applications")
+          .select("application_status, submitted_at")
+          .eq("user_id", user.id)
+          .order("submitted_at", { ascending: false })
+          .limit(1);
+
+        if (thisRefresh !== refreshNumber) return;
+
+        if (applicationError) {
+          console.error(
+            "Application status check failed:",
+            applicationError
+          );
+          authMessage.textContent =
+            "Could not check your application status. Please refresh and try again.";
+          return;
+        }
+
+        const application = applications?.[0];
+
+        if (!application) {
+          applyAction.hidden = false;
+          authMessage.textContent =
+            "You are signed in. You may apply for club membership.";
+        } else if (application.application_status === "pending") {
+          authMessage.textContent =
+            "Your membership application is awaiting review.";
+        } else if (application.application_status === "rejected") {
+          authMessage.textContent =
+            "Your previous application was not approved. Contact the club administration for next steps.";
+        } else if (application.application_status === "approved") {
+          authMessage.textContent =
+            "Your application is approved. Refresh the page if your member status has not updated yet.";
+        } else {
+          authMessage.textContent =
+            "Your membership application is already recorded.";
+        }
+      }
+
+      // Clicking the Google status button toggles Sign Out.
+      googleSignedIn.addEventListener("click", () => {
+        if (!signOutInProgress) {
+          signOutButton.hidden = !signOutButton.hidden;
+        }
+      });
+
+      signOutButton.addEventListener("click", async () => {
+        if (signOutInProgress) return;
+
+        const confirmed = window.confirm(
+          "Are you sure you want to sign out?"
+        );
+
+        if (!confirmed) return;
+
+        signOutInProgress = true;
+        signOutButton.disabled = true;
+        signOutButton.textContent = "Signing out...";
+
+        const { error } = await supabase.auth.signOut();
+
+        signOutButton.disabled = false;
+        signOutButton.textContent = "Sign Out";
+        signOutInProgress = false;
+
+        if (error) {
+          authMessage.textContent =
+            "Sign out failed. Please try again.";
+          console.error("Sign out failed:", error);
+          return;
+        }
+
+        signOutButton.hidden = true;
+        await updateButtons();
+      });
+
+      // Refresh UI after authentication changes.
+      supabase.auth.onAuthStateChange((event, session) => {
+        const newUserId = session?.user?.id ?? null;
+
+        if (
+          event === "SIGNED_IN" ||
+          event === "SIGNED_OUT" ||
+          newUserId !== currentUserId
+        ) {
+          window.setTimeout(() => {
+            updateButtons();
+          }, 0);
+        }
+      });
+
+      updateButtons();
+    });
+  </script>
+
+  <script src="site-animations.js"></script>
+  <script src="language.js"></script>
+</body>
+</html>

@@ -1,0 +1,411 @@
+/* =====================================
+   ENHANCEMENTS.CSS — Additional styles
+   for animations, Settings page, and
+   Login page. Include AFTER style.css.
+   ===================================== */
+
+/* ---- Font size scaling ---- */
+html { font-size: 16px; }
+html[data-font-size="small"]  { font-size: 14px; }
+html[data-font-size="medium"] { font-size: 16px; }
+html[data-font-size="large"]  { font-size: 18px; }
+html[data-font-size="xlarge"] { font-size: 20px; }
+
+/* ---- Light theme ---- */
+[data-theme="light"] {
+  --black: #f5f5f5;
+  --dark: #ffffff;
+  --gold: #b48c14;
+  --light-gold: #d4af37;
+  --white: #1a1a1a;
+  --muted: #555;
+}
+[data-theme="light"] body { background: var(--black); color: var(--white); }
+[data-theme="light"] header,
+[data-theme="light"] footer,
+[data-theme="light"] .card,
+[data-theme="light"] .topbar { background: var(--dark); }
+
+/* ---- Animations disabled ---- */
+html[data-animations="off"] .sa-reveal,
+html[data-animations="off"] .reveal,
+html[data-animations="off"] .mv-reveal {
+  opacity: 1 !important; transform: none !important; transition: none !important;
+}
+html[data-animations="off"] .sa-page-in,
+html[data-animations="off"] .page-load-animate { animation: none !important; }
+
+/* ===== SETTINGS PAGE ===== */
+.settings-page { max-width: 820px; margin: 0 auto; padding: 40px 20px 70px; }
+.settings-hero { text-align: center; padding: 50px 20px 40px; }
+.settings-hero .eyebrow { color: var(--gold); text-transform: uppercase; letter-spacing: 3px; font-size: 12px; font-weight: bold; }
+.settings-hero h1 { color: var(--gold); font-size: clamp(32px, 7vw, 55px); margin: 12px 0; line-height: 1.2; }
+.settings-hero p { max-width: 600px; margin: 0 auto; color: var(--muted, #b8b8b8); }
+.settings-section { margin-bottom: 28px; padding: 26px 24px; border: 1px solid rgba(212,175,55,0.25); border-radius: 12px; background: #141414; }
+.settings-section h2 { color: var(--gold); font-size: 20px; margin: 0 0 18px; padding-bottom: 12px; border-bottom: 1px solid rgba(212,175,55,0.15); }
+.settings-row { display: flex; align-items: center; justify-content: space-between; gap: 16px; padding: 14px 0; border-bottom: 1px solid rgba(255,255,255,0.05); }
+.settings-row:last-child { border-bottom: none; }
+.settings-row-label { display: flex; flex-direction: column; gap: 3px; min-width: 0; }
+.settings-row-label strong { color: #f5f5f5; font-size: 14px; }
+.settings-row-label small { color: var(--muted, #b8b8b8); font-size: 12px; }
+.settings-row-control { flex-shrink: 0; }
+
+/* Toggle switch */
+.sa-toggle { position: relative; display: inline-block; width: 48px; height: 26px; }
+.sa-toggle input { opacity: 0; width: 0; height: 0; }
+.sa-toggle .slider { position: absolute; cursor: pointer; inset: 0; background: #333; border: 1px solid #555; border-radius: 26px; transition: 0.25s; }
+.sa-toggle .slider::before { content: ""; position: absolute; height: 18px; width: 18px; left: 3px; bottom: 3px; background: #888; border-radius: 50%; transition: 0.25s; }
+.sa-toggle input:checked + .slider { background: rgba(212,175,55,0.3); border-color: var(--gold); }
+.sa-toggle input:checked + .slider::before { transform: translateX(22px); background: var(--gold); }
+
+/* Select */
+.sa-select { padding: 8px 14px; border: 1px solid #8f752d; border-radius: 6px; background: #171717; color: #f5f5f5; font: inherit; font-size: 13px; cursor: pointer; outline: none; }
+.sa-select:focus { border-color: var(--gold); box-shadow: 0 0 0 3px rgba(212,175,55,0.1); }
+
+/* Buttons */
+.sa-btn { display: inline-block; padding: 10px 20px; border: 1px solid var(--gold); border-radius: 6px; background: transparent; color: var(--gold); font: inherit; font-size: 13px; font-weight: 700; cursor: pointer; transition: background 0.2s, color 0.2s; }
+.sa-btn:hover { background: var(--gold); color: #0b0b0b; }
+.sa-btn.danger { border-color: #e05555; color: #e05555; }
+.sa-btn.danger:hover { background: #e05555; color: #fff; }
+
+/* Theme previews */
+.theme-previews { display: flex; gap: 12px; }
+.theme-preview { width: 44px; height: 44px; border-radius: 50%; border: 2px solid #555; cursor: pointer; transition: border-color 0.2s, transform 0.2s; }
+.theme-preview:hover { transform: scale(1.08); }
+.theme-preview.active { border-color: var(--gold); box-shadow: 0 0 12px rgba(212,175,55,0.4); }
+.theme-preview.dark { background: #0b0b0b; }
+.theme-preview.light { background: #f5f5f5; }
+
+/* Font size buttons */
+.font-size-options { display: flex; gap: 6px; }
+.font-size-btn { padding: 6px 14px; border: 1px solid #8f752d; border-radius: 6px; background: #171717; color: #ccc; font: inherit; cursor: pointer; transition: 0.2s; }
+.font-size-btn:hover { border-color: var(--gold); }
+.font-size-btn.active { background: var(--gold); color: #0b0b0b; border-color: var(--gold); }
+
+.settings-about { text-align: center; padding: 24px; color: var(--muted, #b8b8b8); font-size: 13px; }
+.settings-about strong { color: var(--gold); }
+
+/* ===== LOGIN PAGE ===== */
+.login-page { display: flex; align-items: center; justify-content: center; min-height: 100vh; padding: 24px; background: radial-gradient(ellipse at 50% 30%, rgba(212,175,55,0.08), transparent 60%), #0b0b0b; }
+.login-card { width: 100%; max-width: 420px; padding: 40px 32px; border: 1px solid rgba(212,175,55,0.3); border-radius: 16px; background: #141414; box-shadow: 0 20px 60px rgba(0,0,0,0.5); }
+.login-logo { display: flex; flex-direction: column; align-items: center; margin-bottom: 28px; }
+.login-logo img { width: 64px; height: 64px; object-fit: contain; margin-bottom: 12px; }
+.login-logo h1 { color: var(--gold); font-size: 22px; margin: 0; letter-spacing: 1px; }
+.login-logo p { color: var(--muted, #b8b8b8); font-size: 13px; margin: 4px 0 0; }
+.login-field { margin-bottom: 18px; }
+.login-field label { display: block; margin-bottom: 6px; color: #ddd; font-size: 13px; font-weight: 600; }
+.login-input-wrap { position: relative; }
+.login-input { width: 100%; padding: 12px 16px; border: 1px solid #8f752d; border-radius: 8px; background: #0b0b0b; color: #f5f5f5; font: inherit; font-size: 14px; outline: none; transition: border-color 0.2s, box-shadow 0.2s; }
+.login-input:focus { border-color: var(--gold); box-shadow: 0 0 0 3px rgba(212,175,55,0.1); }
+.login-input::placeholder { color: #666; }
+.login-toggle-pw { position: absolute; right: 10px; top: 50%; transform: translateY(-50%); background: none; border: none; color: #888; cursor: pointer; font-size: 14px; padding: 4px 8px; }
+.login-toggle-pw:hover { color: var(--gold); }
+.login-options { display: flex; align-items: center; justify-content: space-between; margin-bottom: 22px; font-size: 13px; }
+.login-remember { display: flex; align-items: center; gap: 8px; color: #ccc; cursor: pointer; }
+.login-remember input { accent-color: var(--gold); width: 16px; height: 16px; cursor: pointer; }
+.login-forgot { color: var(--gold); text-decoration: none; }
+.login-forgot:hover { text-decoration: underline; }
+.login-btn { display: block; width: 100%; padding: 13px; border: none; border-radius: 8px; background: linear-gradient(135deg, var(--gold), #b48c14); color: #0b0b0b; font: inherit; font-size: 15px; font-weight: 700; cursor: pointer; transition: transform 0.2s, box-shadow 0.2s; margin-bottom: 18px; }
+.login-btn:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(212,175,55,0.3); }
+.login-divider { display: flex; align-items: center; gap: 12px; margin: 18px 0; color: #666; font-size: 12px; }
+.login-divider::before, .login-divider::after { content: ""; flex: 1; height: 1px; background: rgba(212,175,55,0.2); }
+.login-register{ text-align: center; color: var(--muted, #b8b8b8); font-size: 13px; }
+.login-register a { color: var(--gold); font-weight: 700; text-decoration: none; }
+.login-register a:hover { text-decoration: underline; }
+.login-back { display: block; text-align: center; margin-top: 20px; color: #888; font-size: 13px; text-decoration: none; }
+.login-back:hover { color: var(--gold); }
+.login-error { display: none; padding: 10px 14px; margin-bottom: 16px; border: 1px solid rgba(224,85,85,0.3); border-radius: 8px; background: rgba(224,85,85,0.08); color: #e05555; font-size: 13px; text-align: center; }
+.login-error.show { display: block; animation: shake 0.4s ease; }
+@keyframes shake { 0%, 100% { transform: translateX(0); } 25% { transform: translateX(-6px); } 75% { transform: translateX(6px); } }
+
+@media (max-width: 480px) {
+  .settings-page { padding: 30px 14px 60px; }
+  .settings-section { padding: 20px 16px; }
+  .login-card { padding: 32px 22px; }
+  .settings-row { flex-direction: column; align-items: flex-start; gap: 10px; }
+}
+/* =========================================
+   CHECKMAITRÉX — GLOBAL THEME SYSTEM
+   Works with settings-global.js
+   ========================================= */
+
+/* Original Black & Gold */
+:root,
+html[data-theme="dark"] {
+  color-scheme: dark;
+  --black: #0b0b0b;
+  --dark: #151515;
+  --gold: #d4af37;
+  --light-gold: #f1d77a;
+  --white: #f5f5f5;
+  --muted: #b8b8b8;
+  --theme-border: rgba(212, 175, 55, .25);
+  --theme-panel: #141414;
+  --theme-input: #171717;
+  --theme-button-text: #0b0b0b;
+}
+
+/* 01 — Emerald Classic */
+html[data-theme="emerald"] {
+  color-scheme: dark;
+  --black: #101713;
+  --dark: #17251d;
+  --gold: #42c78a;
+  --light-gold: #91edbd;
+  --white: #f0f8f2;
+  --muted: #b0c7b8;
+  --theme-border: rgba(66, 199, 138, .3);
+  --theme-panel: #1b2c22;
+  --theme-input: #122019;
+  --theme-button-text: #0b2116;
+}
+
+/* 02 — Royal Gold */
+html[data-theme="royal-gold"] {
+  color-scheme: dark;
+  --black: #080e1c;
+  --dark: #101a32;
+  --gold: #d9b85f;
+  --light-gold: #f5dfa0;
+  --white: #f3f5fb;
+  --muted: #b5bfd4;
+  --theme-border: rgba(217, 184, 95, .3);
+  --theme-panel: #14203a;
+  --theme-input: #0b1428;
+  --theme-button-text: #101a32;
+}
+
+/* 03 — Clean Minimal */
+html[data-theme="clean-minimal"] {
+  color-scheme: light;
+  --black: #f4f5f7;
+  --dark: #ffffff;
+  --gold: #287b54;
+  --light-gold: #3d9a70;
+  --white: #202a33;
+  --muted: #5f6b75;
+  --theme-border: #dce4df;
+  --theme-panel: #ffffff;
+  --theme-input: #f7f9f8;
+  --theme-button-text: #ffffff;
+}
+
+/* 04 — Midnight Arena */
+html[data-theme="midnight-arena"] {
+  color-scheme: dark;
+  --black: #0b0d0f;
+  --dark: #141719;
+  --gold: #c4ff39;
+  --light-gold: #e1ff9b;
+  --white: #f2f5ed;
+  --muted: #abb4a4;
+  --theme-border: rgba(196, 255, 57, .25);
+  --theme-panel: #171b1d;
+  --theme-input: #0e1112;
+  --theme-button-text: #141719;
+}
+
+/* 05 — Warm Wood */
+html[data-theme="warm-wood"] {
+  color-scheme: light;
+  --black: #f0e5d2;
+  --dark: #e4d2b8;
+  --gold: #805333;
+  --light-gold: #a87548;
+  --white: #302319;
+  --muted: #685342;
+  --theme-border: rgba(128, 83, 51, .3);
+  --theme-panel: #f8f0e3;
+  --theme-input: #fffaf1;
+  --theme-button-text: #ffffff;
+}
+
+/* 06 — Glass Layers */
+html[data-theme="glass-layers"] {
+  color-scheme: dark;
+  --black: #10191e;
+  --dark: #1a292f;
+  --gold: #79d4c5;
+  --light-gold: #b1eee4;
+  --white: #edf8f7;
+  --muted: #b1c9c9;
+  --theme-border: rgba(121, 212, 197, .3);
+  --theme-panel: #20343b;
+  --theme-input: #142329;
+  --theme-button-text: #102725;
+}
+
+/* 07 — Tournament Pro */
+html[data-theme="tournament-pro"] {
+  color-scheme: light;
+  --black: #edf2f8;
+  --dark: #ffffff;
+  --gold: #244b75;
+  --light-gold: #4777a8;
+  --white: #192b40;
+  --muted: #5d7085;
+  --theme-border: #d4dfeb;
+  --theme-panel: #ffffff;
+  --theme-input: #f3f6fa;
+  --theme-button-text: #ffffff;
+}
+
+/* 08 — Modern Editorial */
+html[data-theme="modern-editorial"] {
+  color-scheme: light;
+  --black: #faf7f0;
+  --dark: #f0ece2;
+  --gold: #454b69;
+  --light-gold: #666e96;
+  --white: #252735;
+  --muted: #686875;
+  --theme-border: #ded9ce;
+  --theme-panel: #fffdf8;
+  --theme-input: #f7f3eb;
+  --theme-button-text: #ffffff;
+}
+
+/* 09 — Soft Modern */
+html[data-theme="soft-modern"] {
+  color-scheme: light;
+  --black: #e9eee8;
+  --dark: #f8faf7;
+  --gold: #55785c;
+  --light-gold: #789b7e;
+  --white: #26372b;
+  --muted: #647568;
+  --theme-border: #d4dfd4;
+  --theme-panel: #f8faf7;
+  --theme-input: #edf2ec;
+  --theme-button-text: #ffffff;
+}
+
+/* 10 — Neo Chess */
+html[data-theme="neo-chess"] {
+  color-scheme: light;
+  --black: #f4eddf;
+  --dark: #fffaf0;
+  --gold: #3159d8;
+  --light-gold: #6685f0;
+  --white: #252a38;
+  --muted: #666d7e;
+  --theme-border: #d9dced;
+  --theme-panel: #fffaf0;
+  --theme-input: #f8f3e9;
+  --theme-button-text: #ffffff;
+}
+
+/* Apply theme colors to common website components */
+html[data-theme] body {
+  background-color: var(--black);
+  color: var(--white);
+}
+
+html[data-theme] header,
+html[data-theme] footer,
+html[data-theme] .topbar,
+html[data-theme] .card,
+html[data-theme] .settings-section,
+html[data-theme] .login-card {
+  background-color: var(--theme-panel);
+  color: var(--white);
+  border-color: var(--theme-border);
+}
+
+html[data-theme] h1,
+html[data-theme] h2,
+html[data-theme] h3,
+html[data-theme] .settings-hero h1,
+html[data-theme] .settings-section h2 {
+  color: var(--gold);
+}
+
+html[data-theme] p,
+html[data-theme] small {
+  color: var(--muted);
+}
+
+html[data-theme] a {
+  color: var(--gold);
+}
+
+html[data-theme] .sa-select,
+html[data-theme] .font-size-btn,
+html[data-theme] .login-input {
+  background-color: var(--theme-input);
+  color: var(--white);
+  border-color: var(--theme-border);
+}
+
+html[data-theme] .sa-btn,
+html[data-theme] .login-btn,
+html[data-theme] .font-size-btn.active {
+  border-color: var(--gold);
+}
+
+html[data-theme] .login-btn,
+html[data-theme] .font-size-btn.active {
+  background: var(--gold);
+  color: var(--theme-button-text);
+}
+
+html[data-theme] .settings-row {
+  border-bottom-color: var(--theme-border);
+}
+
+/* Keep text readable when the selected theme is light */
+html[data-theme="clean-minimal"] .settings-row-label strong,
+html[data-theme="warm-wood"] .settings-row-label strong,
+html[data-theme="tournament-pro"] .settings-row-label strong,
+html[data-theme="modern-editorial"] .settings-row-label strong,
+html[data-theme="soft-modern"] .settings-row-label strong,
+html[data-theme="neo-chess"] .settings-row-label strong {
+  color: var(--white);
+}
+
+/* Respect reduced-motion preferences */
+@media (prefers-reduced-motion: reduce) {
+  html:not([data-animations="on"]) *,
+  html:not([data-animations="on"]) *::before,
+  html:not([data-animations="on"]) *::after {
+    scroll-behavior: auto !important;
+  }
+}
+/* THEME CONSISTENCY FIX */
+html[data-theme] {
+  color-scheme: dark;
+}
+
+html[data-theme] body {
+  background-color: var(--black);
+  color: var(--white);
+}
+
+html[data-theme] .hero,
+html[data-theme] .welcome,
+html[data-theme] .card,
+html[data-theme] footer {
+  color: var(--white);
+}
+
+html[data-theme] .hero p,
+html[data-theme] .welcome p,
+html[data-theme] .card p,
+html[data-theme] footer p {
+  color: var(--muted);
+}
+
+html[data-theme] .hero .button {
+  color: var(--white);
+}
+
+html[data-theme] .hero .outline-button {
+  background: transparent;
+  border: 1px solid var(--gold);
+  color: var(--gold);
+}
+
+html[data-theme] .hero .button:focus-visible {
+  outline: 3px solid var(--light-gold);
+  outline-offset: 4px;
+}

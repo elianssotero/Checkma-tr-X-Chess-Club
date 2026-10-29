@@ -1,0 +1,187 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <title>Membership &amp; User Management | CheckmaîtréX</title>
+
+  <link rel="stylesheet" href="membership-user-management.css">
+
+  <!-- Supabase JavaScript library -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+  <!-- Existing shared Supabase configuration -->
+  <script src="../supabase-client.js"></script>
+</head>
+
+<body>
+  <main class="mum-shell">
+
+    <header class="mum-header">
+      <div>
+        <p class="mum-eyebrow">CHECKMAÎTRÉX CHESS CLUB · ADMIN</p>
+        <h1>Membership &amp; User Management</h1>
+        <p class="mum-subtitle">
+          Manage applications and membership records in one place.
+        </p>
+      </div>
+
+      <span id="adminState" class="mum-status">
+        Verifying access…
+      </span>
+    </header>
+
+    <!-- Access verification message -->
+    <section id="accessGate" class="mum-card" role="status">
+      <h2>Administrator verification</h2>
+
+      <p id="accessMessage">
+        Checking your signed-in account. Please wait.
+      </p>
+
+      <a href="../index.html" id="returnLink" hidden>
+        Return to club website
+      </a>
+    </section>
+
+    <!-- Membership tools appear after admin verification -->
+    <div id="membershipApp" hidden>
+
+      <nav class="mum-tabs"
+           aria-label="Membership management sections"
+           role="tablist">
+
+        <button
+          class="mum-tab is-active"
+          id="tab-applications"
+          type="button"
+          role="tab"
+          aria-selected="true"
+          aria-controls="panelContent"
+          data-panel="applications">
+          Membership Applications
+        </button>
+
+        <button
+          class="mum-tab"
+          id="tab-approved"
+          type="button"
+          role="tab"
+          aria-selected="false"
+          aria-controls="panelContent"
+          data-panel="approved"
+          tabindex="-1">
+          Approved Members
+        </button>
+
+        <button
+          class="mum-tab"
+          id="tab-pending"
+          type="button"
+          role="tab"
+          aria-selected="false"
+          aria-controls="panelContent"
+          data-panel="pending"
+          tabindex="-1">
+          Pending Applications
+        </button>
+
+        <button
+          class="mum-tab"
+          id="tab-rejected"
+          type="button"
+          role="tab"
+          aria-selected="false"
+          aria-controls="panelContent"
+          data-panel="rejected"
+          tabindex="-1">
+          Rejected Applications
+        </button>
+
+        <button
+          class="mum-tab"
+          id="tab-disconnections"
+          type="button"
+          role="tab"
+          aria-selected="false"
+          aria-controls="panelContent"
+          data-panel="disconnections"
+          tabindex="-1">
+          Membership Disconnection Requests
+        </button>
+
+        <button
+          class="mum-tab"
+          id="tab-directory"
+          type="button"
+          role="tab"
+          aria-selected="false"
+          aria-controls="panelContent"
+          data-panel="directory"
+          tabindex="-1">
+          Member Directory
+        </button>
+
+        <button
+          class="mum-tab"
+          id="tab-roles"
+          type="button"
+          role="tab"
+          aria-selected="false"
+          aria-controls="panelContent"
+          data-panel="roles"
+          tabindex="-1">
+          Member Roles &amp; Permissions
+        </button>
+
+        <button
+          class="mum-tab"
+          id="tab-history"
+          type="button"
+          role="tab"
+          aria-selected="false"
+          aria-controls="panelContent"
+          data-panel="history"
+          tabindex="-1">
+          Membership History
+        </button>
+
+      </nav>
+
+      <!-- Each section's JavaScript renders inside this container -->
+      <section
+        id="panelContent"
+        class="mum-panel mum-card"
+        role="tabpanel"
+        aria-labelledby="tab-applications"
+        tabindex="0"
+        aria-live="polite">
+
+        <p>Loading membership tools…</p>
+
+      </section>
+
+      <!-- Success and error notifications -->
+      <div
+        id="toast"
+        class="mum-toast"
+        role="status"
+        aria-live="polite"
+        hidden>
+      </div>
+
+    </div>
+
+    <footer class="mum-footer">
+      Restricted administrator area.
+      Membership decisions must be reviewed carefully.
+    </footer>
+
+  </main>
+
+  <!-- Load the membership page controller as an ES module -->
+  <script type="module" src="membership-user-management.js"></script>
+</body>
+</html>

@@ -1,0 +1,171 @@
+
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#0b0b0b">
+  <title>Membership Application | CheckmaîtréX Chess Club</title>
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="enhancements.css">
+  <link rel="stylesheet" href="auth-pages.css">
+</head>
+<body>
+  <main class="auth-shell">
+    <section class="auth-card">
+      <div class="auth-brand">
+        <div class="auth-mark" aria-hidden="true">♟</div>
+        <h1>CHECKMAÎTRÉX</h1>
+        <p>Chess Club</p>
+      </div>
+
+      <h2>Apply for Membership</h2>
+      <p class="auth-intro">
+        Sign in with your verified account before submitting
+        your membership application.
+      </p>
+
+      <form id="applicationForm">
+        <div class="auth-field">
+          <label for="appName">Full name</label>
+          <input
+            id="appName"
+            name="appName"
+            type="text"
+            maxlength="120"
+            autocomplete="name"
+            required
+            placeholder="Enter your full name">
+        </div>
+
+        <div class="auth-field">
+          <label for="membershipId">Membership ID</label>
+          <input
+            id="membershipId"
+            name="membershipId"
+            type="text"
+            maxlength="80"
+            required
+            placeholder="Enter your membership ID">
+        </div>
+
+        <button class="auth-action" id="applicationButton" type="submit">
+          Submit Application
+        </button>
+
+        <div class="auth-status" id="applicationStatus"
+             role="status" aria-live="polite">
+          Your application has not been submitted.
+        </div>
+      </form>
+
+      <div class="auth-links">
+        <a href="member-login.html">Member Login</a>
+        <a href="login-selection.html">Back to Login Options</a>
+      </div>
+
+      <a class="auth-home" href="index.html">← Back to Home</a>
+    </section>
+  </main>
+
+  <script src="site-animations.js"></script>
+  <script src="language.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="supabase-client.js"></script>
+
+  <script>
+    const applicationForm =
+      document.getElementById("applicationForm");
+    const applicationStatus =
+      document.getElementById("applicationStatus");
+    const applicationButton =
+      document.getElementById("applicationButton");
+
+    async function checkSession() {
+      if (!window.clubSupabase) {
+        applicationStatus.textContent =
+          "The login service is unavailable. Please try again later.";
+        applicationStatus.classList.add("show");
+        return;
+      }
+
+      const { data, error } =
+        await window.clubSupabase.auth.getSession();
+
+      if (error || !data.session) {
+        applicationStatus.textContent =
+          "Please log in first before applying.";
+        applicationStatus.classList.add("show");
+        applicationButton.disabled = true;
+      }
+    }
+
+    applicationForm.addEventListener("submit", async function (event) {
+      event.preventDefault();
+
+      if (!window.clubSupabase) {
+        applicationStatus.textContent =
+          "The login service is unavailable. Please try again later.";
+        applicationStatus.classList.add("show");
+        return;
+      }
+
+      applicationButton.disabled = true;
+      applicationButton.textContent = "Submitting...";
+      applicationStatus.textContent = "Submitting your application...";
+      applicationStatus.classList.add("show");
+
+      try {
+        const { data: sessionData, error: sessionError } =
+          await window.clubSupabase.auth.getSession();
+
+        if (sessionError || !sessionData.session) {
+          applicationStatus.textContent =
+            "Please log in before submitting your application.";
+          return;
+        }
+
+        const fullName =
+          document.getElementById("appName").value.trim();
+        const membershipId =
+          document.getElementById("membershipId").value.trim();
+
+        const { error } = await window.clubSupabase.rpc(
+          "submit_membership_application",
+          {
+            p_full_name: fullName,
+            p_membership_id: membershipId
+          }
+        );
+
+        if (error) throw error;
+
+        applicationStatus.textContent =
+          "Application submitted successfully! Your status is pending review.";
+        applicationForm.reset();
+      } catch (error) {
+        const message = error.message || "";
+
+        if (message.includes("pending application")) {
+          applicationStatus.textContent =
+            "You already have an application waiting for review.";
+        } else if (message.includes("membership ID is already in use")) {
+          applicationStatus.textContent =
+            "That membership ID is already in use. Please check it.";
+        } else if (message.includes("verify your email")) {
+          applicationStatus.textContent =
+            "Please verify your email before applying.";
+        } else {
+          applicationStatus.textContent =
+            "Could not submit your application. Please check your details and try again.";
+        }
+      } finally {
+        applicationButton.disabled = false;
+        applicationButton.textContent = "Submit Application";
+      }
+    });
+
+    checkSession();
+  </script>
+</body>
+</html>

@@ -1,0 +1,1102 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#0b0b0b">
+  <meta name="description" content="Customize your CheckmaîtréX Chess Club experience.">
+  <title>Settings | CheckmaîtréX Chess Club</title>
+  <link rel="icon" href="logo.png" type="image/png">
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="enhancements.css">
+
+  <style>
+    .settings-header {
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+      background: var(--dark, #151515);
+      border-bottom: 1px solid var(--gold, #d4af37);
+      backdrop-filter: blur(12px);
+    }
+
+    .settings-header-inner {
+      width: min(1200px, 92%);
+      min-height: 72px;
+      margin: auto;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+    }
+
+    .settings-brand {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      color: var(--gold, #d4af37);
+      text-decoration: none;
+      font-weight: 800;
+      letter-spacing: 1px;
+      white-space: nowrap;
+    }
+
+    .settings-brand img {
+      width: 44px;
+      height: 44px;
+      object-fit: contain;
+    }
+
+    .settings-brand small {
+      display: block;
+      color: var(--muted, #b8b8b8);
+      font-size: 10px;
+      letter-spacing: 3px;
+      margin-top: 2px;
+    }
+
+    .settings-back {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 8px 14px;
+      border: 1px solid var(--gold, #d4af37);
+      border-radius: 6px;
+      color: var(--gold, #d4af37);
+      text-decoration: none;
+      font-size: 13px;
+      font-weight: 600;
+    }
+
+    .settings-back:hover {
+      background: var(--gold, #d4af37);
+      color: var(--black, #0b0b0b);
+    }
+
+    .settings-page {
+      max-width: 820px;
+      margin: auto;
+      padding: 32px 20px 70px;
+    }
+
+    .settings-section {
+      margin: 22px 0;
+      padding: 22px;
+      border: 1px solid var(--gold, #d4af37);
+      border-radius: 12px;
+      background: var(--dark, #151515);
+      color: var(--white, #f5f5f5);
+    }
+
+    .settings-section h2 {
+      margin-top: 0;
+      color: var(--gold, #d4af37);
+    }
+
+    .settings-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 18px;
+      padding: 15px 0;
+      border-bottom: 1px solid rgba(128,128,128,.25);
+      flex-wrap: wrap;
+    }
+
+    .settings-row:last-child {
+      border-bottom: 0;
+    }
+
+    .settings-row-label {
+      flex: 1 1 220px;
+      min-width: 0;
+    }
+
+    .settings-row-label strong {
+      display: block;
+      color: var(--white, #f5f5f5);
+    }
+
+    .settings-row-label small {
+      display: block;
+      margin-top: 5px;
+      color: var(--muted, #b8b8b8);
+      line-height: 1.5;
+    }
+
+    .settings-row-control {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex-wrap: wrap;
+      max-width: 100%;
+    }
+
+    .sa-select,
+    .settings-search,
+    .settings-text-input {
+      width: 100%;
+      max-width: 320px;
+      padding: 11px;
+      border: 1px solid var(--gold, #d4af37);
+      border-radius: 6px;
+      background: var(--dark, #151515);
+      color: var(--white, #f5f5f5);
+    }
+
+    .sa-btn,
+    .font-size-btn {
+      min-height: 42px;
+      padding: 10px 14px;
+      border: 1px solid var(--gold, #d4af37);
+      border-radius: 6px;
+      background: transparent;
+      color: var(--gold, #d4af37);
+      cursor: pointer;
+    }
+
+    .sa-btn:hover,
+    .font-size-btn:hover,
+    .font-size-btn.active {
+      background: var(--gold, #d4af37);
+      color: var(--black, #0b0b0b);
+    }
+
+    .sa-btn.danger {
+      border-color: #d9534f;
+      color: #ff7777;
+    }
+
+    .sa-btn.danger:hover {
+      background: #d9534f;
+      color: #fff;
+    }
+
+    .font-size-options {
+      display: flex;
+      gap: 7px;
+    }
+
+    .sa-toggle {
+      position: relative;
+      display: inline-block;
+      width: 48px;
+      height: 26px;
+    }
+
+    .sa-toggle input {
+      width: 1px;
+      height: 1px;
+      opacity: 0;
+      position: absolute;
+    }
+
+    .sa-toggle .slider {
+      position: absolute;
+      inset: 0;
+      cursor: pointer;
+      border-radius: 20px;
+      background: #777;
+      transition: background .2s;
+    }
+
+    .sa-toggle .slider::before {
+      content: "";
+      position: absolute;
+      width: 18px;
+      height: 18px;
+      left: 4px;
+      top: 4px;
+      border-radius: 50%;
+      background: #fff;
+      transition: transform .2s;
+    }
+
+    .sa-toggle input:checked + .slider {
+      background: var(--gold, #d4af37);
+    }
+
+    .sa-toggle input:checked + .slider::before {
+      transform: translateX(22px);
+    }
+
+    .sa-toggle input:focus-visible + .slider {
+      outline: 3px solid var(--gold, #d4af37);
+      outline-offset: 4px;
+    }
+
+    .settings-status {
+      min-height: 1.5em;
+      margin: 12px 0 0;
+      color: var(--muted, #b8b8b8);
+      font-size: 13px;
+    }
+
+    .settings-note {
+      color: var(--muted, #b8b8b8);
+      font-size: 13px;
+      line-height: 1.6;
+    }
+
+    .accent-control {
+      width: 48px;
+      height: 42px;
+      padding: 3px;
+      border: 1px solid var(--gold, #d4af37);
+      border-radius: 6px;
+      background: transparent;
+      cursor: pointer;
+    }
+
+    .settings-search-wrap {
+      margin: 24px 0;
+    }
+
+    .settings-search {
+      max-width: none;
+      box-sizing: border-box;
+    }
+
+    .settings-preview {
+      padding: 18px;
+      margin-top: 14px;
+      border: 1px solid var(--gold, #d4af37);
+      border-radius: 10px;
+      background: var(--theme-panel, var(--dark, #151515));
+    }
+
+    .settings-preview-swatch {
+      display: inline-block;
+      width: 15px;
+      height: 15px;
+      margin-right: 6px;
+      border-radius: 50%;
+      background: var(--gold, #d4af37);
+      vertical-align: middle;
+    }
+
+    .settings-section details {
+      padding: 12px 0;
+      border-bottom: 1px solid rgba(128,128,128,.25);
+    }
+
+    .settings-section details:last-child {
+      border-bottom: 0;
+    }
+
+    .settings-section summary {
+      cursor: pointer;
+      font-weight: 700;
+    }
+
+    .settings-section button:focus-visible,
+    .settings-section select:focus-visible,
+    .settings-section input:focus-visible,
+    .settings-search:focus-visible,
+    .settings-back:focus-visible {
+      outline: 3px solid var(--gold, #d4af37);
+      outline-offset: 3px;
+    }
+
+    html[data-high-contrast="on"] body {
+      color: #fff;
+    }
+
+    html[data-high-contrast="on"] .settings-section {
+      border-width: 2px;
+    }
+
+    html[data-readable-text="on"] body {
+      line-height: 1.8;
+      letter-spacing: .02em;
+    }
+
+    html[data-readable-text="on"] .settings-row-label small,
+    html[data-readable-text="on"] .settings-note {
+      font-size: 1rem;
+    }
+
+    html[data-reduced-motion="on"] *,
+    html[data-animations="off"] * {
+      animation: none !important;
+      transition: none !important;
+      scroll-behavior: auto !important;
+    }
+
+    @media (max-width: 480px) {
+      .settings-header-inner {
+        width: 94%;
+        min-height: 64px;
+        gap: 8px;
+      }
+
+      .settings-brand {
+        font-size: 12px;
+        letter-spacing: .5px;
+      }
+
+      .settings-brand img {
+        width: 34px;
+        height: 34px;
+      }
+
+      .settings-brand small {
+        font-size: 8px;
+        letter-spacing: 2px;
+      }
+
+      .settings-back {
+        padding: 8px 10px;
+        font-size: 12px;
+      }
+
+      .settings-page {
+        padding: 24px 12px 50px;
+      }
+
+      .settings-section {
+        padding: 16px;
+      }
+
+      .settings-row {
+        align-items: flex-start;
+      }
+
+      .settings-row-control {
+        width: 100%;
+      }
+
+      .sa-select {
+        max-width: none;
+      }
+
+      .font-size-options {
+        flex-wrap: wrap;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <script src="settings-global.js"></script>
+
+  <header class="settings-header">
+    <div class="settings-header-inner">
+      <a class="settings-brand" href="index.html">
+        <img src="logo.png" alt="CheckmaîtréX Chess Club logo">
+        <span>CHECKMAÎTRÉX<small>CHESS CLUB</small></span>
+      </a>
+      <a class="settings-back" href="index.html">&larr; Back to Home</a>
+    </div>
+  </header>
+
+  <main class="settings-page">
+    <div class="settings-hero">
+      <div class="eyebrow">Personalize Your Experience</div>
+      <h1>Settings</h1>
+      <p>Customize how CheckmaîtréX Chess Club looks and behaves. Your preferences are saved on this device.</p>
+    </div>
+
+    <div class="settings-search-wrap">
+      <label for="settingsSearch"><strong>Search Settings</strong></label>
+      <input class="settings-search" id="settingsSearch" type="search"
+        placeholder="Search themes, accessibility, privacy..." autocomplete="off">
+      <p class="settings-note">Search to quickly find a settings section.</p>
+    </div>
+
+    <p class="settings-status" id="settingsStatus" role="status" aria-live="polite"></p>
+
+    <section class="settings-section" data-search-section>
+      <h2>Appearance</h2>
+
+      <div class="settings-row">
+        <div class="settings-row-label">
+          <strong>Website Theme</strong>
+          <small>Choose one of the 11 design concepts. Changes preview immediately.</small>
+        </div>
+        <div class="settings-row-control">
+          <select class="sa-select" id="themeSelect">
+            <option value="dark">00 — Original Black &amp; Gold</option>
+            <option value="emerald">01 — Emerald Classic</option>
+            <option value="royal-gold">02 — Royal Gold</option>
+            <option value="clean-minimal">03 — Clean Minimal</option>
+            <option value="midnight-arena">04 — Midnight Arena</option>
+            <option value="warm-wood">05 — Warm Wood</option>
+            <option value="glass-layers">06 — Glass Layers</option>
+            <option value="tournament-pro">07 — Tournament Pro</option>
+            <option value="modern-editorial">08 — Modern Editorial</option>
+            <option value="soft-modern">09 — Soft Modern</option>
+            <option value="neo-chess">10 — Neo Chess</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="settings-row">
+        <div class="settings-row-label">
+          <strong>Custom Accent Color</strong>
+          <small>Choose a custom accent for supported website elements.</small>
+        </div>
+        <div class="settings-row-control">
+          <input class="accent-control" type="color" id="accentColor" value="#d4af37"
+            aria-label="Choose accent color">
+          <button type="button" class="sa-btn" id="resetAccent">Reset Color</button>
+        </div>
+      </div>
+
+      <div class="settings-row">
+        <div class="settings-row-label">
+          <strong>Font Size</strong>
+          <small>Adjust text size for readability.</small>
+        </div>
+        <div class="settings-row-control font-size-options">
+          <button type="button" class="font-size-btn" data-size="small">A-</button>
+          <button type="button" class="font-size-btn" data-size="medium">A</button>
+          <button type="button" class="font-size-btn" data-size="large">A+</button>
+          <button type="button" class="font-size-btn" data-size="xlarge">A++</button>
+        </div>
+      </div>
+
+      <div class="settings-preview" id="themePreview">
+        <strong>Live Preview</strong>
+        <p>Calculate. Conquer. Checkmate.</p>
+        <span class="settings-preview-swatch"></span>
+        <span>Accent color preview</span>
+        <p class="settings-note">Some hardcoded colors on other pages may need CSS updates before every theme looks consistent.</p>
+      </div>
+
+      <div class="settings-row">
+        <div class="settings-row-label">
+          <strong>Undo Last Change</strong>
+          <small>Restore the previous setting changed during this visit.</small>
+        </div>
+        <div class="settings-row-control">
+          <button type="button" class="sa-btn" id="undoButton" disabled>Undo</button>
+        </div>
+      </div>
+    </section>
+
+    <section class="settings-section" data-search-section>
+      <h2>Accessibility &amp; Motion</h2>
+
+      <div class="settings-row">
+        <div class="settings-row-label">
+          <strong>Page Animations</strong>
+          <small>Enable or disable supported page effects.</small>
+        </div>
+        <div class="settings-row-control">
+          <label class="sa-toggle">
+            <input type="checkbox" id="animationsToggle">
+            <span class="slider"></span>
+          </label>
+        </div>
+      </div>
+
+      <div class="settings-row">
+        <div class="settings-row-label">
+          <strong>High Contrast</strong>
+          <small>Improve contrast on supported elements.</small>
+        </div>
+        <div class="settings-row-control">
+          <label class="sa-toggle">
+            <input type="checkbox" id="highContrastToggle">
+            <span class="slider"></span>
+          </label>
+        </div>
+      </div>
+
+      <div class="settings-row">
+        <div class="settings-row-label">
+          <strong>Readable Text</strong>
+          <small>Increase text spacing and improve readability.</small>
+        </div>
+        <div class="settings-row-control">
+          <label class="sa-toggle">
+            <input type="checkbox" id="readableTextToggle">
+            <span class="slider"></span>
+          </label>
+        </div>
+      </div>
+
+      <div class="settings-row">
+        <div class="settings-row-label">
+          <strong>Reduced Motion</strong>
+          <small>Reduce animations and transitions on supported pages.</small>
+        </div>
+        <div class="settings-row-control">
+          <label class="sa-toggle">
+            <input type="checkbox" id="reducedMotionToggle">
+            <span class="slider"></span>
+          </label>
+        </div>
+      </div>
+    </section>
+
+    <section class="settings-section" data-search-section>
+      <h2>Language</h2>
+      <div class="settings-row">
+        <div class="settings-row-label">
+          <strong>Display Language</strong>
+          <small>Save your preferred language.</small>
+        </div>
+        <div class="settings-row-control">
+          <select class="sa-select" id="languageSelect">
+            <option value="en">English</option>
+            <option value="fil">Filipino</option>
+          </select>
+        </div>
+      </div>
+      <p class="settings-note">Note: This saves your language preference. Full translation of the website requires a separate translation system.</p>
+    </section>
+
+    <section class="settings-section" data-search-section>
+      <h2>Notifications</h2>
+
+      <div class="settings-row">
+        <div class="settings-row-label">
+          <strong>Event Reminders</strong>
+          <small>Save your preference for club event reminders.</small>
+        </div>
+        <div class="settings-row-control">
+          <label class="sa-toggle">
+            <input type="checkbox" id="notifEvents">
+            <span class="slider"></span>
+          </label>
+        </div>
+      </div>
+
+      <div class="settings-row">
+        <div class="settings-row-label">
+          <strong>Tournament Updates</strong>
+          <small>Save your preference for tournament updates.</small>
+        </div>
+        <div class="settings-row-control">
+          <label class="sa-toggle">
+            <input type="checkbox" id="notifTournaments">
+            <span class="slider"></span>
+          </label>
+        </div>
+      </div>
+
+      <div class="settings-row">
+        <div class="settings-row-label">
+          <strong>Club News</strong>
+          <small>Save your preference for club news.</small>
+        </div>
+        <div class="settings-row-control">
+          <label class="sa-toggle">
+            <input type="checkbox" id="notifNews">
+            <span class="slider"></span>
+          </label>
+        </div>
+      </div>
+
+      <p class="settings-note">These switches save preferences locally. Actual notifications require a notification service.</p>
+    </section>
+
+    <section class="settings-section" data-search-section>
+      <h2>AI Assistant</h2>
+
+      <div class="settings-row">
+        <div class="settings-row-label">
+          <strong>Clear Chat History</strong>
+          <small>Delete saved AI conversations on this device.</small>
+        </div>
+        <div class="settings-row-control">
+          <button type="button" class="sa-btn danger" id="clearAIButton">Clear</button>
+        </div>
+      </div>
+
+      <div class="settings-row">
+        <div class="settings-row-label">
+          <strong>AI Suggestions</strong>
+          <small>Show suggested prompts on the AI welcome screen.</small>
+        </div>
+        <div class="settings-row-control">
+          <label class="sa-toggle">
+            <input type="checkbox" id="aiSuggestions">
+            <span class="slider"></span>
+          </label>
+        </div>
+      </div>
+    </section>
+
+    <section class="settings-section" data-search-section>
+      <h2>Privacy &amp; Data</h2>
+
+      <div class="settings-row">
+        <div class="settings-row-label">
+          <strong>Export Settings</strong>
+          <small>Download a backup of your saved preferences as JSON.</small>
+        </div>
+        <div class="settings-row-control">
+          <button type="button" class="sa-btn" id="exportButton">Export</button>
+        </div>
+      </div>
+
+      <div class="settings-row">
+        <div class="settings-row-label">
+          <strong>Import Settings</strong>
+          <small>Restore preferences from a settings JSON backup.</small>
+        </div>
+        <div class="settings-row-control">
+          <input type="file" id="importFile" accept=".json,application/json" aria-label="Choose settings backup file">
+          <button type="button" class="sa-btn" id="importButton">Import</button>
+        </div>
+      </div>
+
+      <div class="settings-row">
+        <div class="settings-row-label">
+          <strong>Undo / Reset Preferences</strong>
+          <small>Reset your saved preferences to their default values.</small>
+        </div>
+        <div class="settings-row-control">
+          <button type="button" class="sa-btn danger" id="resetAllButton">Reset All Settings</button>
+        </div>
+      </div>
+
+      <div class="settings-row">
+        <div class="settings-row-label">
+          <strong>Clear Website Settings</strong>
+          <small>Remove only known CheckmaîtréX preference keys. This does not clear your browser cache.</small>
+        </div>
+        <div class="settings-row-control">
+          <button type="button" class="sa-btn danger" id="clearSettingsButton">Clear Settings</button>
+        </div>
+      </div>
+
+      <p class="settings-note">Preferences are stored in this browser on this device. Export a backup before resetting if you want to keep them.</p>
+    </section>
+
+    <section class="settings-section" data-search-section>
+      <h2>Help &amp; FAQ</h2>
+
+      <details>
+        <summary>How do I change the website theme?</summary>
+        <p>Choose a theme from Appearance. Your selection is saved on this device and previews immediately on this page.</p>
+      </details>
+
+      <details>
+        <summary>Why do some pages still show the old colors?</summary>
+        <p>Some pages may contain hardcoded colors. Their CSS must be updated separately for all 11 themes to look consistent.</p>
+      </details>
+
+      <details>
+        <summary>Does the language option translate every page?</summary>
+        <p>No. It saves your preference. A translation system must be implemented separately.</p>
+      </details>
+
+      <details>
+        <summary>Are notifications sent automatically?</summary>
+        <p>No. These options save your preferences only. Real notifications need a notification service.</p>
+      </details>
+
+      <details>
+        <summary>What does Reset All Settings do?</summary>
+        <p>It removes the known website preference keys and reloads the page. It does not intentionally delete saved AI conversations.</p>
+      </details>
+    </section>
+
+    <section class="settings-section" data-search-section>
+      <h2>What's New</h2>
+      <div class="settings-about">
+        <p><strong>Settings Dashboard update</strong></p>
+        <ul>
+          <li>11 theme choices</li>
+          <li>Custom accent color and font-size controls</li>
+          <li>Accessibility preferences</li>
+          <li>Settings search and backup tools</li>
+          <li>Safer preference clearing</li>
+        </ul>
+        <p class="settings-note">Some preferences require additional site-wide integration before they affect every page.</p>
+      </div>
+    </section>
+
+    <section class="settings-section" data-search-section>
+      <h2>About</h2>
+      <div class="settings-about">
+        <p><strong>CheckmaîtréX Chess Club</strong></p>
+        <p>Official Club Website</p>
+        <p>Calculate. Conquer. Checkmate.</p>
+        <p>Version 1.1 &middot; &copy; 2026</p>
+      </div>
+    </section>
+  </main>
+
+  <script>
+    (function () {
+      "use strict";
+
+      var root = document.documentElement;
+      var status = document.getElementById("settingsStatus");
+      var undoStack = [];
+      var defaultAccent = "#d4af37";
+
+      var themeIds = [
+        "dark", "emerald", "royal-gold", "clean-minimal",
+        "midnight-arena", "warm-wood", "glass-layers",
+        "tournament-pro", "modern-editorial", "soft-modern",
+        "neo-chess"
+      ];
+
+      var sizes = ["small", "medium", "large", "xlarge"];
+
+      var keys = [
+        "checkmaitrex_theme",
+        "checkmaitrex_font_size",
+        "checkmaitrex_animations",
+        "checkmaitrex_language",
+        "checkmaitrex_notif_events",
+        "checkmaitrex_notif_tournaments",
+        "checkmaitrex_notif_news",
+        "checkmaitrex_ai_suggestions",
+        "checkmaitrex_accent_color",
+        "checkmaitrex_high_contrast",
+        "checkmaitrex_readable_text",
+        "checkmaitrex_reduced_motion"
+      ];
+
+      function read(key, fallback) {
+        try {
+          var value = localStorage.getItem(key);
+          return value === null ? fallback : value;
+        } catch (error) {
+          return fallback;
+        }
+      }
+
+      function write(key, value) {
+        try {
+          localStorage.setItem(key, value);
+          return true;
+        } catch (error) {
+          announce("Could not save this setting. Browser storage may be unavailable.");
+          return false;
+        }
+      }
+
+      function removeKey(key) {
+        try {
+          localStorage.removeItem(key);
+        } catch (error) {
+          announce("Some settings could not be removed.");
+        }
+      }
+
+      function announce(message) {
+        if (status) status.textContent = message;
+      }
+
+      function remember(key) {
+        undoStack.push({
+          key: key,
+          value: read(key, null)
+        });
+
+        if (undoStack.length > 30) undoStack.shift();
+
+        document.getElementById("undoButton").disabled = false;
+      }
+
+      function save(key, value, message) {
+        remember(key);
+        if (write(key, value)) {
+          applyOne(key, value);
+          announce(message || "Setting saved on this device.");
+        }
+      }
+
+      function applyTheme(value) {
+        var theme = themeIds.indexOf(value) !== -1 ? value : "dark";
+        root.setAttribute("data-theme", theme);
+        document.getElementById("themeSelect").value = theme;
+      }
+
+      function applySize(value) {
+        var size = sizes.indexOf(value) !== -1 ? value : "medium";
+        root.setAttribute("data-font-size", size);
+
+        document.querySelectorAll(".font-size-btn").forEach(function (button) {
+          var active = button.getAttribute("data-size") === size;
+          button.classList.toggle("active", active);
+          button.setAttribute("aria-pressed", String(active));
+        });
+      }
+
+      function applyAccent(value) {
+        var valid = /^#[0-9a-fA-F]{6}$/.test(value || "") ? value : defaultAccent;
+        root.style.setProperty("--gold", valid);
+        root.style.setProperty("--light-gold", valid);
+        document.getElementById("accentColor").value = valid;
+      }
+
+      function applyOne(key, value) {
+        switch (key) {
+          case "checkmaitrex_theme":
+            applyTheme(value || "dark");
+            break;
+          case "checkmaitrex_font_size":
+            applySize(value || "medium");
+            break;
+          case "checkmaitrex_animations":
+            document.getElementById("animationsToggle").checked = value !== "off";
+            if (value === "off") root.setAttribute("data-animations", "off");
+            else root.removeAttribute("data-animations");
+            break;
+          case "checkmaitrex_language":
+            document.getElementById("languageSelect").value = value === "fil" ? "fil" : "en";
+            break;
+          case "checkmaitrex_notif_events":
+            document.getElementById("notifEvents").checked = value !== "off";
+            break;
+          case "checkmaitrex_notif_tournaments":
+            document.getElementById("notifTournaments").checked = value !== "off";
+            break;
+          case "checkmaitrex_notif_news":
+            document.getElementById("notifNews").checked = value !== "off";
+            break;
+          case "checkmaitrex_ai_suggestions":
+            document.getElementById("aiSuggestions").checked = value !== "off";
+            break;
+          case "checkmaitrex_accent_color":
+            applyAccent(value || defaultAccent);
+            break;
+          case "checkmaitrex_high_contrast":
+            root.setAttribute("data-high-contrast", value === "on" ? "on" : "off");
+            document.getElementById("highContrastToggle").checked = value === "on";
+            break;
+          case "checkmaitrex_readable_text":
+            root.setAttribute("data-readable-text", value === "on" ? "on" : "off");
+            document.getElementById("readableTextToggle").checked = value === "on";
+            break;
+          case "checkmaitrex_reduced_motion":
+            root.setAttribute("data-reduced-motion", value === "on" ? "on" : "off");
+            document.getElementById("reducedMotionToggle").checked = value === "on";
+            break;
+        }
+      }
+
+      function initialize() {
+        keys.forEach(function (key) {
+          var fallback = null;
+          if (key === "checkmaitrex_theme") fallback = "dark";
+          if (key === "checkmaitrex_font_size") fallback = "medium";
+          if (key === "checkmaitrex_animations") fallback = "on";
+          if (key === "checkmaitrex_language") fallback = "en";
+          if (key === "checkmaitrex_notif_events") fallback = "on";
+          if (key === "checkmaitrex_notif_tournaments") fallback = "on";
+          if (key === "checkmaitrex_notif_news") fallback = "off";
+          if (key === "checkmaitrex_ai_suggestions") fallback = "on";
+          if (key === "checkmaitrex_accent_color") fallback = defaultAccent;
+          if (key.indexOf("checkmaitrex_high_contrast") === 0) fallback = "off";
+          if (key.indexOf("checkmaitrex_readable_text") === 0) fallback = "off";
+          if (key.indexOf("checkmaitrex_reduced_motion") === 0) fallback = "off";
+
+          applyOne(key, read(key, fallback));
+        });
+      }
+
+      document.getElementById("themeSelect").addEventListener("change", function () {
+        save("checkmaitrex_theme", this.value, "Theme preview updated and preference saved.");
+      });
+
+      document.querySelectorAll(".font-size-btn").forEach(function (button) {
+        button.addEventListener("click", function () {
+          save("checkmaitrex_font_size", this.getAttribute("data-size"), "Font size updated.");
+        });
+      });
+
+      document.getElementById("accentColor").addEventListener("input", function () {
+        save("checkmaitrex_accent_color", this.value, "Accent color updated.");
+      });
+
+      document.getElementById("resetAccent").addEventListener("click", function () {
+        save("checkmaitrex_accent_color", defaultAccent, "Accent color reset.");
+      });
+
+      document.getElementById("animationsToggle").addEventListener("change", function () {
+        save("checkmaitrex_animations", this.checked ? "on" : "off", "Animation preference saved.");
+      });
+
+      document.getElementById("highContrastToggle").addEventListener("change", function () {
+        save("checkmaitrex_high_contrast", this.checked ? "on" : "off", "High contrast preference saved.");
+      });
+
+      document.getElementById("readableTextToggle").addEventListener("change", function () {
+        save("checkmaitrex_readable_text", this.checked ? "on" : "off", "Readable text preference saved.");
+      });
+
+      document.getElementById("reducedMotionToggle").addEventListener("change", function () {
+        save("checkmaitrex_reduced_motion", this.checked ? "on" : "off", "Reduced motion preference saved.");
+      });
+
+      document.getElementById("languageSelect").addEventListener("change", function () {
+        save("checkmaitrex_language", this.value, "Language preference saved.");
+      });
+
+      [
+        ["notifEvents", "checkmaitrex_notif_events"],
+        ["notifTournaments", "checkmaitrex_notif_tournaments"],
+        ["notifNews", "checkmaitrex_notif_news"],
+        ["aiSuggestions", "checkmaitrex_ai_suggestions"]
+      ].forEach(function (pair) {
+        document.getElementById(pair[0]).addEventListener("change", function () {
+          save(pair[1], this.checked ? "on" : "off", "Preference saved.");
+        });
+      });
+
+      document.getElementById("undoButton").addEventListener("click", function () {
+        var previous = undoStack.pop();
+
+        if (!previous) {
+          announce("There is no recent setting to undo.");
+          this.disabled = true;
+          return;
+        }
+
+        if (previous.value === null) removeKey(previous.key);
+        else write(previous.key, previous.value);
+
+        applyOne(previous.key, previous.value);
+        this.disabled = undoStack.length === 0;
+        announce("Last setting change undone.");
+      });
+
+      document.getElementById("clearAIButton").addEventListener("click", function () {
+        if (!confirm("Delete saved AI chat history on this device?")) return;
+        removeKey("checkmaitrex_conversations");
+        announce("AI chat history removal requested.");
+      });
+
+      function resetPreferences() {
+        keys.forEach(removeKey);
+        location.reload();
+      }
+
+      document.getElementById("resetAllButton").addEventListener("click", function () {
+        if (!confirm("Reset all saved website preferences to their defaults? AI chat history will not be intentionally deleted.")) return;
+        resetPreferences();
+      });
+
+      document.getElementById("clearSettingsButton").addEventListener("click", function () {
+        if (!confirm("Clear the saved CheckmaîtréX preferences listed by this settings page?")) return;
+        resetPreferences();
+      });
+
+      document.getElementById("exportButton").addEventListener("click", function () {
+        try {
+          var data = {};
+
+          keys.forEach(function (key) {
+            data[key] = read(key, null);
+          });
+
+          var blob = new Blob([JSON.stringify(data, null, 2)], {
+            type: "application/json"
+          });
+
+          var url = URL.createObjectURL(blob);
+          var link = document.createElement("a");
+          link.href = url;
+          link.download = "checkmaitrex-settings.json";
+          document.body.appendChild(link);
+          link.click();
+          link.remove();
+          URL.revokeObjectURL(url);
+
+          announce("Settings backup exported.");
+        } catch (error) {
+          announce("Export failed. Please try again.");
+        }
+      });
+
+      document.getElementById("importButton").addEventListener("click", function () {
+        var input = document.getElementById("importFile");
+        var file = input.files && input.files[0];
+
+        if (!file) {
+          announce("Choose a JSON settings backup first.");
+          return;
+        }
+
+        var reader = new FileReader();
+
+        reader.onload = function () {
+          try {
+            var data = JSON.parse(reader.result);
+
+            if (!data || typeof data !== "object" || Array.isArray(data)) {
+              throw new Error("Invalid settings file");
+            }
+
+            if (!confirm("Import preferences from this file? Current saved preferences may be replaced.")) return;
+
+            keys.forEach(function (key) {
+              if (!Object.prototype.hasOwnProperty.call(data, key)) return;
+
+              var value = data[key];
+
+              if (value === null) {
+                removeKey(key);
+                return;
+              }
+
+              if (typeof value !== "string") return;
+
+              if (key === "checkmaitrex_theme" && themeIds.indexOf(value) === -1) return;
+              if (key === "checkmaitrex_font_size" && sizes.indexOf(value) === -1) return;
+              if (key === "checkmaitrex_language" && ["en", "fil"].indexOf(value) === -1) return;
+              if (/checkmaitrex_(animations|notif_events|notif_tournaments|notif_news|ai_suggestions|high_contrast|readable_text|reduced_motion)$/.test(key) && ["on", "off"].indexOf(value) === -1) return;
+              if (key === "checkmaitrex_accent_color" && !/^#[0-9a-fA-F]{6}$/.test(value)) return;
+
+              write(key, value);
+            });
+
+            announce("Import finished. Reloading to apply imported preferences.");
+            setTimeout(function () { location.reload(); }, 500);
+          } catch (error) {
+            announce("Import failed. Check that this is a valid settings JSON file.");
+          }
+        };
+
+        reader.onerror = function () {
+          announce("Could not read the selected file.");
+        };
+
+        reader.readAsText(file);
+      });
+
+      document.getElementById("settingsSearch").addEventListener("input", function () {
+        var query = this.value.trim().toLowerCase();
+
+        document.querySelectorAll("[data-search-section]").forEach(function (section) {
+          var rows = Array.from(section.querySelectorAll(".settings-row"));
+          var heading = section.querySelector("h2");
+          var headingMatches = heading && heading.textContent.toLowerCase().indexOf(query) !== -1;
+          var sectionMatches = section.textContent.toLowerCase().indexOf(query) !== -1;
+
+          if (!query) {
+            section.hidden = false;
+            rows.forEach(function (row) { row.hidden = false; });
+            return;
+          }
+
+          rows.forEach(function (row) {
+            row.hidden = !headingMatches && row.textContent.toLowerCase().indexOf(query) === -1;
+          });
+
+          section.hidden = !sectionMatches;
+        });
+      });
+
+      initialize();
+    })();
+  </script>
+
+  <script src="bfcache-fix.js"></script>
+  <script src="site-animations.js"></script>  
+  <script src="language.js"></script>
+
+</body>
+
+</html>

@@ -1,0 +1,123 @@
+
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#0b0b0b">
+  <title>Member Login | CheckmaîtréX Chess Club</title>
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="enhancements.css">
+  <link rel="stylesheet" href="auth-pages.css">
+</head>
+<body>
+  <main class="auth-shell">
+    <section class="auth-card">
+      <div class="auth-brand">
+        <div class="auth-mark" aria-hidden="true">♟</div>
+        <h1>CHECKMAÎTRÉX</h1>
+        <p>Chess Club</p>
+      </div>
+
+      <h2>Member Login</h2>
+      <p class="auth-intro">
+        Sign in using the email address and password registered
+        with your CheckmaîtréX account.
+      </p>
+
+      <form id="memberLoginForm">
+        <div class="auth-field">
+          <label for="memberEmail">Email address</label>
+          <input
+            id="memberEmail"
+            name="memberEmail"
+            type="email"
+            autocomplete="username"
+            required
+            placeholder="you@example.com">
+        </div>
+
+        <div class="auth-field">
+          <label for="memberPassword">Password</label>
+          <input
+            id="memberPassword"
+            name="memberPassword"
+            type="password"
+            autocomplete="current-password"
+            required
+            placeholder="Enter your password">
+        </div>
+
+        <button class="auth-action" id="loginButton" type="submit">
+          Log In
+        </button>
+
+        <div class="auth-status" id="authStatus"
+             role="status" aria-live="polite">
+          Enter your account details to sign in.
+        </div>
+      </form>
+
+      <div class="auth-links">
+        <a href="login-selection.html">Back to Login Options</a>
+        <a href="membership-application.html">Apply for Membership</a>
+      </div>
+
+      <a class="auth-home" href="index.html">← Back to Home</a>
+    </section>
+  </main>
+
+  <script src="site-animations.js"></script>
+  <script src="language.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="supabase-client.js"></script>
+
+  <script>
+    const loginForm = document.getElementById("memberLoginForm");
+    const authStatus = document.getElementById("authStatus");
+    const loginButton = document.getElementById("loginButton");
+
+    loginForm.addEventListener("submit", async function (event) {
+      event.preventDefault();
+
+      const email = document.getElementById("memberEmail").value.trim();
+      const password = document.getElementById("memberPassword").value;
+
+      if (!window.clubSupabase) {
+        authStatus.textContent =
+          "Login service is unavailable. Please try again later.";
+        authStatus.classList.add("show");
+        return;
+      }
+
+      loginButton.disabled = true;
+      loginButton.textContent = "Signing in...";
+      authStatus.textContent = "Checking your credentials...";
+      authStatus.classList.add("show");
+
+      try {
+        const { data, error } =
+          await window.clubSupabase.auth.signInWithPassword({
+            email,
+            password
+          });
+
+        if (error) throw error;
+
+        authStatus.textContent =
+          "Login successful! Redirecting...";
+
+        window.location.href = "index.html";
+      } catch (error) {
+        authStatus.textContent =
+          error.message === "Invalid login credentials"
+            ? "Incorrect email or password."
+            : "Unable to sign in. Check your details and try again.";
+
+        loginButton.disabled = false;
+        loginButton.textContent = "Log In";
+      }
+    });
+  </script>
+</body>
+</html>

@@ -1,0 +1,636 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#0b0b0b">
+  <title>Our Story | CheckmaîtréX Chess Club</title>
+  <meta name="description" content="Discover the story, identity, and journey of CheckmaîtréX Chess Club.">
+
+  <style>
+    :root {
+      --black: #0b0b0b;
+      --dark: #151515;
+      --gold: #d4af37;
+      --light-gold: #f1d77a;
+      --white: #f5f5f5;
+      --muted: #c5c5c5;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html {
+      scroll-behavior: smooth;
+      scroll-padding-top: 25px;
+    }
+
+    body {
+      margin: 0;
+      background: var(--black);
+      color: var(--white);
+      font-family: Arial, Helvetica, sans-serif;
+      line-height: 1.8;
+      overflow-x: hidden;
+    }
+
+    a {
+      color: inherit;
+    }
+
+    /* HEADER */
+
+    .story-header {
+      position: relative;
+      z-index: 10;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 20px;
+      padding: 13px 5%;
+      background: #0b0b0b;
+      border-bottom: 1px solid #59491f;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex-shrink: 0;
+      text-decoration: none;
+    }
+
+    .brand-logo {
+      width: 42px;
+      height: 42px;
+      object-fit: contain;
+    }
+
+    .brand-text {
+      display: flex;
+      flex-direction: column;
+      line-height: 1.4;
+    }
+
+    .brand-text strong {
+      color: var(--gold);
+      font-size: 14px;
+      letter-spacing: 1px;
+    }
+
+    .brand-text small {
+      color: var(--white);
+      font-size: 9px;
+      letter-spacing: 3px;
+    }
+
+    .story-nav {
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+      flex-wrap: wrap;
+      gap: 8px 20px;
+    }
+
+    .story-nav > a,
+    .story-dropdown summary {
+      padding: 8px 0;
+      color: var(--white);
+      font-size: 12px;
+      text-decoration: none;
+      cursor: pointer;
+      list-style: none;
+    }
+
+    .story-nav > a:hover,
+    .story-dropdown summary:hover,
+    .story-dropdown[open] summary {
+      color: var(--gold);
+    }
+
+    .story-dropdown {
+      position: relative;
+    }
+
+    .story-dropdown summary::-webkit-details-marker {
+      display: none;
+    }
+
+    .story-dropdown-menu {
+      position: absolute;
+      top: 100%;
+      left: -12px;
+      z-index: 20;
+      min-width: 185px;
+      padding: 7px;
+      background: #171717;
+      border: 1px solid #8f752d;
+      border-radius: 6px;
+      box-shadow: 0 12px 25px #0008;
+    }
+
+    .story-dropdown-menu a {
+      display: block;
+      padding: 9px 11px;
+      border-radius: 4px;
+      color: var(--white);
+      font-size: 12px;
+      text-decoration: none;
+    }
+
+    .story-dropdown-menu a:hover,
+    .story-dropdown-menu a[aria-current="page"] {
+      color: var(--light-gold);
+      background: #d4af3718;
+    }
+
+    /* HERO */
+
+    .story-hero {
+      min-height: 440px;
+      display: grid;
+      place-items: center;
+      padding: 75px 7%;
+      text-align: center;
+      background:
+        linear-gradient(90deg, #080808ed, #080808a8),
+        url("https://images.unsplash.com/photo-1586165368502-1bad197a6461?auto=format&fit=crop&w=1600&q=80")
+        center / cover no-repeat;
+      border-bottom: 1px solid #59491f;
+    }
+
+    .story-hero-content {
+      max-width: 760px;
+    }
+
+    .story-eyebrow {
+      margin: 0 0 14px;
+      color: var(--gold);
+      font-size: 10px;
+      font-weight: bold;
+      letter-spacing: 3px;
+    }
+
+    .story-hero h1 {
+      margin: 0 0 18px;
+      color: var(--light-gold);
+      font-size: clamp(42px, 7vw, 72px);
+      line-height: 1.2;
+    }
+
+    .story-hero-content > p:not(.story-eyebrow) {
+      max-width: 590px;
+      margin: 0 auto 25px;
+      color: #e0e0e0;
+      font-size: 14px;
+    }
+
+    .story-button {
+      display: inline-block;
+      padding: 12px 22px;
+      border: 1px solid var(--gold);
+      border-radius: 4px;
+      background: linear-gradient(135deg, var(--light-gold), var(--gold));
+      color: #111;
+      font-size: 12px;
+      font-weight: bold;
+      text-decoration: none;
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+
+    .story-button:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px #d4af3733;
+    }
+
+    /* STORY SECTIONS */
+
+    .story-section {
+      display: grid;
+      grid-template-columns: minmax(0, 1.15fr) minmax(0, 0.85fr);
+      align-items: center;
+      gap: clamp(25px, 5vw, 65px);
+      padding: 75px 8%;
+      border-bottom: 1px solid #d4af371c;
+      background: var(--black);
+    }
+
+    .story-section-alt {
+      background:
+        radial-gradient(ellipse at 15% 50%, #d4af370d, transparent 65%),
+        #111;
+    }
+
+    .story-section-content {
+      max-width: 720px;
+    }
+
+    .story-section-content h2 {
+      margin: 0 0 23px;
+      color: var(--light-gold);
+      font-size: clamp(27px, 3.5vw, 38px);
+      line-height: 1.3;
+    }
+
+    .story-section-content > p:not(.story-eyebrow) {
+      margin: 0 0 16px;
+      color: var(--muted);
+      font-size: 14px;
+      line-height: 1.95;
+    }
+
+    .story-section-content > p:last-child {
+      margin-bottom: 0;
+    }
+
+    /* CHESS PHOTOS */
+
+    .story-image {
+      width: 100%;
+      margin: 0;
+      padding: 8px;
+      border-radius: 7px;
+      background: linear-gradient(135deg, var(--light-gold), #574314, var(--gold));
+      box-shadow: 0 15px 40px #0007;
+    }
+
+    .story-image img {
+      display: block;
+      width: 100%;
+      aspect-ratio: 4 / 5;
+      object-fit: cover;
+      background: #171717;
+      border-radius: 3px;
+    }
+
+    .story-image figcaption {
+      padding: 11px 6px 4px;
+      color: #e6d49a;
+      font-size: 11px;
+      text-align: center;
+    }
+
+    /* CLOSING */
+
+    .story-closing {
+      padding: 75px 7%;
+      text-align: center;
+      background:
+        linear-gradient(#080808e8, #080808f2),
+        url("https://images.unsplash.com/photo-1529699211952-734e80c4d42b?auto=format&fit=crop&w=1400&q=80")
+        center / cover no-repeat;
+      border-top: 1px solid #59491f;
+    }
+
+    .story-closing-content {
+      max-width: 700px;
+      margin: auto;
+    }
+
+    .story-closing h2 {
+      margin: 0 0 16px;
+      color: var(--light-gold);
+      font-size: clamp(28px, 4vw, 40px);
+    }
+
+    .story-closing-content > p:not(.story-eyebrow) {
+      margin: 0 auto 25px;
+      color: var(--muted);
+      font-size: 14px;
+    }
+
+    .story-closing-actions {
+      display: flex;
+      justify-content: center;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+
+    .story-button-outline {
+      background: transparent;
+      color: var(--light-gold);
+    }
+
+    .story-button-outline:hover {
+      background: var(--gold);
+      color: #111;
+    }
+
+    /* FOOTER */
+
+    .story-footer {
+      padding: 23px 5%;
+      background: #080808;
+      border-top: 1px solid #59491f;
+      text-align: center;
+    }
+
+    .story-footer p {
+      margin: 0;
+      color: #aaa;
+      font-size: 11px;
+    }
+
+    /* TABLET AND MOBILE */
+
+    @media (max-width: 950px) {
+      .story-header {
+        flex-direction: column;
+        gap: 8px;
+      }
+
+      .story-nav {
+        justify-content: center;
+      }
+
+      .story-section {
+        padding: 55px 6%;
+        gap: 28px;
+      }
+    }
+
+    @media (max-width: 650px) {
+      .story-header {
+        padding: 12px 4%;
+      }
+
+      .brand-logo {
+        width: 36px;
+        height: 36px;
+      }
+
+      .brand-text strong {
+        font-size: 12px;
+      }
+
+      .story-nav {
+        gap: 4px 13px;
+      }
+
+      .story-nav > a,
+      .story-dropdown summary {
+        font-size: 11px;
+      }
+
+      .story-dropdown-menu {
+        left: auto;
+        right: 0;
+      }
+
+      .story-hero {
+        min-height: 360px;
+        padding: 55px 6%;
+      }
+
+      .story-hero h1 {
+        font-size: 43px;
+      }
+
+      .story-section {
+        grid-template-columns: minmax(0, 1fr);
+        gap: 25px;
+        padding: 45px 6%;
+      }
+
+      .story-section-content h2 {
+        font-size: 29px;
+      }
+
+      .story-section-content > p:not(.story-eyebrow) {
+        font-size: 13px;
+      }
+
+      .story-image {
+        max-width: 440px;
+        margin: 0 auto;
+      }
+
+      .story-image img {
+        aspect-ratio: 5 / 4;
+      }
+
+      .story-closing {
+        padding: 55px 6%;
+      }
+
+      .story-closing-actions {
+        flex-direction: column;
+        align-items: center;
+      }
+
+      .story-closing-actions .story-button {
+        width: 100%;
+        max-width: 280px;
+      }
+    }
+  </style>
+</head>
+
+<body class="story-page">
+
+  <header class="story-header">
+    <a class="brand" href="index.html">
+      <img src="logo.png" alt="CheckmaîtréX Chess Club logo" class="brand-logo">
+      <span class="brand-text">
+        <strong>CHECKMAÎTRÉX</strong>
+        <small>CHESS CLUB</small>
+      </span>
+    </a>
+
+    <nav class="story-nav" aria-label="Main navigation">
+      <a href="index.html">Home</a>
+
+      <details class="story-dropdown">
+        <summary>About Us ⌄</summary>
+        <div class="story-dropdown-menu">
+          <a href="our-story.html" aria-current="page">Our Story</a>
+          <a href="about.html#mission">Mission &amp; Vision</a>
+          <a href="leadership.html">Leadership</a>
+        </div>
+      </details>
+
+      
+      
+
+<details class="story-dropdown">
+  <summary>Activities ⌄</summary>
+  <div class="story-dropdown-menu">
+    <a href="activities.html#events">Events</a>
+    <a href="activities.html#development">Chess Development</a>
+    <a href="activities.html#tournaments">Tournaments</a>
+  </div>
+</details>
+
+
+
+
+      <details class="story-dropdown">
+        <summary>Club Highlights ⌄</summary>
+        <div class="story-dropdown-menu">
+          <a href="highlights.html">All Highlights</a>
+          <a href="highlights.html#achievements">Achievements</a>
+          <a href="highlights.html#gallery">Club Gallery</a>
+          <a href="highlights.html#news">News</a>
+        </div>
+      </details>
+
+      <details class="story-dropdown">
+        <summary>Join Us ⌄</summary>
+        <div class="story-dropdown-menu">
+          <a href="join.html">Become a Member</a>
+          <a href="join.html#connect">Connect With Us</a>
+        </div>
+      </details>
+    </nav>
+  </header>
+
+  <main>
+    <section class="story-hero">
+      <div class="story-hero-content">
+        <p class="story-eyebrow">THE STORY BEHIND THE CLUB</p>
+        <h1>Our Story</h1>
+        <p>
+          Every great journey begins with a vision. Discover the story,
+          identity, and purpose behind CheckmaîtréX Chess Club.
+        </p>
+        <a class="story-button" href="#beginning">Discover Our Journey</a>
+      </div>
+    </section>
+
+    <section class="story-section" id="beginning">
+      <div class="story-section-content">
+        <p class="story-eyebrow">WHERE IT ALL BEGAN</p>
+        <h2>The Beginning</h2>
+
+        <p>Every great journey begins with an idea. For CheckmaîtréX Chess Club, that idea started simply and unexpectedly.</p>
+
+        <p>Without a large team or an established community, the vision began with one person who wanted to make a difference in the world of chess. What started as a sudden idea became an opportunity to create something meaningful—a club dedicated to encouraging others to discover chess, learn its principles, and improve their skills.</p>
+
+        <p>The goal was never just about moving pieces across a board. It was about opening the door for more people to experience the game, appreciate its challenges, and discover what they can learn from every move.</p>
+
+        <p>CheckmaîtréX Chess Club represents the belief that a meaningful beginning does not need to be grand. Sometimes, all it takes is one idea, a willingness to begin, and a purpose that makes the journey worthwhile.</p>
+      </div>
+
+      <figure class="story-image">
+        <img src="https://images.unsplash.com/photo-1586165368502-1bad197a6461?auto=format&fit=crop&w=1000&q=80"
+             alt="Chess pieces arranged on a chessboard" loading="lazy">
+        <figcaption>Every journey begins with a first move.</figcaption>
+      </figure>
+    </section>
+
+    <section class="story-section story-section-alt" id="meaning">
+      <figure class="story-image">
+        <img src="https://images.unsplash.com/photo-1529699211952-734e80c4d42b?auto=format&fit=crop&w=1000&q=80"
+             alt="Chessboard and chess pieces" loading="lazy">
+        <figcaption>A name shaped by creativity and strategy.</figcaption>
+      </figure>
+
+      <div class="story-section-content">
+        <p class="story-eyebrow">OUR IDENTITY</p>
+        <h2>The Meaning Behind The Name</h2>
+
+        <p>The name CheckmaîtréX was created from a familiar concept in chess: checkmate.</p>
+
+        <p>The word was reimagined with a distinctive style, drawing inspiration from the French word maître and incorporating the letter X to create a more modern and memorable identity. The accented “é” adds a deliberate visual touch, giving the name a character of its own.</p>
+
+        <p>More than a name, CheckmaîtréX represents the identity of a chess project built around creativity, strategy, and the desire to bring more attention to the game.</p>
+
+        <p>Its black-and-gold aesthetic reinforces that identity: bold, refined, and focused. Together, the name and visual style give the club a recognizable presence while keeping chess at the heart of everything it represents.</p>
+      </div>
+    </section>
+
+    <section class="story-section" id="more-than-a-game">
+      <div class="story-section-content">
+        <p class="story-eyebrow">WHAT CHESS TEACHES US</p>
+        <h2>More than a game</h2>
+
+        <p>Chess is more than a competition between two players. It is an opportunity to think carefully, recognize possibilities, learn from mistakes, and approach challenges with patience.</p>
+
+        <p>At CheckmaîtréX Chess Club, the purpose is to encourage more people to give chess a chance. Whether someone is just beginning or already familiar with the game, every move can become an opportunity to learn something new.</p>
+
+        <p>Through chess, players can practice strategic thinking, develop patience, and appreciate the importance of making thoughtful decisions. Winning can be rewarding, but learning, improving, and respecting others are meaningful parts of the experience as well.</p>
+
+        <p>The club stands for a simple idea: chess should be something more people feel encouraged to explore, enjoy, and improve at—one move at a time.</p>
+      </div>
+
+      <figure class="story-image">
+        <img src="https://images.unsplash.com/photo-1528819622765-d6bcf132f793?auto=format&fit=crop&w=1000&q=80"
+             alt="Chessboard representing strategic thinking" loading="lazy">
+        <figcaption>Every move is an opportunity to learn.</figcaption>
+      </figure>
+    </section>
+
+    <section class="story-section story-section-alt" id="journey">
+      <figure class="story-image">
+        <img src="https://images.unsplash.com/photo-1586165368502-1bad197a6461?auto=format&fit=crop&w=1000&q=80"
+             alt="Chess pieces ready for the next move" loading="lazy">
+        <figcaption>The next chapter begins one move at a time.</figcaption>
+      </figure>
+
+      <div class="story-section-content">
+        <p class="story-eyebrow">LOOKING FORWARD</p>
+        <h2>The Journey Ahead</h2>
+
+        <p>The journey of CheckmaîtréX Chess Club is guided by a vision that reaches beyond its own name: to encourage more people to discover chess and help the chess community in the Philippines grow.</p>
+
+        <p>In a world where many people are drawn to more widely followed sports, the club hopes to give chess greater visibility and inspire people to explore what makes the game special. Every new learner, every shared lesson, and every person who becomes interested in chess can contribute to a stronger community.</p>
+
+        <p>The road ahead is an opportunity to keep learning, develop new ideas, and find meaningful ways to make chess more approachable to others. The ambition is not simply to grow a club, but to encourage a wider appreciation for a game built on strategy, creativity, and thoughtful decisions.</p>
+
+        <p>The future of CheckmaîtréX will be shaped one step at a time, with the hope that a simple idea can inspire more people to sit at the board, make their first move, and discover the possibilities chess has to offer.</p>
+      </div>
+    </section>
+
+    <section class="story-closing">
+      <div class="story-closing-content">
+        <p class="story-eyebrow">CALCULATE. CONQUER. CHECKMATE.</p>
+        <h2>Be Part of the Journey</h2>
+        <p>
+          Explore our club, discover our activities, and learn more
+          about the vision that moves CheckmaîtréX Chess Club forward.
+        </p>
+
+        <div class="story-closing-actions">
+          <a class="story-button" href="mission-vision.html#mission">Our Mission &amp; Vision</a>
+          <a class="story-button story-button-outline" href="join.html">Connect With Us</a>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="story-footer">
+    <p>
+      &copy; <span id="story-year">2026</span>
+      CheckmaîtréX Chess Club. All rights reserved.
+    </p>
+  </footer>
+
+  <script>
+    const year = document.getElementById("story-year");
+    if (year) year.textContent = new Date().getFullYear();
+
+    document.addEventListener("click", function (event) {
+      document.querySelectorAll(".story-dropdown[open]").forEach(function (dropdown) {
+        if (!dropdown.contains(event.target)) {
+          dropdown.removeAttribute("open");
+        }
+      });
+    });
+
+    document.querySelectorAll(".story-dropdown-menu a").forEach(function (link) {
+      link.addEventListener("click", function () {
+        document.querySelectorAll(".story-dropdown[open]").forEach(function (dropdown) {
+          dropdown.removeAttribute("open");
+        });
+      });
+    });
+  </script>
+  <script src="bfcache-fix.js"></script>
+  <script src="site-animations.js"></script>
+  <script src="settings-global.js"></script>
+  <script src="language.js"></script>
+  
+</body>
+</html>

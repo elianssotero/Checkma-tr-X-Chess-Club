@@ -1,0 +1,770 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#0b0b0b">
+
+  <title>Leadership | CheckmaîtréX Chess Club</title>
+
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="enhancements.css">
+
+  <style>
+    /* LEADERSHIP PAGE */
+    .leadership-page {
+      --gold: #d4af37;
+      --gold-dark: #8f752d;
+      --black: #0b0b0b;
+      --panel: #121212;
+      --muted: #bcbcbc;
+      background: var(--black);
+      color: #f5f5f5;
+      font-family: Arial, Helvetica, sans-serif;
+      line-height: 1.7;
+      min-height: 100vh;
+    }
+
+    .leadership-page * {
+      box-sizing: border-box;
+    }
+
+    .leadership-page a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    .leadership-page .gold {
+      color: var(--gold);
+    }
+
+    .leadership-page .section-wrap {
+      width: min(1100px, 90%);
+      margin: 0 auto;
+    }
+
+    /* HEADER */
+    .leadership-header {
+      background: #090909;
+      border-bottom: 1px solid #392f17;
+      position: relative;
+      z-index: 10;
+    }
+
+    .leadership-header-inner {
+      width: min(1200px, 92%);
+      min-height: 82px;
+      margin: 0 auto;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 24px;
+    }
+
+    .leadership-brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      flex-shrink: 0;
+    }
+
+    .leadership-brand-icon {
+      width: 43px;
+      height: 43px;
+      display: grid;
+      place-items: center;
+      border: 1px solid var(--gold-dark);
+      color: var(--gold);
+      font-family: Georgia, serif;
+      font-size: 26px;
+    }
+
+    .leadership-brand-name {
+      display: block;
+      font-size: 15px;
+      font-weight: 700;
+      letter-spacing: 1.5px;
+    }
+
+    .leadership-brand-sub {
+      display: block;
+      color: #bcbcbc;
+      font-size: 10px;
+      letter-spacing: 3px;
+    }
+
+    .leadership-nav {
+      display: flex;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 23px;
+      font-size: 13px;
+    }
+
+    .leadership-nav > a,
+    .leadership-nav summary {
+      cursor: pointer;
+      transition: color 0.2s ease;
+    }
+
+    .leadership-nav > a:hover,
+    .leadership-nav summary:hover {
+      color: var(--gold);
+    }
+
+    .leadership-nav details {
+      position: relative;
+    }
+
+    .leadership-nav summary {
+      list-style: none;
+    }
+
+    .leadership-nav summary::-webkit-details-marker {
+      display: none;
+    }
+
+    .leadership-nav summary::after {
+      content: "⌄";
+      color: var(--gold);
+      margin-left: 6px;
+    }
+
+    .leadership-nav .current {
+      color: var(--gold);
+    }
+
+    .leadership-nav .current::after {
+      content: "";
+      display: block;
+      height: 2px;
+      margin-top: 5px;
+      background: var(--gold);
+    }
+
+    .leadership-dropdown {
+      position: absolute;
+      top: calc(100% + 15px);
+      left: -15px;
+      width: 190px;
+      padding: 8px;
+      background: #151515;
+      border: 1px solid var(--gold-dark);
+      box-shadow: 0 12px 25px #0008;
+    }
+
+    .leadership-dropdown a {
+      display: block;
+      padding: 10px;
+      font-size: 13px;
+    }
+
+    .leadership-dropdown a:hover {
+      background: #242015;
+      color: var(--gold);
+    }
+
+    /* HERO */
+    .leadership-hero {
+      text-align: center;
+      padding: 100px 20px 90px;
+      background:
+        radial-gradient(ellipse at 50% 0%, #80621d26, transparent 65%),
+        #0b0b0b;
+      border-bottom: 1px solid #211c10;
+    }
+
+    .leadership-eyebrow {
+      color: var(--gold);
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 4px;
+      text-transform: uppercase;
+    }
+
+    .leadership-hero h1 {
+      margin: 16px 0 10px;
+      font-family: Georgia, "Times New Roman", serif;
+      font-size: clamp(38px, 6vw, 66px);
+      line-height: 1.15;
+      font-weight: 400;
+    }
+
+    .leadership-hero h2 {
+      margin: 0 0 20px;
+      color: var(--gold);
+      font-family: Georgia, "Times New Roman", serif;
+      font-size: clamp(17px, 2.5vw, 24px);
+      font-weight: 400;
+    }
+
+    .leadership-hero p {
+      max-width: 650px;
+      margin: 0 auto;
+      color: var(--muted);
+      font-size: 15px;
+    }
+
+    .leadership-rule {
+      width: 65px;
+      height: 2px;
+      margin: 28px auto 0;
+      background: var(--gold);
+    }
+
+    /* SHARED SECTIONS */
+    .leadership-section {
+      padding: 76px 0;
+    }
+
+    .leadership-section-title {
+      margin: 0 0 12px;
+      font-family: Georgia, "Times New Roman", serif;
+      font-size: clamp(28px, 4vw, 39px);
+      font-weight: 400;
+      line-height: 1.25;
+    }
+
+    .leadership-section-intro {
+      max-width: 650px;
+      margin: 0 auto 35px;
+      color: var(--muted);
+    }
+
+    .leadership-centered {
+      text-align: center;
+    }
+
+    /* FOUNDER PROFILE */
+    .leadership-founder {
+      display: grid;
+      grid-template-columns: 0.8fr 1.4fr;
+      align-items: stretch;
+      gap: 45px;
+    }
+
+    .leadership-founder-panel {
+      min-height: 340px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 30px;
+      border: 1px solid var(--gold-dark);
+      background:
+        radial-gradient(ellipse at center, #74581a24, transparent 70%),
+        var(--panel);
+      text-align: center;
+    }
+
+    .leadership-founder-mark {
+      color: var(--gold);
+      font-family: Georgia, "Times New Roman", serif;
+      font-size: 100px;
+      line-height: 1.2;
+    }
+
+    .leadership-founder-panel p {
+      margin: 10px 0 0;
+      color: #c9c9c9;
+      font-size: 11px;
+      letter-spacing: 3px;
+    }
+
+    /* FOUNDER PROFILE PHOTO */
+    .leadership-founder-photo {
+      display: block;
+      width: 190px;
+      height: 190px;
+      max-width: 100%;
+      object-fit: cover;
+      object-position: center;
+      border-radius: 50%;
+      border: 3px solid var(--gold);
+      box-shadow: 0 0 25px #d4af3730;
+      margin: 0 auto 18px;
+    }
+
+    .leadership-founder-copy {
+      align-self: center;
+    }
+
+    .leadership-founder-copy .leadership-eyebrow {
+      letter-spacing: 3px;
+    }
+
+    .leadership-founder-copy h2 {
+      margin: 12px 0 2px;
+      font-family: Georgia, "Times New Roman", serif;
+      font-size: clamp(30px, 4vw, 43px);
+      font-weight: 400;
+      line-height: 1.2;
+    }
+
+    .leadership-role {
+      color: var(--gold);
+      font-size: 15px;
+      font-weight: 600;
+    }
+
+    .leadership-credential {
+      margin: 3px 0 20px;
+      color: #aaa;
+      font-size: 13px;
+    }
+
+    .leadership-founder-copy p {
+      color: var(--muted);
+      font-size: 14px;
+    }
+
+    /* LEADERSHIP PRINCIPLES */
+    .leadership-principles {
+      background: #10100e;
+      border-top: 1px solid #211c10;
+      border-bottom: 1px solid #211c10;
+    }
+
+    .leadership-card-grid {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 18px;
+    }
+
+    .leadership-card {
+      padding: 25px 20px;
+      border: 1px solid #4d401f;
+      background: #121212;
+      transition: border-color 0.2s ease,
+                  transform 0.2s ease;
+    }
+
+    .leadership-card:hover {
+      border-color: var(--gold);
+      transform: translateY(-3px);
+    }
+
+    .leadership-card-symbol {
+      display: block;
+      margin-bottom: 17px;
+      color: var(--gold);
+      font-family: Georgia, "Times New Roman", serif;
+      font-size: 28px;
+    }
+
+    .leadership-card h3 {
+      margin: 0 0 10px;
+      color: var(--gold);
+      font-family: Georgia, "Times New Roman", serif;
+      font-size: 19px;
+      font-weight: 400;
+      line-height: 1.35;
+    }
+
+    .leadership-card p {
+      margin: 0;
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    /* PHILOSOPHY */
+    .leadership-philosophy {
+      max-width: 760px;
+      margin: 0 auto;
+      text-align: center;
+    }
+
+    .leadership-philosophy p {
+      color: var(--muted);
+      font-size: 15px;
+    }
+
+    .leadership-quote {
+      margin: 28px 0 0;
+      padding: 20px 0 0;
+      border-top: 1px solid #51421f;
+      color: var(--gold);
+      font-family: Georgia, "Times New Roman", serif;
+      font-size: clamp(22px, 3vw, 32px);
+      font-style: italic;
+    }
+
+    /* CLOSING SECTION */
+    .leadership-future {
+      background:
+        radial-gradient(ellipse at 50% 100%, #72591c1f, transparent 70%),
+        #10100e;
+      border-top: 1px solid #211c10;
+      text-align: center;
+    }
+
+    .leadership-future p {
+      max-width: 650px;
+      margin: 0 auto 28px;
+      color: var(--muted);
+      font-size: 14px;
+    }
+
+    .leadership-button {
+      display: inline-block;
+      padding: 12px 22px;
+      border: 1px solid var(--gold);
+      color: var(--gold) !important;
+      font-size: 13px;
+      transition: background 0.2s ease, color 0.2s ease;
+    }
+
+    .leadership-button:hover {
+      background: var(--gold);
+      color: #090909 !important;
+    }
+
+    /* FOOTER */
+    .leadership-footer {
+      padding: 24px 15px;
+      border-top: 1px solid #51421f;
+      color: #aaa;
+      font-size: 12px;
+      text-align: center;
+    }
+
+    /* MOBILE */
+    @media (max-width: 900px) {
+      .leadership-header-inner {
+        padding: 16px 0;
+        align-items: flex-start;
+        flex-direction: column;
+        gap: 18px;
+      }
+
+      .leadership-nav {
+        gap: 16px;
+      }
+
+      .leadership-card-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+
+      .leadership-founder {
+        grid-template-columns: 1fr 1.3fr;
+        gap: 25px;
+      }
+    }
+
+    @media (max-width: 600px) {
+      .leadership-header-inner {
+        width: 90%;
+      }
+
+      .leadership-nav {
+        width: 100%;
+        gap: 13px 18px;
+        font-size: 12px;
+      }
+
+      .leadership-dropdown {
+        left: 0;
+        z-index: 20;
+      }
+
+      .leadership-hero {
+        padding: 72px 20px 65px;
+      }
+
+      .leadership-section {
+        padding: 55px 0;
+      }
+
+      .leadership-founder {
+        grid-template-columns: 1fr;
+        gap: 28px;
+      }
+
+      .leadership-founder-panel {
+        min-height: 220px;
+      }
+
+      .leadership-founder-mark {
+        font-size: 76px;
+      }
+
+      .leadership-founder-photo {
+        width: 160px;
+        height: 160px;
+      }
+
+      .leadership-card-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .leadership-card {
+        padding: 22px;
+      }
+    }
+  </style>
+</head>
+
+<body class="leadership-page">
+
+  <!-- HEADER -->
+  <header class="leadership-header">
+    <div class="leadership-header-inner">
+
+      <a class="leadership-brand" href="index.html">
+        <span class="leadership-brand-icon" aria-hidden="true">♞</span>
+        <span>
+          <span class="leadership-brand-name">CHECKMAÎTRÉX</span>
+          <span class="leadership-brand-sub">CHESS CLUB</span>
+        </span>
+      </a>
+
+      <nav class="leadership-nav" aria-label="Main navigation">
+        <a href="index.html">Home</a>
+
+        <details>
+          <summary class="current">About Us</summary>
+          <div class="leadership-dropdown">
+            <a href="our-story.html">Our Story</a>
+            <a href="mission-vision.html">Mission &amp; Vision</a>
+            <a href="leadership.html" aria-current="page">Leadership</a>
+          </div>
+        </details>
+
+        <a href="activities.html">Activities</a>
+        <a href="highlights.html">Club Highlights</a>
+        <a href="join.html">Join Us</a>
+      </nav>
+
+    </div>
+  </header>
+
+  <main>
+
+    <!-- HERO -->
+    <section class="leadership-hero">
+      <div class="leadership-eyebrow">
+        CheckmaîtréX Chess Club
+      </div>
+
+      <h1>Leadership &amp; Vision</h1>
+
+      <h2>Guided by Purpose. Built on Passion.</h2>
+
+      <p>
+        Strong leadership begins with a clear vision, a commitment
+        to growth, and a passion for the game.
+      </p>
+
+      <div class="leadership-rule"></div>
+    </section>
+
+    <!-- FOUNDER PROFILE -->
+    <section class="leadership-section">
+      <div class="section-wrap leadership-founder">
+
+        <div class="leadership-founder-panel">
+          <img
+            class="leadership-founder-photo"
+            src="https://pxdrop.online/raw/db95doa81qec73f6p3a0"
+            alt="El.ians Sotero, Founder and Club President"
+            loading="eager"
+            referrerpolicy="no-referrer"
+          >
+
+          <p/ • FOUNDER • </p>
+        </div>
+
+        <div class="leadership-founder-copy">
+          <div class="leadership-eyebrow">Meet the Founder</div>
+
+          <h2>El.ians Sotero</h2>
+
+          <div class="leadership-role">
+            Founder &amp; Club President
+          </div>
+
+          <div class="leadership-credential">
+            Arena International Master (AIM)
+          </div>
+
+          <p>
+            El.ians Sotero, an Arena International Master (AIM),
+            is the founder and president of CheckmaîtréX Chess Club.
+            Driven by a passion for chess and a commitment to promoting
+            the game, he established the initiative to encourage a
+            wider appreciation of chess and contribute to the
+            development of a welcoming chess community in the Philippines.
+          </p>
+
+          <p>
+            As the club's founder and president, he guides its identity,
+            digital presence, and long-term direction. His vision is to
+            make chess more approachable, encourage continuous learning,
+            and inspire people to appreciate the strategic thinking,
+            patience, and discipline that the game can cultivate.
+          </p>
+
+          <p>
+            As CheckmaîtréX Chess Club continues to develop, his
+            leadership remains focused on building a strong foundation,
+            expanding awareness of chess, and pursuing a future grounded
+            in learning, improvement, and community development.
+          </p>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- LEADERSHIP PRINCIPLES -->
+    <section class="leadership-section leadership-principles">
+      <div class="section-wrap leadership-centered">
+
+        <h2 class="leadership-section-title">
+          Leading With Purpose
+        </h2>
+
+        <p class="leadership-section-intro">
+          Four principles guide the club's development and its
+          commitment to the game of chess.
+        </p>
+
+        <div class="leadership-card-grid">
+
+          <article class="leadership-card">
+            <span class="leadership-card-symbol" aria-hidden="true">♔</span>
+            <h3>Vision &amp; Direction</h3>
+            <p>
+              Establishing the club's goals and working toward
+              a clear long-term direction.
+            </p>
+          </article>
+
+          <article class="leadership-card">
+            <span class="leadership-card-symbol" aria-hidden="true">♜</span>
+            <h3>Club Development</h3>
+            <p>
+              Building a recognizable club identity and a
+              consistent digital presence.
+            </p>
+          </article>
+
+          <article class="leadership-card">
+            <span class="leadership-card-symbol" aria-hidden="true">♞</span>
+            <h3>Chess Promotion</h3>
+            <p>
+              Encouraging more people to discover chess,
+              learn its principles, and enjoy the game.
+            </p>
+          </article>
+
+          <article class="leadership-card">
+            <span class="leadership-card-symbol" aria-hidden="true">♙</span>
+            <h3>Community Development</h3>
+            <p>
+              Working toward a welcoming chess community
+              built on learning, respect, and improvement.
+            </p>
+          </article>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- LEADERSHIP PHILOSOPHY -->
+    <section class="leadership-section">
+      <div class="section-wrap leadership-philosophy">
+
+        <h2 class="leadership-section-title">
+          Progress Through Every Move
+        </h2>
+
+        <p>
+          Like chess itself, leadership requires patience,
+          thoughtful decisions, adaptability, and a willingness
+          to keep learning. These principles guide the effort to
+          develop CheckmaîtréX Chess Club steadily and responsibly.
+        </p>
+
+        <blockquote class="leadership-quote">
+          “Every great vision begins with a move.”
+        </blockquote>
+
+      </div>
+    </section>
+
+    <!-- LOOKING AHEAD -->
+    <section class="leadership-section leadership-future">
+      <div class="section-wrap">
+
+        <h2 class="leadership-section-title">
+          Building the Future of Chess
+        </h2>
+
+        <p>
+          The goal is to develop a recognizable club identity,
+          encourage greater interest in chess, and create more
+          opportunities for people in the Philippines to engage
+          with the game. Every step forward is an opportunity
+          to learn, improve, and grow.
+        </p>
+
+        <a class="leadership-button" href="mission-vision.html">
+          Explore Our Mission &amp; Vision →
+        </a>
+
+      </div>
+    </section>
+
+  </main>
+
+  <!-- FOOTER -->
+  <footer class="leadership-footer">
+    © 2026 CheckmaîtréX Chess Club
+  </footer>
+
+  <!-- SCRIPT FOR PAGE LOAD ANIMATION & FADE TRANSITION -->
+  <script>
+    document.addEventListener("DOMContentLoaded", () => {
+      // 1. Pagpapalabas ng page kapag nabuksan na
+      document.body.classList.add("page-loaded");
+
+      // 2. Smooth fade-out kapag nag-navigate papuntang ibang page
+      document.querySelectorAll("a[href]").forEach((link) => {
+        link.addEventListener("click", (event) => {
+          if (
+            event.defaultPrevented ||
+            event.button !== 0 ||
+            event.ctrlKey ||
+            event.metaKey ||
+            event.shiftKey ||
+            event.altKey ||
+            link.target === "_blank" ||
+            link.hasAttribute("download")
+          ) return;
+
+          const url = new URL(link.href, window.location.href);
+
+          if (
+            url.origin !== window.location.origin ||
+            url.pathname === window.location.pathname ||
+            url.hash
+          ) return;
+
+          event.preventDefault();
+          document.body.classList.add("page-leaving");
+
+          setTimeout(() => {
+            window.location.href = url.href;
+          }, 220);
+        });
+      });
+    });
+  </script>
+<script src="bfcache-fix.js"></script>
+<script src="site-animations.js"></script>
+<script src="settings-global.js"></script>
+<script src="language.js"></script>
+  
+</body>
+</html>

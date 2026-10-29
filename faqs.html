@@ -1,0 +1,1263 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#0b0b0b">
+  <meta name="description" content="Find answers to frequently asked questions about CheckmaîtréX Chess Club, membership, activities, tournaments, and club policies.">
+  <title>FAQs | CheckmaîtréX Chess Club</title>
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="enhancements.css">
+
+  <style>
+    /* HOMEPAGE HEADER AND NAVIGATION */
+    header {
+      position: relative;
+      z-index: 10;
+    }
+
+    header nav {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 24px;
+    }
+
+    .brand-container {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex-shrink: 0;
+      min-width: 0;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      color: #d4af37;
+      font-size: 1.1rem;
+      font-weight: 800;
+      letter-spacing: 1px;
+      white-space: nowrap;
+      text-decoration: none;
+      flex-shrink: 0;
+    }
+
+    .brand-logo {
+      width: 52px;
+      height: 52px;
+      object-fit: contain;
+      flex-shrink: 0;
+    }
+
+    .brand-text {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .brand-text small {
+      display: block;
+      color: #eee;
+      font-size: .65rem;
+      letter-spacing: 4px;
+      margin-top: 3px;
+    }
+
+    .brand-menu {
+      position: relative;
+      flex-shrink: 0;
+    }
+
+    .brand-menu > summary {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 30px;
+      height: 30px;
+      padding: 0;
+      list-style: none;
+      cursor: pointer;
+      color: #d4af37;
+      border: 1px solid rgba(212,175,55,.55);
+      border-radius: 50%;
+      transition: background .2s ease, color .2s ease;
+    }
+
+    .brand-menu > summary::-webkit-details-marker {
+      display: none;
+    }
+
+    .brand-menu > summary:hover,
+    .brand-menu[open] > summary {
+      background: #d4af37;
+      color: #0b0b0b;
+    }
+
+    .brand-menu-arrow {
+      display: inline-block;
+      transition: transform .25s ease;
+    }
+
+    .brand-menu[open] .brand-menu-arrow {
+      transform: rotate(180deg);
+    }
+
+    .brand-dropdown {
+      position: absolute;
+      top: calc(100% + 10px);
+      left: 0;
+      width: 225px;
+      padding: 8px;
+      background: #171717;
+      border: 1px solid #8f752d;
+      border-radius: 8px;
+      box-shadow: 0 12px 25px #0008;
+      z-index: 1100;
+    }
+
+    .brand-dropdown button {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      width: 100%;
+      padding: 11px 12px;
+      border: 0;
+      border-radius: 5px;
+      background: transparent;
+      color: #f5f5f5;
+      text-align: left;
+      font: inherit;
+      font-size: .9rem;
+      cursor: pointer;
+    }
+
+    .brand-dropdown button span {
+      width: 18px;
+      color: #d4af37;
+      text-align: center;
+      flex-shrink: 0;
+    }
+
+    .brand-dropdown button:hover,
+    .brand-dropdown button:focus-visible {
+      background: #292316;
+      color: #d4af37;
+    }
+
+    .main-nav {
+      display: flex;
+      align-items: center;
+      gap: 22px;
+    }
+
+    .main-nav > a,
+    .main-nav summary {
+      position: relative;
+      display: inline-block;
+      padding: 10px 0;
+      color: #f5f5f5;
+      font-weight: 600;
+      cursor: pointer;
+      list-style: none;
+      white-space: nowrap;
+      text-decoration: none;
+      transition: color .2s ease;
+    }
+
+    .main-nav summary::-webkit-details-marker {
+      display: none;
+    }
+
+    .main-nav summary::after {
+      content: " ▾";
+      color: #d4af37;
+    }
+
+    .main-nav > a::before,
+    .main-nav summary::before {
+      content: "";
+      position: absolute;
+      left: 0;
+      right: 0;
+      bottom: 2px;
+      height: 2px;
+      background: #d4af37;
+      transform: scaleX(0);
+      transform-origin: left;
+      transition: transform .25s ease;
+    }
+
+    .main-nav > a:hover,
+    .main-nav > a.active,
+    .main-nav summary:hover,
+    .main-nav details[open] > summary {
+      color: #d4af37;
+    }
+
+    .main-nav > a:hover::before,
+    .main-nav > a.active::before,
+    .main-nav summary:hover::before,
+    .main-nav details[open] > summary::before {
+      transform: scaleX(1);
+    }
+
+    .main-nav details {
+      position: relative;
+    }
+
+    .dropdown {
+      position: absolute;
+      top: 100%;
+      left: 0;
+      min-width: 190px;
+      padding: 10px;
+      margin-top: 12px;
+      background: #171717;
+      border: 1px solid #8f752d;
+      border-radius: 8px;
+      box-shadow: 0 12px 25px #0008;
+      z-index: 20;
+    }
+
+    .dropdown a {
+      display: block;
+      padding: 10px;
+      border-radius: 5px;
+      color: #f5f5f5;
+      text-decoration: none;
+    }
+
+    .dropdown a:hover,
+    .dropdown a[aria-current="page"] {
+      color: #d4af37;
+      background: #292316;
+    }
+
+    .main-nav details[open] > .dropdown {
+      animation: dropdownOpen .25s ease both;
+      transform-origin: top;
+    }
+
+    .main-nav details.is-closing > .dropdown {
+      animation: dropdownClose .22s ease both;
+      pointer-events: none;
+    }
+
+    @keyframes dropdownOpen {
+      from { opacity: 0; transform: translateY(-8px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    @keyframes dropdownClose {
+      from { opacity: 1; transform: translateY(0); }
+      to { opacity: 0; transform: translateY(-8px); }
+    }
+
+    .main-nav details[open]:not(.is-closing) .dropdown a,
+    .brand-menu[open]:not(.is-closing) .brand-dropdown button {
+      animation: menuItemFade .25s ease both;
+    }
+
+    .main-nav .dropdown a:nth-child(1),
+    .brand-dropdown button:nth-child(1) { animation-delay: .03s; }
+    .main-nav .dropdown a:nth-child(2),
+    .brand-dropdown button:nth-child(2) { animation-delay: .06s; }
+    .main-nav .dropdown a:nth-child(3),
+    .brand-dropdown button:nth-child(3) { animation-delay: .09s; }
+    .main-nav .dropdown a:nth-child(4),
+    .brand-dropdown button:nth-child(4) { animation-delay: .12s; }
+
+    @keyframes menuItemFade {
+      from { opacity: 0; transform: translateY(-5px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .brand-menu.is-closing .brand-dropdown {
+      animation: dropdownClose .22s ease both;
+      pointer-events: none;
+    }
+
+    /* FAQ PAGE */
+    .faq-page {
+      width: min(1050px, 92%);
+      margin: 0 auto;
+      padding: 55px 0 70px;
+    }
+
+    .faq-hero {
+      padding: clamp(35px, 7vw, 70px) 22px;
+      border: 1px solid rgba(212,175,55,.3);
+      border-radius: 16px;
+      background:
+        radial-gradient(ellipse at 80% 20%, #72591c33, transparent 50%),
+        #111;
+      text-align: center;
+    }
+
+    .faq-eyebrow {
+      color: #d4af37;
+      font-size: .8rem;
+      font-weight: bold;
+      letter-spacing: 4px;
+      text-transform: uppercase;
+    }
+
+    .faq-hero h1 {
+      margin: 14px 0;
+      color: #f0d77b;
+      font-size: clamp(2rem, 6vw, 3.5rem);
+      line-height: 1.2;
+    }
+
+    .faq-hero p:last-child {
+      max-width: 680px;
+      margin: 15px auto 0;
+      color: #c5c5c5;
+      line-height: 1.8;
+    }
+
+    .faq-intro {
+      margin: 38px 0 20px;
+      text-align: center;
+    }
+
+    .faq-intro h2,
+    .faq-contact h2 {
+      color: #d4af37;
+    }
+
+    .faq-intro p,
+    .faq-contact p {
+      color: #c5c5c5;
+    }
+
+    .faq-search {
+      display: block;
+      width: 100%;
+      max-width: 680px;
+      margin: 24px auto;
+      padding: 14px 16px;
+      border: 1px solid #8f752d;
+      border-radius: 9px;
+      outline: none;
+      background: #151515;
+      color: #fff;
+      font: inherit;
+    }
+
+    .faq-search:focus {
+      border-color: #f0d77b;
+      box-shadow: 0 0 0 3px #d4af3720;
+    }
+
+    .faq-search::placeholder {
+      color: #999;
+    }
+
+    .faq-categories {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 9px;
+      margin: 20px 0 25px;
+    }
+
+    .faq-filter {
+      padding: 9px 14px;
+      border: 1px solid #8f752d;
+      border-radius: 25px;
+      background: #141414;
+      color: #eee;
+      font: inherit;
+      font-size: .88rem;
+      cursor: pointer;
+      transition: background .2s, color .2s;
+    }
+
+    .faq-filter:hover,
+    .faq-filter.active {
+      background: #d4af37;
+      color: #111;
+    }
+
+    .faq-count {
+      margin: 12px 0;
+      color: #aaa;
+      text-align: center;
+      font-size: .9rem;
+    }
+
+    .faq-list {
+      display: grid;
+      gap: 12px;
+    }
+
+    .faq-item {
+      overflow: hidden;
+      border: 1px solid rgba(212,175,55,.25);
+      border-radius: 11px;
+      background: #141414;
+      transition: border-color .2s, background .2s;
+    }
+
+    .faq-item[open] {
+      border-color: #b69735;
+      background: #181818;
+    }
+
+    .faq-question {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 15px;
+      padding: 18px;
+      color: #f5f5f5;
+      font-weight: 700;
+      line-height: 1.5;
+      cursor: pointer;
+      list-style: none;
+    }
+
+    .faq-question::-webkit-details-marker {
+      display: none;
+    }
+
+    .faq-question::after {
+      content: "+";
+      flex-shrink: 0;
+      color: #d4af37;
+      font-size: 1.6rem;
+      font-weight: 400;
+    }
+
+    .faq-item[open] .faq-question::after {
+      content: "−";
+    }
+
+    .faq-question:hover {
+      color: #f0d77b;
+    }
+
+    .faq-question:focus-visible {
+      outline: 2px solid #d4af37;
+      outline-offset: -3px;
+    }
+
+    .faq-answer {
+      padding: 0 18px 19px;
+      color: #c5c5c5;
+      line-height: 1.8;
+      overflow-wrap: anywhere;
+    }
+
+    .faq-answer p {
+      margin: 0 0 10px;
+    }
+
+    .faq-answer p:last-child {
+      margin-bottom: 0;
+    }
+
+    .faq-answer a {
+      color: #f0d77b;
+      text-underline-offset: 3px;
+    }
+
+    .faq-category-label {
+      display: block;
+      margin-bottom: 7px;
+      color: #d4af37;
+      font-size: .72rem;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+    }
+
+    .faq-empty {
+      display: none;
+      padding: 25px;
+      border: 1px dashed #8f752d;
+      border-radius: 10px;
+      color: #bbb;
+      text-align: center;
+    }
+
+    .faq-contact {
+      margin-top: 45px;
+      padding: clamp(25px, 5vw, 40px);
+      border: 1px solid rgba(212,175,55,.3);
+      border-radius: 15px;
+      background:
+        radial-gradient(ellipse at top right, #72591c25, transparent 55%),
+        #121212;
+      text-align: center;
+    }
+
+    .faq-contact p {
+      max-width: 650px;
+      margin: 12px auto 22px;
+      line-height: 1.8;
+    }
+
+    .faq-button {
+      display: inline-block;
+      margin: 5px;
+      padding: 12px 22px;
+      border: 1px solid #d4af37;
+      border-radius: 7px;
+      background: #d4af37;
+      color: #111;
+      font-weight: 700;
+      text-decoration: none;
+      transition: .2s;
+    }
+
+    .faq-button:hover {
+      background: transparent;
+      color: #f0d77b;
+      transform: translateY(-2px);
+    }
+
+    .faq-button.secondary {
+      background: transparent;
+      color: #f0d77b;
+    }
+
+    .faq-button.secondary:hover {
+      background: #d4af37;
+      color: #111;
+    }
+
+    .faq-footer {
+      padding: 25px 15px;
+      border-top: 1px solid #d4af37;
+      color: #aaa;
+      text-align: center;
+      font-size: .9rem;
+    }
+
+    .faq-footer p {
+      margin: 8px 0;
+    }
+
+    .faq-footer strong {
+      color: #d4af37;
+    }
+
+    @media (max-width: 850px) {
+      header nav {
+        align-items: flex-start;
+        flex-direction: column;
+        gap: 12px;
+      }
+
+      .brand-logo {
+        width: 44px;
+        height: 44px;
+      }
+
+      .main-nav {
+        width: 100%;
+        align-items: stretch;
+        flex-direction: column;
+        gap: 0;
+      }
+
+      .main-nav > a,
+      .main-nav summary {
+        display: block;
+        padding: 12px 0;
+      }
+
+      .main-nav > a::before,
+      .main-nav summary::before {
+        bottom: 4px;
+        right: auto;
+        width: 100%;
+        max-width: 180px;
+      }
+
+      .dropdown {
+        position: static;
+        margin: 0 0 8px;
+        box-shadow: none;
+      }
+
+      .faq-page {
+        padding-top: 30px;
+      }
+    }
+
+    @media (max-width: 400px) {
+      .brand {
+        font-size: .95rem;
+        gap: 8px;
+      }
+
+      .brand-logo {
+        width: 38px;
+        height: 38px;
+      }
+
+      .brand-text small {
+        font-size: .58rem;
+        letter-spacing: 3px;
+      }
+
+      .brand-dropdown {
+        width: 205px;
+      }
+
+      .faq-question {
+        padding: 15px;
+        font-size: .94rem;
+      }
+
+      .faq-answer {
+        padding: 0 15px 16px;
+        font-size: .93rem;
+      }
+
+      .faq-button {
+        width: 100%;
+        max-width: 300px;
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      html { scroll-behavior: auto; }
+
+      .main-nav details[open] > .dropdown,
+      .main-nav details[open] .dropdown a,
+      .main-nav details.is-closing > .dropdown,
+      .brand-menu[open] .brand-dropdown,
+      .brand-menu[open] .brand-dropdown button,
+      .brand-menu.is-closing .brand-dropdown {
+        animation: none !important;
+      }
+
+      .brand-menu-arrow {
+        transition: none;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <!-- SAME NAVIGATION STRUCTURE AS HOMEPAGE -->
+  <header>
+    <nav aria-label="Main navigation">
+      <div class="brand-container">
+        <a class="brand" href="index.html" aria-label="CheckmaîtréX Chess Club Home">
+          <img class="brand-logo" src="logo.png" alt="CheckmaîtréX Chess Club logo">
+          <span class="brand-text">
+            CHECKMAÎTRÉX
+            <small>CHESS CLUB</small>
+          </span>
+        </a>
+
+        <details class="brand-menu">
+          <summary aria-label="Open quick access menu" title="Quick Access">
+            <span class="brand-menu-arrow">▾</span>
+          </summary>
+
+          <div class="brand-dropdown">
+            <button type="button" data-feature="settings">
+              <span aria-hidden="true">⚙</span> Settings
+            </button>
+            <button type="button" data-feature="install">
+              <span aria-hidden="true">↓</span> Install App
+            </button>
+            <button type="button" data-feature="report">
+              <span aria-hidden="true">⚑</span> Report a Problem
+            </button>
+            <button type="button" data-feature="about">
+              <span aria-hidden="true">ⓘ</span> About This Website
+            </button>
+          </div>
+        </details>
+      </div>
+
+      <div class="main-nav">
+        <a href="index.html">Home</a>
+
+        <details>
+          <summary>About Us</summary>
+          <div class="dropdown">
+            <a href="our-story.html">Our Story</a>
+            <a href="mission-vision.html">Mission &amp; Vision</a>
+            <a href="leadership.html">Leadership</a>
+          </div>
+        </details>
+
+        <details>
+          <summary>Activities</summary>
+          <div class="dropdown">
+            <a href="activities.html">All Activities</a>
+            <a href="events.html">Events</a>
+            <a href="development.html">Chess Development</a>
+            <a href="tournaments.html">Tournaments</a>
+          </div>
+        </details>
+
+        <details>
+          <summary>Club Highlights</summary>
+          <div class="dropdown">
+            <a href="highlights.html">All Highlights</a>
+            <a href="achievements.html">Achievements</a>
+            <a href="gallery.html">Club Gallery</a>
+            <a href="news.html">News &amp; Updates</a>
+          </div>
+        </details>
+
+        <details>
+          <summary>Join Us</summary>
+          <div class="dropdown">
+            <a href="membership.html">Membership</a>
+            <a href="faqs.html" aria-current="page">FAQs</a>
+            <a href="contact.html#contact">Contact Us</a>
+          </div>
+        </details>
+      </div>
+    </nav>
+  </header>
+
+  <main class="faq-page">
+    <section class="faq-hero">
+      <p class="faq-eyebrow">CheckmaîtréX Chess Club</p>
+      <h1>Frequently Asked Questions</h1>
+      <p>
+        Everything you need to know about our club, membership,
+        chess activities, tournaments, and how to connect with us.
+        Explore the questions below to find the information you need.
+      </p>
+    </section>
+
+    <section aria-labelledby="faq-heading">
+      <div class="faq-intro">
+        <h2 id="faq-heading">How Can We Help You?</h2>
+        <p>Browse by category or search for a specific question.</p>
+      </div>
+
+      <label for="faqSearch" style="display:block;text-align:center;color:#c5c5c5;">
+        Search the FAQs
+      </label>
+      <input
+        class="faq-search"
+        id="faqSearch"
+        type="search"
+        placeholder="Type a keyword or question..."
+        autocomplete="off"
+      >
+
+      <div class="faq-categories" id="faqCategories" aria-label="Filter FAQs by category">
+        <button type="button" class="faq-filter active" data-category="All">All Questions</button>
+        <button type="button" class="faq-filter" data-category="About the Club">About the Club</button>
+        <button type="button" class="faq-filter" data-category="Membership">Membership</button>
+        <button type="button" class="faq-filter" data-category="Activities & Tournaments">Activities &amp; Tournaments</button>
+        <button type="button" class="faq-filter" data-category="IDs & Applications">IDs &amp; Applications</button>
+        <button type="button" class="faq-filter" data-category="Contact & Website">Contact &amp; Website</button>
+      </div>
+
+      <p class="faq-count" id="faqCount" aria-live="polite">Showing 50 questions</p>
+
+      <div class="faq-list" id="faqList"></div>
+
+      <p class="faq-empty" id="faqEmpty" role="status">
+        No matching questions found. Try a different keyword or category.
+      </p>
+    </section>
+
+    <section class="faq-contact">
+      <h2>Still Have Questions?</h2>
+      <p>
+        If your question is not answered here, visit our Contact Us page
+        to find the club's available communication options.
+      </p>
+      <a class="faq-button" href="contact.html#contact">Connect With Us</a>
+      <a class="faq-button secondary" href="membership.html">Membership Information</a>
+    </section>
+  </main>
+
+  <footer class="faq-footer">
+    <p><strong>CHECKMAÎTRÉX CHESS CLUB</strong></p>
+    <p>Calculate. Conquer. Checkmate.</p>
+    <p>© <span id="year"></span> CheckmaîtréX Chess Club. All rights reserved.</p>
+  </footer>
+
+  <script>
+    // COPYRIGHT YEAR
+    document.getElementById("year").textContent = new Date().getFullYear();
+
+    // HOMEPAGE-STYLE DROPDOWN BEHAVIOR
+    const menus = [...document.querySelectorAll(".main-nav details")];
+
+    function closeMenu(menu) {
+      if (!menu.open || menu.classList.contains("is-closing")) return;
+
+      menu.classList.add("is-closing");
+
+      window.setTimeout(() => {
+        menu.open = false;
+        menu.classList.remove("is-closing");
+      }, 230);
+    }
+
+    menus.forEach((menu) => {
+      menu.querySelector("summary").addEventListener("click", (event) => {
+        event.preventDefault();
+
+        if (menu.classList.contains("is-closing")) return;
+
+        if (menu.open) {
+          closeMenu(menu);
+          return;
+        }
+
+        menus.forEach((other) => {
+          if (other !== menu && other.open) closeMenu(other);
+        });
+
+        menu.open = true;
+      });
+    });
+
+    const brandMenu = document.querySelector(".brand-menu");
+
+    function closeBrandMenu() {
+      if (!brandMenu.open || brandMenu.classList.contains("is-closing")) return;
+
+      brandMenu.classList.add("is-closing");
+
+      window.setTimeout(() => {
+        brandMenu.open = false;
+        brandMenu.classList.remove("is-closing");
+      }, 220);
+    }
+
+    document.addEventListener("click", (event) => {
+      if (!event.target.closest(".main-nav")) {
+        menus.forEach((menu) => {
+          if (menu.open) closeMenu(menu);
+        });
+      }
+
+      if (!brandMenu.contains(event.target)) closeBrandMenu();
+    });
+
+    document.addEventListener("keydown", (event) => {
+      if (event.key === "Escape") {
+        menus.forEach((menu) => {
+          if (menu.open) closeMenu(menu);
+        });
+        closeBrandMenu();
+      }
+    });
+
+    // QUICK ACCESS ACTIONS
+    brandMenu.querySelectorAll("[data-feature]").forEach((button) => {
+      button.addEventListener("click", () => {
+        const feature = button.dataset.feature;
+        closeBrandMenu();
+
+        window.setTimeout(() => {
+          if (feature === "settings") {
+            alert("Settings\n\nDisplay and theme preferences can be added in a future update.");
+          }
+
+          if (feature === "install") {
+            alert("Install App\n\nApp installation will be available when the website is configured as an installable web app.");
+          }
+
+          if (feature === "report") {
+            window.location.href = "contact.html#contact";
+          }
+
+          if (feature === "about") {
+            alert(
+              "About This Website\n\n" +
+              "CheckmaîtréX Chess Club\n" +
+              "Official Club Website\n" +
+              "Black & Gold Design\n\n" +
+              "Website created by El.ians Sotero\n\n" +
+              "Calculate. Conquer. Checkmate."
+            );
+          }
+        }, 220);
+      });
+    });
+
+    // 50 FREQUENTLY ASKED QUESTIONS
+    const faqs = [
+      {
+        category: "About the Club",
+        question: "What is CheckmaîtréX Chess Club?",
+        answer: "CheckmaîtréX Chess Club is a chess community centered on strategic thinking, discipline, learning, sportsmanship, and growth through the game of chess."
+      },
+      {
+        category: "About the Club",
+        question: "What is the purpose of the club?",
+        answer: "The club's website presents its identity, shares information about its activities, and provides a place for visitors to learn how to connect with the chess community."
+      },
+      {
+        category: "About the Club",
+        question: "What does “Calculate. Conquer. Checkmate.” mean?",
+        answer: "It represents a chess-minded approach: calculate possibilities carefully, face challenges with determination, and work toward a clear objective."
+      },
+      {
+        category: "About the Club",
+        question: "Is the club only about winning chess games?",
+        answer: "Chess also provides opportunities to learn, practice patience, think critically, respect opponents, and improve through experience. Winning is only one part of the game."
+      },
+      {
+        category: "About the Club",
+        question: "What values does the club promote?",
+        answer: "The website reflects values such as strategic thinking, discipline, sportsmanship, continuous learning, and community. Please refer to official club statements for any formally adopted code of conduct."
+      },
+      {
+        category: "About the Club",
+        question: "Where can I learn about the club's history?",
+        answer: "Visit the Our Story page for the club's published background and history, when available."
+      },
+      {
+        category: "About the Club",
+        question: "Where can I read the club's mission and vision?",
+        answer: "Visit the Mission & Vision page for the club's published mission and vision statements."
+      },
+      {
+        category: "About the Club",
+        question: "Where can I find information about the club's leaders?",
+        answer: "The Leadership page is intended to provide information about club leadership and responsibilities as officially published."
+      },
+      {
+        category: "About the Club",
+        question: "Does the club welcome people who are passionate about chess?",
+        answer: "People interested in chess can use the website to learn about the club and inquire about membership. Any formal eligibility requirements should be confirmed through the club's official process."
+      },
+      {
+        category: "About the Club",
+        question: "Where can I see the club's photos and achievements?",
+        answer: "Visit Club Gallery for published photos and Achievements for accomplishments the club has officially shared."
+      },
+
+      {
+        category: "Membership",
+        question: "How can I apply for membership?",
+        answer: "Visit the Membership page and use the membership application form provided there. Follow the instructions on the form and provide accurate information."
+      },
+      {
+        category: "Membership",
+        question: "Where can I find the membership application form?",
+        answer: "The application form is linked from the Membership page. Open that page to access the current form."
+      },
+      {
+        category: "Membership",
+        question: "Who is eligible to become a member?",
+        answer: "Eligibility should follow the club's official membership requirements. Please check the Membership page or contact the club to confirm whether specific conditions apply."
+      },
+      {
+        category: "Membership",
+        question: "Can beginners inquire about joining?",
+        answer: "Yes, beginners can inquire about membership and ask what learning opportunities may be available. Participation and membership requirements should be confirmed with the club."
+      },
+      {
+        category: "Membership",
+        question: "Do I need to be an experienced chess player?",
+        answer: "Not necessarily for making an inquiry. If you are new to chess, ask the club about its current activities and whether they are suitable for your experience level."
+      },
+      {
+        category: "Membership",
+        question: "Is there a membership fee?",
+        answer: "Please confirm this directly through the club's official membership information. Do not assume that membership is free or paid unless the club has confirmed its current policy."
+      },
+      {
+        category: "Membership",
+        question: "Does submitting the form guarantee membership approval?",
+        answer: "No. Submitting an application does not automatically mean that membership has been approved. Wait for official confirmation from the club."
+      },
+      {
+        category: "Membership",
+        question: "What should I do after submitting my application?",
+        answer: "Keep any submission confirmation you receive and follow the instructions provided by the club. If you need an update, use the club's available contact options."
+      },
+      {
+        category: "Membership",
+        question: "What if I entered incorrect information in my application?",
+        answer: "Contact the club through its available official communication options and explain which information needs correction. Avoid submitting sensitive personal information through an unverified channel."
+      },
+      {
+        category: "Membership",
+        question: "Can I submit another application if I made a mistake?",
+        answer: "Before submitting a duplicate application, contact the club to ask whether your existing submission can be corrected. This helps avoid unnecessary duplicate records."
+      },
+
+      {
+        category: "Activities & Tournaments",
+        question: "What activities may the club organize?",
+        answer: "Possible chess-related programs may include learning activities, community events, and other club programs. Check the Activities page for information officially published by the club."
+      },
+      {
+        category: "Activities & Tournaments",
+        question: "Where can I find upcoming club events?",
+        answer: "Visit the Events page for event details that have been announced. Dates and schedules should be treated as confirmed only when officially published."
+      },
+      {
+        category: "Activities & Tournaments",
+        question: "Does the club provide chess development activities?",
+        answer: "The Chess Development page is intended to share information about development opportunities offered or announced by the club. Check that page for current details."
+      },
+      {
+        category: "Activities & Tournaments",
+        question: "Does the club organize chess tournaments?",
+        answer: "Tournament plans depend on the club's actual schedule and announcements. Visit the Tournaments page for details about events that have been officially announced."
+      },
+      {
+        category: "Activities & Tournaments",
+        question: "How can I register for a tournament?",
+        answer: "Follow the registration instructions published for the specific tournament. If no instructions are available, contact the club to ask whether registration is open."
+      },
+      {
+        category: "Activities & Tournaments",
+        question: "Where can I check tournament dates and rules?",
+        answer: "Look for the event's official announcement on the Tournaments or News & Updates page. Confirm the schedule and rules before making plans to participate."
+      },
+      {
+        category: "Activities & Tournaments",
+        question: "Are there participation requirements for events?",
+        answer: "Requirements may differ by event. Check the specific announcement for eligibility, registration instructions, format, and any other conditions."
+      },
+      {
+        category: "Activities & Tournaments",
+        question: "Where can I find the results of club activities?",
+        answer: "Check News & Updates, Achievements, and Club Highlights for results or summaries the club has published."
+      },
+      {
+        category: "Activities & Tournaments",
+        question: "Where can I see photos from club events?",
+        answer: "Visit Club Gallery for photos that have been published. Not every activity will necessarily have photos available."
+      },
+      {
+        category: "Activities & Tournaments",
+        question: "How can I keep up with new activities?",
+        answer: "Check the website's Events and News & Updates pages regularly, and use the club's official communication channels when available."
+      },
+
+      {
+        category: "IDs & Applications",
+        question: "What is a Membership ID?",
+        answer: "A Membership ID is an identifier that the club may issue or confirm for a member. Treat an ID as official only after it has been confirmed or issued by the club."
+      },
+      {
+        category: "IDs & Applications",
+        question: "Will I receive a Membership ID immediately after submitting the form?",
+        answer: "Not necessarily. Submitting the form does not mean that an ID has already been assigned. Wait for official confirmation and instructions from the club."
+      },
+      {
+        category: "IDs & Applications",
+        question: "When will my Membership ID be issued?",
+        answer: "The timing depends on the club's membership process. Contact the club for an update if you have submitted an application and need clarification."
+      },
+      {
+        category: "IDs & Applications",
+        question: "What if I have not received an application confirmation?",
+        answer: "Check whether the form showed a successful submission message. If you remain unsure, contact the club and ask how to verify receipt of your application."
+      },
+      {
+        category: "IDs & Applications",
+        question: "What should I do if I lose my Membership ID?",
+        answer: "Contact the club through an official communication channel and ask how your membership can be verified and your ID details confirmed."
+      },
+      {
+        category: "IDs & Applications",
+        question: "Can I use a self-created number as my official Membership ID?",
+        answer: "No. Do not treat a self-created or unconfirmed number as an official club-issued Membership ID. Use only the ID confirmed by the club."
+      },
+      {
+        category: "IDs & Applications",
+        question: "How can I update my membership information?",
+        answer: "Contact the club to ask about its current procedure for updating member information. Provide only the information needed to identify and correct your record."
+      },
+      {
+        category: "IDs & Applications",
+        question: "How do I check the status of my application?",
+        answer: "Use the club's available contact options and ask for an application status update. The website does not promise automatic approval or immediate processing."
+      },
+      {
+        category: "IDs & Applications",
+        question: "What if I accidentally submit the form more than once?",
+        answer: "Contact the club and explain that you may have submitted duplicate entries. Follow its instructions about which submission to retain."
+      },
+      {
+        category: "IDs & Applications",
+        question: "Should I share my Membership ID publicly?",
+        answer: "Share membership information only when necessary and with appropriate recipients. Follow the club's guidance about how member identifiers should be used."
+      },
+
+      {
+        category: "Contact & Website",
+        question: "How can I contact CheckmaîtréX Chess Club?",
+        answer: "Visit the Contact Us page to find the club's available communication options."
+      },
+      {
+        category: "Contact & Website",
+        question: "Where can I find official club announcements?",
+        answer: "Check News & Updates and any official communication channels the club maintains. Look for the source and date of an announcement when confirming information."
+      },
+      {
+        category: "Contact & Website",
+        question: "What should I do if a website link is broken?",
+        answer: "Try returning to the homepage and opening the page through the main navigation. If the link remains broken, report the page or link through the club's available contact options."
+      },
+      {
+        category: "Contact & Website",
+        question: "What should I do if the website does not display correctly?",
+        answer: "Try refreshing the page or reopening it in an updated browser. If the problem continues, tell the club which page and device are affected."
+      },
+      {
+        category: "Contact & Website",
+        question: "Can I browse the website on my phone?",
+        answer: "The website is designed with responsive layouts intended to work on phones and computers. Display may vary depending on the device and browser."
+      },
+      {
+        category: "Contact & Website",
+        question: "How can I report a website problem?",
+        answer: "Use the available contact options to describe the problem and identify the page where it occurred. Do not include passwords or other sensitive account information."
+      },
+      {
+        category: "Contact & Website",
+        question: "What is the purpose of the Quick Access menu?",
+        answer: "The Quick Access menu provides shortcuts to website options such as Settings, Install App, Report a Problem, and About This Website. Some features may depend on future website updates."
+      },
+      {
+        category: "Contact & Website",
+        question: "Can I install the website as an app?",
+        answer: "Installability depends on the website's web-app configuration and the browser being used. If installation is not available, you may still be able to bookmark the site in your browser."
+      },
+      {
+        category: "Contact & Website",
+        question: "Who created the CheckmaîtréX Chess Club website?",
+        answer: "The About This Website information identifies El.ians Sotero as the website creator."
+      },
+      {
+        category: "Contact & Website",
+        question: "Where can I find the latest information if an FAQ answer changes?",
+        answer: "Check the relevant page and the club's official announcements. For details such as fees, eligibility, schedules, and application procedures, confirm the current policy directly with the club."
+      }
+    ];
+
+    const faqList = document.getElementById("faqList");
+    const faqSearch = document.getElementById("faqSearch");
+    const faqCount = document.getElementById("faqCount");
+    const faqEmpty = document.getElementById("faqEmpty");
+    const categoryButtons = [...document.querySelectorAll(".faq-filter")];
+
+    let activeCategory = "All";
+
+    function renderFAQs() {
+      const term = faqSearch.value.trim().toLowerCase();
+
+      const filtered = faqs
+        .map((faq, index) => ({ ...faq, number: index + 1 }))
+        .filter((faq) => {
+          const matchesCategory =
+            activeCategory === "All" || faq.category === activeCategory;
+
+          const searchableText =
+            `${faq.question} ${faq.answer} ${faq.category}`.toLowerCase();
+
+          return matchesCategory && searchableText.includes(term);
+        });
+
+      faqList.replaceChildren();
+
+      filtered.forEach((faq) => {
+        const item = document.createElement("details");
+        item.className = "faq-item";
+
+        const summary = document.createElement("summary");
+        summary.className = "faq-question";
+        summary.textContent = `${faq.number}. ${faq.question}`;
+
+        const answer = document.createElement("div");
+        answer.className = "faq-answer";
+
+        const category = document.createElement("span");
+        category.className = "faq-category-label";
+        category.textContent = faq.category;
+
+        const paragraph = document.createElement("p");
+        paragraph.textContent = faq.answer;
+
+        answer.append(category, paragraph);
+        item.append(summary, answer);
+        faqList.append(item);
+      });
+
+      faqCount.textContent =
+        `Showing ${filtered.length} of ${faqs.length} questions`;
+
+      faqEmpty.style.display = filtered.length === 0 ? "block" : "none";
+    }
+
+    faqSearch.addEventListener("input", renderFAQs);
+
+    categoryButtons.forEach((button) => {
+      button.addEventListener("click", () => {
+        activeCategory = button.dataset.category;
+
+        categoryButtons.forEach((other) => {
+          const selected = other === button;
+          other.classList.toggle("active", selected);
+          other.setAttribute("aria-pressed", String(selected));
+        });
+
+        renderFAQs();
+      });
+    });
+
+    renderFAQs();
+
+    // PAGE FADE-IN AND FADE-OUT
+    document.addEventListener("DOMContentLoaded", () => {
+      document.body.classList.add("page-loaded");
+
+      document.querySelectorAll("a[href]").forEach((link) => {
+        link.addEventListener("click", (event) => {
+          if (
+            event.defaultPrevented ||
+            event.button !== 0 ||
+            event.ctrlKey ||
+            event.metaKey ||
+            event.shiftKey ||
+            event.altKey ||
+            link.target === "_blank" ||
+            link.hasAttribute("download")
+          ) return;
+
+          const url = new URL(link.href, window.location.href);
+
+          if (
+            url.origin !== window.location.origin ||
+            url.pathname === window.location.pathname ||
+            url.hash ||
+            link.hasAttribute("data-no-transition")
+          ) return;
+
+          event.preventDefault();
+          document.body.classList.add("page-leaving");
+
+          window.setTimeout(() => {
+            window.location.href = url.href;
+          }, 220);
+        });
+      });
+    });
+  </script>
+<script src="bfcache-fix.js"></script>
+<script src="site-animations.js"></script>
+<script src="settings-global.js"></script>
+  <script src="language.js"></script>
+  
+</body>
+</html>
