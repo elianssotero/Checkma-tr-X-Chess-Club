@@ -1218,6 +1218,11 @@ function openPage(page) {
     return;
   }
 
+  if (page === "CheckmaîtréX AI Management") {
+    window.location.href = "ai-management.html";
+    return;
+  }
+
   currentPage = page;
 
   const category = categories.find(item =>
