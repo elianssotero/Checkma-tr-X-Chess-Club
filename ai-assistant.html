@@ -5,1387 +5,1278 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="theme-color" content="#0b0b0d">
-<title>CheckmaîtréX AI — Chess Assistant</title>
-<meta name="description" content="CheckmaîtréX AI — Your intelligent chess assistant and learning companion.">
-<link rel="icon" href="ai-logo.png" type="image/png">
+<title>CheckmaîtréX AI</title>
+<meta name="description" content="CheckmaîtréX AI — Your intelligent chess companion.">
 
 <style>
 :root {
   color-scheme: dark;
-  --bg: #0b0b0d;
-  --panel: #111114;
-  --panel-2: #17171b;
-  --panel-3: #202025;
-  --border: rgba(255,255,255,.09);
-  --border-gold: rgba(217,180,91,.28);
-  --text: #f4f1e9;
-  --muted: #a09da0;
-  --dim: #77747a;
-  --gold: #d9b45b;
-  --gold-light: #f0d58d;
-  --gold-dark: #9c7830;
-  --danger: #e36b6b;
-  --success: #70bd91;
-  --sidebar-width: 290px;
-  --header-height: 64px;
-  --radius: 18px;
-  --font: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
-  --shadow: 0 18px 55px rgba(0,0,0,.38);
+  --bg:#0b0b0d;
+  --panel:#111114;
+  --panel2:#19191d;
+  --panel3:#242329;
+  --text:#f4f1e9;
+  --muted:#a09da0;
+  --dim:#77747a;
+  --gold:#d9b45b;
+  --gold-light:#f0d58d;
+  --gold-border:rgba(217,180,91,.28);
+  --border:rgba(255,255,255,.09);
+  --danger:#df6868;
+  --sidebar-width:290px;
+  --font:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif;
+  --shadow:0 20px 65px rgba(0,0,0,.45);
 }
 
 [data-theme="light"] {
-  color-scheme: light;
-  --bg: #f6f5f2;
-  --panel: #ffffff;
-  --panel-2: #f0efeb;
-  --panel-3: #e8e6e0;
-  --border: rgba(0,0,0,.10);
-  --border-gold: rgba(156,120,48,.28);
-  --text: #24221e;
-  --muted: #66625c;
-  --dim: #89847c;
-  --gold: #a77c22;
-  --gold-light: #8d681b;
-  --gold-dark: #765718;
-  --shadow: 0 18px 55px rgba(0,0,0,.10);
+  color-scheme:light;
+  --bg:#f6f5f2;
+  --panel:#fff;
+  --panel2:#f0efeb;
+  --panel3:#e7e5df;
+  --text:#24221e;
+  --muted:#66625c;
+  --dim:#89847c;
+  --gold:#a77c22;
+  --gold-light:#8d681b;
+  --gold-border:rgba(156,120,48,.3);
+  --border:rgba(0,0,0,.1);
+  --shadow:0 20px 65px rgba(0,0,0,.12);
 }
 
 * {
-  box-sizing: border-box;
-  margin: 0;
-  padding: 0;
+  box-sizing:border-box;
+  margin:0;
+  padding:0;
 }
 
-html, body {
-  width: 100%;
-  height: 100%;
+html,body {
+  width:100%;
+  height:100%;
 }
 
 body {
-  background: var(--bg);
-  color: var(--text);
-  font-family: var(--font);
-  overflow: hidden;
-  -webkit-font-smoothing: antialiased;
+  background:var(--bg);
+  color:var(--text);
+  font-family:var(--font);
+  overflow:hidden;
+  -webkit-font-smoothing:antialiased;
 }
 
-button, textarea, input {
-  font: inherit;
+button,input,textarea {
+  font:inherit;
 }
 
 button {
-  color: inherit;
+  color:inherit;
 }
 
-button:focus-visible,
-a:focus-visible,
-textarea:focus-visible,
-input:focus-visible {
-  outline: 2px solid var(--gold);
-  outline-offset: 3px;
+button:focus-visible {
+  outline:2px solid var(--gold);
+  outline-offset:2px;
 }
 
 button:disabled {
-  opacity: .45;
-  cursor: not-allowed !important;
+  opacity:.45;
+  cursor:not-allowed!important;
 }
 
-/* APP LAYOUT */
+svg {
+  width:20px;
+  height:20px;
+  display:block;
+  fill:none;
+  stroke:currentColor;
+  stroke-width:1.8;
+  stroke-linecap:round;
+  stroke-linejoin:round;
+}
 
 .app {
-  width: 100%;
-  height: 100dvh;
-  display: flex;
-  overflow: hidden;
-  position: relative;
+  position:relative;
+  display:flex;
+  width:100%;
+  height:100dvh;
+  overflow:hidden;
 }
 
 .chat-shell {
-  min-width: 0;
-  flex: 1;
-  height: 100%;
-  display: flex;
-  flex-direction: column;
-  position: relative;
+  flex:1;
+  min-width:0;
+  height:100%;
+  display:flex;
+  flex-direction:column;
+  position:relative;
 }
+
+/* HEADER */
 
 .header {
-  height: var(--header-height);
-  min-height: var(--header-height);
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 0 22px;
-  background: var(--bg);
-  border-bottom: 1px solid var(--border);
-  position: relative;
-  z-index: 20;
+  height:64px;
+  min-height:64px;
+  padding:0 20px;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  background:var(--bg);
+  border-bottom:1px solid var(--border);
+  position:relative;
+  z-index:20;
 }
 
-.header-left,
-.header-right,
-.header-brand {
-  display: flex;
-  align-items: center;
+.header-left,.header-right,.header-brand {
+  display:flex;
+  align-items:center;
 }
 
 .header-left {
-  gap: 12px;
-  min-width: 0;
+  gap:10px;
+  min-width:0;
 }
 
 .header-right {
-  gap: 8px;
+  gap:7px;
 }
 
 .header-brand {
-  gap: 8px;
-  min-width: 0;
+  gap:9px;
+  min-width:0;
 }
 
 .icon-button {
-  width: 40px;
-  height: 40px;
-  border: 1px solid transparent;
-  border-radius: 12px;
-  background: transparent;
-  color: var(--muted);
-  display: inline-flex;
-  justify-content: center;
-  align-items: center;
-  cursor: pointer;
-  font-size: 19px;
-  transition: .18s ease;
-  flex-shrink: 0;
+  width:40px;
+  height:40px;
+  display:grid;
+  place-items:center;
+  border:1px solid transparent;
+  border-radius:12px;
+  background:transparent;
+  color:var(--muted);
+  cursor:pointer;
+  flex-shrink:0;
+  transition:.2s;
 }
 
 .icon-button:hover {
-  background: var(--panel-2);
-  border-color: var(--border);
-  color: var(--gold);
+  background:var(--panel2);
+  color:var(--gold);
+  border-color:var(--border);
 }
 
-.menu-button {
-  font-size: 22px;
+.brand-mark {
+  width:32px;
+  height:32px;
+  display:grid;
+  place-items:center;
+  border:1px solid var(--gold-border);
+  border-radius:11px;
+  color:var(--gold);
+  background:linear-gradient(145deg,rgba(217,180,91,.16),rgba(217,180,91,.025));
 }
 
-.brand-symbol {
-  width: 30px;
-  height: 30px;
-  display: grid;
-  place-items: center;
-  border: 1px solid var(--border-gold);
-  border-radius: 10px;
-  color: var(--gold);
-  font-size: 18px;
+.brand-mark svg {
+  width:19px;
+  height:19px;
 }
 
 .model-wrap {
-  position: relative;
+  position:relative;
 }
 
 .model-button {
-  display: flex;
-  align-items: center;
-  gap: 9px;
-  border: 0;
-  background: transparent;
-  color: var(--text);
-  padding: 9px 10px;
-  border-radius: 11px;
-  cursor: pointer;
-  font-size: 15px;
-  font-weight: 650;
-  white-space: nowrap;
+  display:flex;
+  align-items:center;
+  gap:9px;
+  padding:9px 10px;
+  border:0;
+  border-radius:10px;
+  background:transparent;
+  color:var(--text);
+  font-size:15px;
+  font-weight:700;
+  cursor:pointer;
+  white-space:nowrap;
 }
 
 .model-button:hover {
-  background: var(--panel-2);
+  background:var(--panel2);
 }
 
 .model-button .chevron {
-  color: var(--muted);
-  font-size: 12px;
+  color:var(--muted);
+  font-size:12px;
 }
 
 .model-menu {
-  display: none;
-  position: absolute;
-  top: calc(100% + 12px);
-  left: 0;
-  width: 270px;
-  padding: 9px;
-  background: var(--panel);
-  border: 1px solid var(--border-gold);
-  border-radius: 15px;
-  box-shadow: var(--shadow);
-  z-index: 100;
+  display:none;
+  position:absolute;
+  top:calc(100% + 12px);
+  left:0;
+  width:260px;
+  padding:9px;
+  background:var(--panel);
+  border:1px solid var(--gold-border);
+  border-radius:15px;
+  box-shadow:var(--shadow);
+  z-index:100;
 }
 
 .model-menu.open {
-  display: block;
-  animation: popIn .16s ease;
+  display:block;
+  animation:popIn .16s ease;
 }
 
 .menu-caption {
-  padding: 9px 10px 7px;
-  color: var(--dim);
-  text-transform: uppercase;
-  font-size: 10px;
-  font-weight: 750;
-  letter-spacing: .1em;
+  padding:9px 10px;
+  color:var(--dim);
+  font-size:10px;
+  font-weight:800;
+  letter-spacing:.12em;
+  text-transform:uppercase;
 }
 
 .model-option {
-  width: 100%;
-  padding: 11px 10px;
-  border: 0;
-  border-radius: 10px;
-  background: transparent;
-  text-align: left;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 10px;
-  color: var(--text);
-  font-size: 13px;
-}
-
-.model-option.available {
-  cursor: pointer;
-}
-
-.model-option.available:hover {
-  background: var(--panel-2);
-}
-
-.model-option.current {
-  background: rgba(217,180,91,.10);
-  color: var(--gold);
-}
-
-.model-option.disabled {
-  color: var(--dim);
-  cursor: default;
+  width:100%;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:10px;
+  padding:12px 10px;
+  border:0;
+  border-radius:10px;
+  background:rgba(217,180,91,.09);
+  color:var(--gold);
+  text-align:left;
+  font-size:13px;
 }
 
 .model-option small {
-  display: block;
-  color: var(--dim);
-  font-size: 11px;
-  margin-top: 3px;
-}
-
-.model-check {
-  color: var(--gold);
+  display:block;
+  margin-top:4px;
+  color:var(--muted);
+  font-size:11px;
 }
 
 .header-divider {
-  width: 1px;
-  height: 25px;
-  background: var(--border);
-  margin: 0 3px;
+  width:1px;
+  height:24px;
+  background:var(--border);
+  margin:0 3px;
 }
 
 /* SIDEBAR */
 
 .sidebar {
-  width: var(--sidebar-width);
-  height: 100%;
-  position: absolute;
-  z-index: 40;
-  top: 0;
-  left: 0;
-  background: var(--panel);
-  border-right: 1px solid var(--border);
-  transform: translateX(-101%);
-  transition: transform .25s ease;
-  display: flex;
-  flex-direction: column;
-  box-shadow: 12px 0 35px rgba(0,0,0,.12);
+  width:var(--sidebar-width);
+  height:100%;
+  position:absolute;
+  z-index:50;
+  top:0;
+  left:0;
+  display:flex;
+  flex-direction:column;
+  background:var(--panel);
+  border-right:1px solid var(--border);
+  transform:translateX(-101%);
+  transition:transform .25s ease;
+  box-shadow:12px 0 35px rgba(0,0,0,.15);
 }
 
 .sidebar.open {
-  transform: translateX(0);
+  transform:translateX(0);
 }
 
 .sidebar-top {
-  min-height: var(--header-height);
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 0 15px 0 19px;
-  border-bottom: 1px solid var(--border);
+  min-height:64px;
+  padding:0 16px 0 19px;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  border-bottom:1px solid var(--border);
 }
 
 .sidebar-brand {
-  color: var(--text);
-  font-weight: 750;
-  font-size: 14px;
+  font-size:14px;
+  font-weight:800;
 }
 
 .sidebar-brand span {
-  color: var(--gold);
+  color:var(--gold);
 }
 
 .sidebar-scroll {
-  flex: 1;
-  overflow-y: auto;
-  padding: 15px 11px;
+  flex:1;
+  overflow-y:auto;
+  padding:15px 11px;
 }
 
 .sidebar-primary {
-  display: grid;
-  gap: 5px;
-  margin-bottom: 22px;
+  display:grid;
+  gap:5px;
+  margin-bottom:20px;
 }
 
 .sidebar-action {
-  width: 100%;
-  min-height: 43px;
-  padding: 10px 12px;
-  border: 1px solid transparent;
-  border-radius: 11px;
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  background: transparent;
-  color: var(--muted);
-  text-align: left;
-  cursor: pointer;
-  font-size: 13px;
-  transition: .18s ease;
+  width:100%;
+  min-height:43px;
+  padding:10px 12px;
+  display:flex;
+  align-items:center;
+  gap:12px;
+  border:1px solid transparent;
+  border-radius:11px;
+  background:transparent;
+  color:var(--muted);
+  text-align:left;
+  font-size:13px;
+  cursor:pointer;
+  transition:.18s;
 }
 
 .sidebar-action:hover {
-  background: var(--panel-2);
-  color: var(--text);
+  background:var(--panel2);
+  color:var(--text);
 }
 
-.sidebar-action .side-icon {
-  width: 20px;
-  text-align: center;
-  color: var(--gold);
-  font-size: 17px;
+.sidebar-action svg {
+  width:18px;
+  height:18px;
+  color:var(--gold);
 }
 
 .sidebar-section-title {
-  padding: 9px 11px;
-  color: var(--dim);
-  font-size: 10px;
-  font-weight: 750;
-  letter-spacing: .12em;
-  text-transform: uppercase;
+  padding:9px 11px;
+  color:var(--dim);
+  font-size:10px;
+  font-weight:800;
+  letter-spacing:.12em;
+  text-transform:uppercase;
 }
 
 .search-wrap {
-  padding: 0 3px 12px;
+  padding:0 3px 12px;
 }
 
 .search-input {
-  width: 100%;
-  height: 39px;
-  padding: 0 12px;
-  border: 1px solid var(--border);
-  border-radius: 10px;
-  outline: none;
-  background: var(--panel-2);
-  color: var(--text);
-  font-size: 12px;
+  width:100%;
+  height:39px;
+  padding:0 12px;
+  border:1px solid var(--border);
+  border-radius:10px;
+  outline:none;
+  background:var(--panel2);
+  color:var(--text);
+  font-size:12px;
 }
 
 .search-input:focus {
-  border-color: var(--gold-dark);
+  border-color:var(--gold-border);
 }
 
 .search-input::placeholder {
-  color: var(--dim);
+  color:var(--dim);
 }
 
 .conversation-list {
-  display: grid;
-  gap: 3px;
+  display:grid;
+  gap:3px;
 }
 
 .conversation-item {
-  min-width: 0;
-  display: flex;
-  align-items: center;
-  gap: 4px;
-  padding: 4px;
-  border-radius: 10px;
-  border: 1px solid transparent;
+  min-width:0;
+  display:flex;
+  align-items:center;
+  gap:4px;
+  padding:4px;
+  border:1px solid transparent;
+  border-radius:10px;
 }
 
 .conversation-item:hover {
-  background: var(--panel-2);
+  background:var(--panel2);
 }
 
 .conversation-item.active {
-  background: rgba(217,180,91,.09);
-  border-color: var(--border-gold);
+  background:rgba(217,180,91,.09);
+  border-color:var(--gold-border);
 }
 
 .conversation-open {
-  flex: 1;
-  min-width: 0;
-  border: 0;
-  background: transparent;
-  color: var(--muted);
-  text-align: left;
-  padding: 8px 7px;
-  cursor: pointer;
-  font-size: 12px;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
+  flex:1;
+  min-width:0;
+  padding:8px 7px;
+  overflow:hidden;
+  border:0;
+  background:transparent;
+  color:var(--muted);
+  text-align:left;
+  text-overflow:ellipsis;
+  white-space:nowrap;
+  font-size:12px;
+  cursor:pointer;
 }
 
 .conversation-item.active .conversation-open {
-  color: var(--gold);
+  color:var(--gold);
 }
 
 .conversation-more {
-  width: 29px;
-  height: 29px;
-  border: 0;
-  border-radius: 8px;
-  background: transparent;
-  color: var(--dim);
-  cursor: pointer;
-  opacity: 0;
-}
-
-.conversation-item:hover .conversation-more,
-.conversation-more:focus-visible {
-  opacity: 1;
+  width:30px;
+  height:30px;
+  border:0;
+  border-radius:8px;
+  background:transparent;
+  color:var(--dim);
+  cursor:pointer;
 }
 
 .conversation-more:hover {
-  color: var(--gold);
-  background: var(--panel-3);
+  color:var(--gold);
+  background:var(--panel3);
 }
 
 .empty-history {
-  padding: 17px 10px;
-  color: var(--dim);
-  font-size: 12px;
-  line-height: 1.6;
+  padding:17px 10px;
+  color:var(--dim);
+  font-size:12px;
+  line-height:1.6;
 }
 
 .sidebar-bottom {
-  border-top: 1px solid var(--border);
-  padding: 10px 11px 14px;
-}
-
-.sidebar-bottom .sidebar-action {
-  min-height: 40px;
+  padding:10px 11px 14px;
+  border-top:1px solid var(--border);
 }
 
 .sidebar-backdrop {
-  position: absolute;
-  z-index: 35;
-  inset: 0;
-  background: rgba(0,0,0,.23);
-  opacity: 0;
-  pointer-events: none;
-  transition: opacity .25s ease;
+  position:absolute;
+  z-index:45;
+  inset:0;
+  background:rgba(0,0,0,.35);
+  opacity:0;
+  pointer-events:none;
+  transition:opacity .25s;
 }
 
 .sidebar-backdrop.show {
-  opacity: 1;
-  pointer-events: auto;
+  opacity:1;
+  pointer-events:auto;
 }
 
 /* CHAT AREA */
 
 .chat-container {
-  flex: 1;
-  min-height: 0;
-  width: 100%;
-  display: flex;
-  flex-direction: column;
-  position: relative;
+  flex:1;
+  min-height:0;
+  width:100%;
+  display:flex;
+  flex-direction:column;
+  position:relative;
 }
 
 .messages {
-  flex: 1;
-  min-height: 0;
-  width: 100%;
-  overflow-y: auto;
-  scroll-behavior: smooth;
-  padding: 32px 22px 25px;
+  flex:1;
+  min-height:0;
+  width:100%;
+  overflow-y:auto;
+  scroll-behavior:smooth;
+  padding:30px 22px 25px;
 }
 
 .messages-inner {
-  width: 100%;
-  max-width: 790px;
-  margin: 0 auto;
+  width:100%;
+  max-width:790px;
+  margin:0 auto;
 }
 
 .messages::-webkit-scrollbar,
 .sidebar-scroll::-webkit-scrollbar {
-  width: 6px;
+  width:6px;
 }
 
 .messages::-webkit-scrollbar-thumb,
 .sidebar-scroll::-webkit-scrollbar-thumb {
-  background: var(--panel-3);
-  border-radius: 10px;
+  background:var(--panel3);
+  border-radius:10px;
 }
 
 /* WELCOME */
 
 .welcome {
-  min-height: 100%;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  text-align: center;
-  padding: 40px 12px 55px;
+  min-height:100%;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  text-align:center;
+  padding:45px 12px 55px;
+  animation:welcomeIn .8s ease both;
+}
+
+@keyframes welcomeIn {
+  from {opacity:0;transform:translateY(15px)}
+  to {opacity:1;transform:translateY(0)}
 }
 
 .welcome-emblem {
-  width: 76px;
-  height: 76px;
-  display: grid;
-  place-items: center;
-  border: 1px solid var(--border-gold);
-  border-radius: 25px;
-  background: linear-gradient(145deg, rgba(217,180,91,.14), rgba(217,180,91,.025));
-  color: var(--gold);
-  font-size: 39px;
-  box-shadow: 0 0 45px rgba(217,180,91,.07);
-  margin-bottom: 25px;
+  width:88px;
+  height:88px;
+  display:grid;
+  place-items:center;
+  margin-bottom:25px;
+  border:1px solid rgba(217,180,91,.55);
+  border-radius:29px;
+  color:var(--gold);
+  background:radial-gradient(circle,rgba(217,180,91,.2),rgba(217,180,91,.025) 70%);
+  box-shadow:0 0 0 9px rgba(217,180,91,.025),0 0 65px rgba(217,180,91,.13);
+  animation:emblemGlow 3.5s ease-in-out infinite;
+}
+
+.welcome-emblem svg {
+  width:42px;
+  height:42px;
+  stroke-width:1.5;
+}
+
+@keyframes emblemGlow {
+  0%,100% {box-shadow:0 0 0 8px rgba(217,180,91,.025),0 0 35px rgba(217,180,91,.08)}
+  50% {box-shadow:0 0 0 13px rgba(217,180,91,.04),0 0 70px rgba(217,180,91,.19)}
 }
 
 .welcome h1 {
-  font-size: clamp(25px, 4vw, 34px);
-  font-weight: 750;
-  letter-spacing: -.045em;
-  margin-bottom: 11px;
+  margin-bottom:12px;
+  font-size:clamp(27px,4vw,37px);
+  font-weight:800;
+  letter-spacing:-.045em;
 }
 
 .welcome h1 span {
-  color: var(--gold);
+  color:var(--gold);
 }
 
 .welcome-subtitle {
-  color: var(--muted);
-  max-width: 460px;
-  line-height: 1.7;
-  font-size: 14px;
-  margin-bottom: 32px;
-}
-
-.welcome-label {
-  color: var(--dim);
-  font-size: 10px;
-  font-weight: 750;
-  text-transform: uppercase;
-  letter-spacing: .13em;
-  margin-bottom: 12px;
-}
-
-.suggestion-grid {
-  width: 100%;
-  max-width: 620px;
-  display: grid;
-  grid-template-columns: repeat(2, minmax(0,1fr));
-  gap: 10px;
-}
-
-.suggestion-chip {
-  min-height: 67px;
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  padding: 13px 15px;
-  border: 1px solid var(--border);
-  border-radius: 14px;
-  background: var(--panel);
-  color: var(--text);
-  text-align: left;
-  cursor: pointer;
-  transition: .2s ease;
-}
-
-.suggestion-chip:hover {
-  border-color: var(--border-gold);
-  background: var(--panel-2);
-  transform: translateY(-2px);
-}
-
-.chip-icon {
-  width: 35px;
-  height: 35px;
-  flex-shrink: 0;
-  display: grid;
-  place-items: center;
-  border-radius: 11px;
-  background: rgba(217,180,91,.10);
-  color: var(--gold);
-  font-size: 17px;
-}
-
-.chip-text {
-  font-size: 12px;
-  line-height: 1.4;
+  max-width:440px;
+  color:var(--muted);
+  font-size:14px;
+  line-height:1.75;
 }
 
 /* CHAT MESSAGES */
 
 .msg {
-  display: flex;
-  align-items: flex-start;
-  gap: 13px;
-  margin: 0 0 26px;
-  animation: messageIn .2s ease;
+  display:flex;
+  align-items:flex-start;
+  gap:13px;
+  margin-bottom:26px;
+  animation:messageIn .2s ease;
 }
 
 @keyframes messageIn {
-  from { opacity: 0; transform: translateY(7px); }
-  to { opacity: 1; transform: translateY(0); }
+  from {opacity:0;transform:translateY(7px)}
+  to {opacity:1;transform:translateY(0)}
 }
 
 .msg-avatar {
-  width: 34px;
-  height: 34px;
-  flex-shrink: 0;
-  display: grid;
-  place-items: center;
-  border-radius: 12px;
-  background: var(--panel-2);
-  border: 1px solid var(--border);
-  color: var(--gold);
-  font-size: 16px;
+  width:35px;
+  height:35px;
+  flex-shrink:0;
+  display:grid;
+  place-items:center;
+  border:1px solid var(--border);
+  border-radius:12px;
+  background:var(--panel2);
+  color:var(--gold);
+}
+
+.msg-avatar svg {
+  width:18px;
+  height:18px;
 }
 
 .msg.user .msg-avatar {
-  color: var(--muted);
+  color:var(--muted);
 }
 
 .msg-content {
-  min-width: 0;
-  flex: 1;
-  padding-top: 5px;
-  font-size: 14px;
-  line-height: 1.75;
-  overflow-wrap: anywhere;
+  flex:1;
+  min-width:0;
+  padding-top:5px;
+  overflow-wrap:anywhere;
+  font-size:14px;
+  line-height:1.75;
 }
 
 .msg-content p {
-  margin: 0 0 11px;
+  margin:0 0 11px;
 }
 
 .msg-content p:last-child {
-  margin-bottom: 0;
+  margin-bottom:0;
 }
 
-.msg-content ul,
-.msg-content ol {
-  padding-left: 22px;
-  margin: 8px 0 13px;
+.msg-content ul,.msg-content ol {
+  padding-left:22px;
+  margin:8px 0 13px;
 }
 
 .msg-content li {
-  padding-left: 3px;
-  margin-bottom: 5px;
+  margin-bottom:5px;
 }
 
 .msg-content strong {
-  color: var(--gold-light);
-  font-weight: 700;
+  color:var(--gold-light);
 }
 
-.msg-content h1,
-.msg-content h2,
-.msg-content h3 {
-  margin: 17px 0 9px;
-  line-height: 1.35;
+.msg-content h1,.msg-content h2,.msg-content h3 {
+  margin:17px 0 9px;
+  line-height:1.35;
 }
 
-.msg-content h1 { font-size: 20px; }
-.msg-content h2 { font-size: 17px; }
-.msg-content h3 { font-size: 15px; }
+.msg-content h1 {font-size:20px}
+.msg-content h2 {font-size:17px}
+.msg-content h3 {font-size:15px}
 
 .msg-content blockquote {
-  border-left: 3px solid var(--gold);
-  padding: 5px 13px;
-  margin: 12px 0;
-  color: var(--muted);
-  background: var(--panel-2);
-  border-radius: 0 8px 8px 0;
+  margin:12px 0;
+  padding:6px 13px;
+  border-left:3px solid var(--gold);
+  border-radius:0 8px 8px 0;
+  background:var(--panel2);
+  color:var(--muted);
 }
 
 .msg-content code {
-  font-family: Consolas, monospace;
-  font-size: .88em;
-  background: var(--panel-2);
-  border: 1px solid var(--border);
-  border-radius: 5px;
-  padding: 2px 5px;
+  padding:2px 5px;
+  border:1px solid var(--border);
+  border-radius:5px;
+  background:var(--panel2);
+  font-family:Consolas,monospace;
+  font-size:.88em;
 }
 
 .msg-content pre {
-  overflow-x: auto;
-  padding: 14px;
-  margin: 12px 0;
-  background: var(--panel);
-  border: 1px solid var(--border);
-  border-radius: 12px;
+  overflow-x:auto;
+  margin:12px 0;
+  padding:14px;
+  border:1px solid var(--border);
+  border-radius:12px;
+  background:var(--panel);
 }
 
 .msg-content pre code {
-  border: 0;
-  padding: 0;
-  background: transparent;
-  white-space: pre;
+  padding:0;
+  border:0;
+  background:transparent;
+  white-space:pre;
 }
 
 .msg-actions {
-  display: flex;
-  gap: 7px;
-  margin-top: 10px;
-  opacity: .55;
-  transition: .18s ease;
-}
-
-.msg:hover .msg-actions {
-  opacity: 1;
+  display:flex;
+  gap:7px;
+  margin-top:10px;
 }
 
 .msg-action-btn {
-  padding: 5px 9px;
-  border: 1px solid var(--border);
-  border-radius: 8px;
-  background: transparent;
-  color: var(--muted);
-  font-size: 11px;
-  cursor: pointer;
+  padding:5px 9px;
+  border:1px solid var(--border);
+  border-radius:8px;
+  background:transparent;
+  color:var(--muted);
+  font-size:11px;
+  cursor:pointer;
 }
 
 .msg-action-btn:hover {
-  border-color: var(--border-gold);
-  color: var(--gold);
+  border-color:var(--gold-border);
+  color:var(--gold);
 }
 
 /* THINKING */
 
 .typing {
-  display: flex;
-  align-items: center;
-  gap: 5px;
-  height: 30px;
+  display:flex;
+  align-items:center;
+  gap:5px;
+  height:30px;
 }
 
 .typing span {
-  width: 7px;
-  height: 7px;
-  border-radius: 50%;
-  background: var(--gold);
-  animation: typingBounce 1.2s infinite;
+  width:7px;
+  height:7px;
+  border-radius:50%;
+  background:var(--gold);
+  animation:typingBounce 1.2s infinite;
 }
 
-.typing span:nth-child(2) { animation-delay: .15s; }
-.typing span:nth-child(3) { animation-delay: .3s; }
+.typing span:nth-child(2) {animation-delay:.15s}
+.typing span:nth-child(3) {animation-delay:.3s}
 
 @keyframes typingBounce {
-  0%, 60%, 100% { transform: translateY(0); opacity: .35; }
-  30% { transform: translateY(-6px); opacity: 1; }
+  0%,60%,100% {transform:translateY(0);opacity:.35}
+  30% {transform:translateY(-6px);opacity:1}
 }
 
 /* COMPOSER */
 
 .input-area {
-  width: 100%;
-  padding: 12px 20px max(16px, env(safe-area-inset-bottom));
-  background: linear-gradient(180deg, transparent, var(--bg) 22%);
-  position: relative;
-  z-index: 10;
+  width:100%;
+  padding:12px 20px max(16px,env(safe-area-inset-bottom));
+  background:linear-gradient(180deg,transparent,var(--bg) 22%);
+  position:relative;
+  z-index:10;
 }
 
 .composer-wrap {
-  width: 100%;
-  max-width: 790px;
-  margin: 0 auto;
+  width:100%;
+  max-width:790px;
+  margin:0 auto;
 }
 
 .attachment-preview {
-  display: none;
-  flex-wrap: wrap;
-  gap: 8px;
-  padding: 0 4px 10px;
+  display:none;
+  flex-wrap:wrap;
+  gap:8px;
+  padding:0 4px 10px;
 }
 
 .attachment-preview.has-items {
-  display: flex;
+  display:flex;
 }
 
 .attachment-chip {
-  max-width: 220px;
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  padding: 7px 9px;
-  background: var(--panel-2);
-  border: 1px solid var(--border);
-  border-radius: 10px;
-  color: var(--muted);
-  font-size: 11px;
+  max-width:220px;
+  display:flex;
+  align-items:center;
+  gap:8px;
+  padding:7px 9px;
+  border:1px solid var(--border);
+  border-radius:10px;
+  background:var(--panel2);
+  color:var(--muted);
+  font-size:11px;
 }
 
 .attachment-chip img {
-  width: 30px;
-  height: 30px;
-  object-fit: cover;
-  border-radius: 6px;
+  width:30px;
+  height:30px;
+  object-fit:cover;
+  border-radius:6px;
 }
 
-.attachment-chip span {
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
+.attachment-chip .attachment-name {
+  overflow:hidden;
+  text-overflow:ellipsis;
+  white-space:nowrap;
 }
 
 .attachment-remove {
-  border: 0;
-  background: transparent;
-  color: var(--dim);
-  cursor: pointer;
-  font-size: 16px;
+  border:0;
+  background:transparent;
+  color:var(--dim);
+  cursor:pointer;
+  font-size:17px;
 }
 
 .composer {
-  min-height: 62px;
-  display: flex;
-  align-items: flex-end;
-  gap: 8px;
-  padding: 9px 10px;
-  background: var(--panel);
-  border: 1px solid rgba(217,180,91,.24);
-  border-radius: 22px;
-  box-shadow: 0 7px 35px rgba(0,0,0,.18);
-  transition: border-color .2s ease, box-shadow .2s ease;
+  min-height:62px;
+  display:flex;
+  align-items:flex-end;
+  gap:7px;
+  padding:9px 10px;
+  border:1px solid var(--gold-border);
+  border-radius:23px;
+  background:var(--panel);
+  box-shadow:0 7px 35px rgba(0,0,0,.17);
 }
 
+/* Walang dagdag na focus box sa typing area. */
 .composer:focus-within {
-  border-color: rgba(217,180,91,.65);
-  box-shadow: 0 0 0 3px rgba(217,180,91,.06), 0 7px 35px rgba(0,0,0,.18);
+  border-color:var(--gold-border);
+  box-shadow:0 7px 35px rgba(0,0,0,.17);
 }
 
 .composer-side {
-  display: flex;
-  align-items: center;
-  gap: 4px;
-  padding-bottom: 1px;
-  flex-shrink: 0;
+  display:flex;
+  align-items:center;
+  gap:4px;
+  padding-bottom:1px;
+  flex-shrink:0;
 }
 
 .composer-icon {
-  width: 39px;
-  height: 39px;
-  border: 0;
-  border-radius: 13px;
-  background: transparent;
-  color: var(--muted);
-  cursor: pointer;
-  display: grid;
-  place-items: center;
-  font-size: 21px;
-  transition: .18s ease;
+  width:40px;
+  height:40px;
+  display:grid;
+  place-items:center;
+  border:0;
+  border-radius:13px;
+  background:transparent;
+  color:var(--muted);
+  cursor:pointer;
+  transition:.18s;
 }
 
-.composer-icon:hover {
-  background: var(--panel-3);
-  color: var(--gold);
-}
-
+.composer-icon:hover,
 .composer-icon.active {
-  color: var(--gold);
-  background: rgba(217,180,91,.12);
+  background:var(--panel3);
+  color:var(--gold);
+}
+
+.composer-icon svg {
+  width:21px;
+  height:21px;
 }
 
 .message-input {
-  flex: 1;
-  min-width: 0;
-  max-height: 180px;
-  min-height: 40px;
-  padding: 10px 4px 8px;
-  resize: none;
-  overflow-y: auto;
-  outline: none;
-  border: 0;
-  background: transparent;
-  color: var(--text);
-  font-size: 14px;
-  line-height: 1.55;
+  flex:1;
+  min-width:0;
+  min-height:40px;
+  max-height:180px;
+  padding:10px 4px 8px;
+  resize:none;
+  overflow-y:auto;
+  outline:none!important;
+  border:0!important;
+  box-shadow:none!important;
+  background:transparent!important;
+  color:var(--text);
+  font-size:14px;
+  line-height:1.55;
+}
+
+.message-input:focus {
+  outline:none!important;
+  border:0!important;
+  box-shadow:none!important;
 }
 
 .message-input::placeholder {
-  color: var(--dim);
+  color:var(--dim);
 }
 
 .composer-send {
-  min-width: 42px;
-  height: 42px;
-  padding: 0 12px;
-  border: 0;
-  border-radius: 14px;
-  background: var(--gold);
-  color: #16130c;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 19px;
-  font-weight: 800;
-  transition: .18s ease;
-  flex-shrink: 0;
+  min-width:42px;
+  height:42px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  padding:0 12px;
+  border:0;
+  border-radius:14px;
+  background:var(--gold);
+  color:#17130a;
+  font-size:19px;
+  font-weight:800;
+  cursor:pointer;
+  flex-shrink:0;
+  transition:.18s;
 }
 
 .composer-send:hover {
-  background: var(--gold-light);
-  transform: translateY(-1px);
+  background:var(--gold-light);
 }
 
 .composer-send.stop {
-  background: var(--danger);
-  color: white;
+  background:var(--danger);
+  color:white;
 }
 
 .voice-mode-button {
-  height: 42px;
-  padding: 0 13px;
-  border: 1px solid var(--border-gold);
-  border-radius: 14px;
-  background: rgba(217,180,91,.10);
-  color: var(--gold);
-  display: flex;
-  align-items: center;
-  gap: 7px;
-  cursor: pointer;
-  font-size: 12px;
-  font-weight: 650;
-  white-space: nowrap;
+  height:42px;
+  padding:0 13px;
+  display:flex;
+  align-items:center;
+  gap:8px;
+  border:1px solid var(--gold-border);
+  border-radius:14px;
+  background:rgba(217,180,91,.1);
+  color:var(--gold);
+  font-size:12px;
+  font-weight:700;
+  white-space:nowrap;
+  cursor:pointer;
 }
 
 .voice-mode-button:hover {
-  background: rgba(217,180,91,.17);
+  background:rgba(217,180,91,.18);
+}
+
+.voice-mode-button svg {
+  width:18px;
+  height:18px;
 }
 
 .composer-hint {
-  padding-top: 9px;
-  color: var(--dim);
-  text-align: center;
-  font-size: 10px;
-  line-height: 1.5;
+  padding-top:9px;
+  color:var(--dim);
+  text-align:center;
+  font-size:10px;
+  line-height:1.5;
 }
 
 /* PLUS MENU */
 
 .plus-wrap {
-  position: relative;
+  position:relative;
 }
 
 .plus-menu {
-  display: none;
-  position: absolute;
-  left: 0;
-  bottom: calc(100% + 13px);
-  width: 190px;
-  padding: 7px;
-  border: 1px solid var(--border-gold);
-  border-radius: 14px;
-  background: var(--panel);
-  box-shadow: var(--shadow);
-  z-index: 80;
+  display:none;
+  position:absolute;
+  left:0;
+  bottom:calc(100% + 13px);
+  width:185px;
+  padding:7px;
+  border:1px solid var(--gold-border);
+  border-radius:14px;
+  background:var(--panel);
+  box-shadow:var(--shadow);
+  z-index:80;
 }
 
 .plus-menu.open {
-  display: grid;
-  gap: 3px;
-  animation: popIn .16s ease;
+  display:grid;
+  gap:3px;
+  animation:popIn .16s ease;
 }
 
 .plus-option {
-  width: 100%;
-  display: flex;
-  align-items: center;
-  gap: 11px;
-  padding: 11px 10px;
-  border: 0;
-  border-radius: 9px;
-  background: transparent;
-  color: var(--text);
-  text-align: left;
-  cursor: pointer;
-  font-size: 12px;
+  width:100%;
+  display:flex;
+  align-items:center;
+  gap:11px;
+  padding:11px 10px;
+  border:0;
+  border-radius:9px;
+  background:transparent;
+  color:var(--text);
+  text-align:left;
+  font-size:12px;
+  cursor:pointer;
 }
 
 .plus-option:hover {
-  background: var(--panel-2);
+  background:var(--panel2);
 }
 
-.plus-option span:first-child {
-  width: 20px;
-  color: var(--gold);
-  text-align: center;
-  font-size: 16px;
+.plus-option svg {
+  width:18px;
+  height:18px;
+  color:var(--gold);
 }
 
 .hidden-file-input {
-  display: none;
+  display:none;
 }
 
 /* ERROR */
 
 .error-banner {
-  max-width: 790px;
-  margin: 0 auto 10px;
-  padding: 10px 13px;
-  border: 1px solid rgba(227,107,107,.35);
-  border-radius: 11px;
-  background: rgba(227,107,107,.08);
-  color: var(--danger);
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  gap: 10px;
-  font-size: 12px;
+  max-width:790px;
+  margin:0 auto 10px;
+  padding:10px 13px;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:10px;
+  border:1px solid rgba(223,104,104,.35);
+  border-radius:11px;
+  background:rgba(223,104,104,.08);
+  color:var(--danger);
+  font-size:12px;
 }
 
 .error-banner button {
-  border: 1px solid rgba(227,107,107,.4);
-  border-radius: 7px;
-  padding: 5px 9px;
-  background: transparent;
-  color: var(--danger);
-  cursor: pointer;
-  font-size: 11px;
+  padding:5px 9px;
+  border:1px solid rgba(223,104,104,.4);
+  border-radius:7px;
+  background:transparent;
+  color:var(--danger);
+  cursor:pointer;
+  font-size:11px;
 }
 
-/* VOICE PANEL */
+/* VOICE PANELS */
+
+.voice-backdrop {
+  display:none;
+  position:absolute;
+  z-index:110;
+  inset:0;
+  background:rgba(0,0,0,.45);
+  backdrop-filter:blur(5px);
+}
+
+.voice-backdrop.open {
+  display:block;
+}
 
 .voice-panel {
-  display: none;
-  position: absolute;
-  z-index: 120;
-  left: 50%;
-  top: 50%;
-  transform: translate(-50%, -50%);
-  width: min(390px, calc(100% - 30px));
-  padding: 28px 23px 22px;
-  border: 1px solid var(--border-gold);
-  border-radius: 25px;
-  background: var(--panel);
-  box-shadow: 0 25px 90px rgba(0,0,0,.55);
-  text-align: center;
+  display:none;
+  position:absolute;
+  z-index:120;
+  left:50%;
+  top:50%;
+  transform:translate(-50%,-50%);
+  width:min(390px,calc(100% - 30px));
+  padding:29px 23px 22px;
+  border:1px solid var(--gold-border);
+  border-radius:26px;
+  background:var(--panel);
+  box-shadow:0 25px 90px rgba(0,0,0,.55);
+  text-align:center;
 }
 
 .voice-panel.open {
-  display: block;
-  animation: voiceIn .22s ease;
+  display:block;
+  animation:voiceIn .22s ease;
 }
 
 @keyframes voiceIn {
-  from { opacity: 0; transform: translate(-50%, -46%) scale(.97); }
-  to { opacity: 1; transform: translate(-50%, -50%) scale(1); }
+  from {opacity:0;transform:translate(-50%,-46%) scale(.97)}
+  to {opacity:1;transform:translate(-50%,-50%) scale(1)}
 }
 
 .voice-close {
-  position: absolute;
-  top: 12px;
-  right: 12px;
-  width: 34px;
-  height: 34px;
-  border: 0;
-  border-radius: 10px;
-  background: transparent;
-  color: var(--muted);
-  cursor: pointer;
-  font-size: 19px;
+  position:absolute;
+  top:12px;
+  right:12px;
+  width:35px;
+  height:35px;
+  display:grid;
+  place-items:center;
+  border:0;
+  border-radius:10px;
+  background:transparent;
+  color:var(--muted);
+  cursor:pointer;
 }
 
 .voice-close:hover {
-  background: var(--panel-2);
-  color: var(--gold);
+  background:var(--panel2);
+  color:var(--gold);
 }
 
 .voice-orb {
-  width: 118px;
-  height: 118px;
-  margin: 15px auto 21px;
-  display: grid;
-  place-items: center;
-  border-radius: 50%;
-  background: radial-gradient(circle at 35% 30%, #f0d58d, #b38b39 43%, #4b381b 75%);
-  box-shadow: 0 0 0 10px rgba(217,180,91,.06), 0 0 55px rgba(217,180,91,.22);
-  color: #17130a;
-  font-size: 42px;
-  position: relative;
+  width:120px;
+  height:120px;
+  margin:17px auto 22px;
+  display:grid;
+  place-items:center;
+  position:relative;
+  border-radius:50%;
+  background:radial-gradient(circle at 35% 30%,#f0d58d,#b38b39 43%,#4b381b 75%);
+  box-shadow:0 0 0 10px rgba(217,180,91,.06),0 0 55px rgba(217,180,91,.22);
+  color:#17130a;
+}
+
+.voice-orb svg {
+  width:43px;
+  height:43px;
+  stroke-width:1.7;
 }
 
 .voice-orb::before,
 .voice-orb::after {
-  content: "";
-  position: absolute;
-  inset: -12px;
-  border: 1px solid rgba(217,180,91,.25);
-  border-radius: 50%;
-  animation: orbPulse 2.6s infinite;
+  content:"";
+  position:absolute;
+  inset:-12px;
+  border:1px solid rgba(217,180,91,.28);
+  border-radius:50%;
+  animation:orbPulse 2.6s infinite;
 }
 
 .voice-orb::after {
-  inset: -23px;
-  animation-delay: .8s;
+  inset:-23px;
+  animation-delay:.8s;
 }
 
 @keyframes orbPulse {
-  0% { transform: scale(.88); opacity: .65; }
-  100% { transform: scale(1.13); opacity: 0; }
+  0% {transform:scale(.88);opacity:.65}
+  100% {transform:scale(1.13);opacity:0}
 }
 
 .voice-panel.speaking .voice-orb {
-  animation: orbSpeak .7s ease-in-out infinite alternate;
+  animation:orbSpeak .7s ease-in-out infinite alternate;
 }
 
 @keyframes orbSpeak {
-  from { transform: scale(.97); }
-  to { transform: scale(1.05); }
+  from {transform:scale(.97)}
+  to {transform:scale(1.05)}
 }
 
 .voice-panel h2 {
-  font-size: 20px;
-  margin-bottom: 8px;
+  margin-bottom:8px;
+  font-size:20px;
 }
 
 .voice-status {
-  color: var(--muted);
-  font-size: 12px;
-  min-height: 36px;
-  line-height: 1.5;
+  min-height:36px;
+  color:var(--muted);
+  font-size:12px;
+  line-height:1.5;
+  overflow-wrap:anywhere;
 }
 
 .voice-wave {
-  height: 34px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  gap: 4px;
-  margin: 15px 0 20px;
+  height:35px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  gap:4px;
+  margin:15px 0 20px;
 }
 
 .voice-wave span {
-  width: 4px;
-  height: 8px;
-  border-radius: 5px;
-  background: var(--gold);
-  opacity: .6;
+  width:4px;
+  height:8px;
+  border-radius:5px;
+  background:var(--gold);
+  opacity:.6;
 }
 
 .voice-panel.listening .voice-wave span {
-  animation: wave .8s ease-in-out infinite alternate;
+  animation:wave .8s ease-in-out infinite alternate;
 }
 
-.voice-wave span:nth-child(2n) { animation-delay: .12s; }
-.voice-wave span:nth-child(3n) { animation-delay: .25s; }
-.voice-wave span:nth-child(4n) { animation-delay: .38s; }
+.voice-wave span:nth-child(2n) {animation-delay:.12s}
+.voice-wave span:nth-child(3n) {animation-delay:.25s}
+.voice-wave span:nth-child(4n) {animation-delay:.38s}
 
 @keyframes wave {
-  to { height: 27px; opacity: 1; }
+  to {height:27px;opacity:1}
 }
 
 .voice-controls {
-  display: flex;
-  justify-content: center;
-  gap: 13px;
-  margin-bottom: 17px;
+  display:flex;
+  justify-content:center;
+  gap:13px;
+  margin-bottom:17px;
 }
 
 .voice-control {
-  width: 48px;
-  height: 48px;
-  border: 1px solid var(--border);
-  border-radius: 16px;
-  background: var(--panel-2);
-  color: var(--text);
-  cursor: pointer;
-  font-size: 19px;
+  width:49px;
+  height:49px;
+  display:grid;
+  place-items:center;
+  border:1px solid var(--border);
+  border-radius:16px;
+  background:var(--panel2);
+  color:var(--text);
+  cursor:pointer;
 }
 
 .voice-control:hover {
-  border-color: var(--gold);
-  color: var(--gold);
+  border-color:var(--gold);
+  color:var(--gold);
+}
+
+.voice-control svg {
+  width:20px;
+  height:20px;
 }
 
 .voice-end {
-  width: 100%;
-  height: 44px;
-  border: 0;
-  border-radius: 13px;
-  background: var(--danger);
-  color: white;
-  font-weight: 700;
-  cursor: pointer;
+  width:100%;
+  height:44px;
+  border:0;
+  border-radius:13px;
+  background:var(--danger);
+  color:white;
+  font-weight:700;
+  cursor:pointer;
+}
+
+.voice-use {
+  width:100%;
+  height:44px;
+  border:1px solid var(--gold-border);
+  border-radius:13px;
+  background:rgba(217,180,91,.12);
+  color:var(--gold);
+  font-weight:700;
+  cursor:pointer;
+}
+
+.voice-use:hover {
+  background:rgba(217,180,91,.2);
 }
 
 /* NOTICE */
 
 .notice {
-  position: absolute;
-  z-index: 160;
-  bottom: 100px;
-  left: 50%;
-  transform: translateX(-50%);
-  max-width: calc(100% - 30px);
-  padding: 10px 15px;
-  border: 1px solid var(--border-gold);
-  border-radius: 12px;
-  background: var(--panel-2);
-  color: var(--text);
-  box-shadow: var(--shadow);
-  font-size: 12px;
-  text-align: center;
-  display: none;
+  position:absolute;
+  z-index:160;
+  bottom:105px;
+  left:50%;
+  transform:translateX(-50%);
+  max-width:calc(100% - 30px);
+  padding:10px 15px;
+  border:1px solid var(--gold-border);
+  border-radius:12px;
+  background:var(--panel2);
+  color:var(--text);
+  box-shadow:var(--shadow);
+  font-size:12px;
+  text-align:center;
+  display:none;
 }
 
 .notice.show {
-  display: block;
-  animation: popIn .15s ease;
+  display:block;
+  animation:popIn .15s ease;
 }
 
 @keyframes popIn {
-  from { opacity: 0; transform: translateY(5px); }
-  to { opacity: 1; transform: translateY(0); }
+  from {opacity:0;transform:translateY(5px)}
+  to {opacity:1;transform:translateY(0)}
 }
 
 /* RESPONSIVE */
 
-@media (max-width: 700px) {
-  .header {
-    padding: 0 10px;
-  }
-
-  .header-left {
-    gap: 5px;
-  }
-
-  .header-right {
-    gap: 2px;
-  }
-
+@media(max-width:700px) {
+  .header {padding:0 10px}
+  .header-left {gap:5px}
+  .header-right {gap:2px}
   .model-button {
-    max-width: 185px;
-    padding: 8px 6px;
-    font-size: 13px;
+    max-width:190px;
+    padding:8px 6px;
+    font-size:13px;
   }
-
-  .brand-symbol {
-    display: none;
-  }
-
-  .header-divider {
-    display: none;
-  }
-
-  .sidebar {
-    width: min(var(--sidebar-width), 86vw);
-  }
-
-  .messages {
-    padding: 23px 14px 18px;
-  }
-
-  .input-area {
-    padding: 8px 10px max(12px, env(safe-area-inset-bottom));
-  }
-
-  .composer {
-    gap: 4px;
-    padding: 7px;
-    border-radius: 19px;
-  }
-
-  .composer-icon {
-    width: 35px;
-    height: 38px;
-  }
-
-  .message-input {
-    font-size: 13px;
-  }
-
-  .voice-mode-button {
-    padding: 0 10px;
-    font-size: 11px;
-  }
-
-  .composer-send {
-    min-width: 38px;
-    height: 38px;
-  }
-
-  .suggestion-grid {
-    grid-template-columns: 1fr;
-    max-width: 420px;
-  }
-
-  .welcome {
-    padding: 35px 5px;
-  }
-
-  .msg {
-    gap: 9px;
-  }
-
-  .msg-avatar {
-    width: 31px;
-    height: 31px;
-  }
-
-  .msg-content {
-    font-size: 13px;
-  }
-
-  .msg-actions {
-    opacity: 1;
-  }
+  .brand-mark {display:none}
+  .header-divider {display:none}
+  .sidebar {width:min(var(--sidebar-width),86vw)}
+  .messages {padding:23px 14px 18px}
+  .input-area {padding:8px 10px max(12px,env(safe-area-inset-bottom))}
+  .composer {gap:4px;padding:7px;border-radius:19px}
+  .composer-icon {width:36px;height:38px}
+  .message-input {font-size:13px}
+  .voice-mode-button {padding:0 10px;font-size:11px}
+  .composer-send {min-width:38px;height:38px}
+  .welcome {padding:35px 5px}
+  .msg {gap:9px}
+  .msg-avatar {width:31px;height:31px}
+  .msg-content {font-size:13px}
 }
 
-@media (max-width: 390px) {
-  .model-button {
-    max-width: 145px;
-    font-size: 12px;
-  }
-
-  .header-right .icon-button {
-    width: 34px;
-  }
-
+@media(max-width:390px) {
+  .model-button {max-width:145px;font-size:12px}
+  .header-right .icon-button {width:34px}
   .voice-mode-button {
-    width: 39px;
-    padding: 0;
-    justify-content: center;
-    font-size: 0;
+    width:39px;
+    padding:0;
+    justify-content:center;
+    font-size:0;
   }
-
-  .voice-mode-button span {
-    font-size: 17px;
-  }
-
-  .composer-hint {
-    font-size: 9px;
-  }
+  .voice-mode-button span {display:none}
+  .composer-hint {font-size:9px}
 }
 
-@media (prefers-reduced-motion: reduce) {
-  *, *::before, *::after {
-    scroll-behavior: auto !important;
-    animation-duration: .01ms !important;
-    animation-iteration-count: 1 !important;
-    transition-duration: .01ms !important;
+@media(prefers-reduced-motion:reduce) {
+  *,*::before,*::after {
+    animation-duration:.01ms!important;
+    animation-iteration-count:1!important;
+    transition-duration:.01ms!important;
+    scroll-behavior:auto!important;
   }
 }
 </style>
@@ -1394,24 +1285,28 @@ button:disabled {
 <body>
 <div class="app">
 
-  <div class="sidebar-backdrop" id="sidebarBackdrop" onclick="toggleSidebar(false)"></div>
+  <div class="sidebar-backdrop" id="sidebarBackdrop"
+       onclick="toggleSidebar(false)"></div>
 
   <!-- SIDEBAR -->
   <aside class="sidebar" id="sidebar" aria-label="Chat navigation">
     <div class="sidebar-top">
       <div class="sidebar-brand">Checkmaîtré<span>X</span> AI</div>
-      <button class="icon-button" onclick="toggleSidebar(false)" title="Close menu" aria-label="Close menu">×</button>
+      <button class="icon-button" onclick="toggleSidebar(false)"
+              aria-label="Close menu">
+        <svg viewBox="0 0 24 24"><path d="M18 6 6 18M6 6l12 12"/></svg>
+      </button>
     </div>
 
     <div class="sidebar-scroll">
       <div class="sidebar-primary">
         <button class="sidebar-action" onclick="newChat()">
-          <span class="side-icon">＋</span>
+          <svg viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg>
           <span>New Chat</span>
         </button>
 
         <button class="sidebar-action" onclick="focusChatSearch()">
-          <span class="side-icon">⌕</span>
+          <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="m20 20-4-4"/></svg>
           <span>Search Chats</span>
         </button>
       </div>
@@ -1419,14 +1314,9 @@ button:disabled {
       <div class="sidebar-section-title">Your Chats</div>
 
       <div class="search-wrap">
-        <input
-          class="search-input"
-          id="chatSearch"
-          type="search"
-          placeholder="Search your conversations..."
-          autocomplete="off"
-          aria-label="Search conversations"
-        >
+        <input class="search-input" id="chatSearch" type="search"
+               placeholder="Search your conversations..."
+               autocomplete="off" aria-label="Search conversations">
       </div>
 
       <div class="conversation-list" id="convList">
@@ -1436,16 +1326,23 @@ button:disabled {
 
     <div class="sidebar-bottom">
       <button class="sidebar-action" onclick="openSettings()">
-        <span class="side-icon">⚙</span>
+        <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="m19.4 15 .1.1 1.4 1.1-1.4 2.4-1.7-.6a8 8 0 0 1-1.7 1l-.3 1.8h-2.8l-.3-1.8a8 8 0 0 1-1.7-1l-1.7.6-1.4-2.4 1.4-1.1a8 8 0 0 1 0-2l-1.4-1.1 1.4-2.4 1.7.6a8 8 0 0 1 1.7-1l.3-1.8h2.8l.3 1.8a8 8 0 0 1 1.7 1l1.7-.6 1.4 2.4-1.4 1.1a8 8 0 0 1 0 2Z"/></svg>
         <span>Settings</span>
       </button>
+
       <button class="sidebar-action" onclick="openProfile()">
-        <span class="side-icon">♙</span>
+        <svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/></svg>
         <span>Profile</span>
       </button>
+
       <button class="sidebar-action" onclick="toggleTheme()">
-        <span class="side-icon" id="sidebarThemeIcon">☾</span>
+        <svg viewBox="0 0 24 24" id="sidebarThemeIcon"><path d="M20 15.5A8.5 8.5 0 0 1 8.5 4 8.5 8.5 0 1 0 20 15.5Z"/></svg>
         <span id="sidebarThemeText">Appearance</span>
+      </button>
+
+      <button class="sidebar-action" onclick="clearAllHistory()">
+        <svg viewBox="0 0 24 24"><path d="M3 6h18M8 6V4h8v2m3 0-1 14H6L5 6m4 4v6m6-6v6"/></svg>
+        <span>Clear Chat History</span>
       </button>
     </div>
   </aside>
@@ -1455,47 +1352,32 @@ button:disabled {
 
     <header class="header">
       <div class="header-left">
-        <button
-          class="icon-button menu-button"
-          onclick="toggleSidebar()"
-          title="Open menu"
-          aria-label="Open menu"
-        >☰</button>
+        <button class="icon-button" onclick="toggleSidebar()"
+                title="Open menu" aria-label="Open menu">
+          <svg viewBox="0 0 24 24"><path d="M4 6h16M4 12h16M4 18h16"/></svg>
+        </button>
 
         <div class="header-brand">
-          <div class="brand-symbol">♞</div>
+          <div class="brand-mark" id="headerModelLogo">
+            <svg viewBox="0 0 24 24"><path d="m12 3 1.8 5.2L19 10l-5.2 1.8L12 17l-1.8-5.2L5 10l5.2-1.8L12 3Z"/><path d="m19 16 .8 2.2L22 19l-2.2.8L19 22l-.8-2.2L16 19l2.2-.8L19 16Z"/></svg>
+          </div>
 
           <div class="model-wrap">
-            <button
-              class="model-button"
-              id="modelButton"
-              onclick="toggleModelMenu()"
-              aria-haspopup="true"
-              aria-expanded="false"
-            >
+            <button class="model-button" id="modelButton"
+                    onclick="toggleModelMenu()"
+                    aria-haspopup="true" aria-expanded="false">
               <span id="currentModelName">CheckmaîtréX AI</span>
               <span class="chevron">▾</span>
             </button>
 
             <div class="model-menu" id="modelMenu">
               <div class="menu-caption">Available model</div>
-
-              <button class="model-option available current" onclick="selectModel('CheckmaîtréX AI')">
+              <div class="model-option">
                 <span>
                   CheckmaîtréX AI
                   <small>Current connected assistant</small>
                 </span>
-                <span class="model-check">✓</span>
-              </button>
-
-              <div class="menu-caption">More models</div>
-
-              <div class="model-option disabled">
-                <span>
-                  Additional AI models
-                  <small>Shown when enabled by the system</small>
-                </span>
-                <span>—</span>
+                <span>✓</span>
               </div>
             </div>
           </div>
@@ -1504,8 +1386,14 @@ button:disabled {
 
       <div class="header-right">
         <div class="header-divider"></div>
-        <button class="icon-button" onclick="newChat()" title="New chat" aria-label="New chat">＋</button>
-        <button class="icon-button" onclick="toggleTheme()" id="themeBtn" title="Toggle theme" aria-label="Toggle theme">☾</button>
+        <button class="icon-button" onclick="newChat()"
+                title="New chat" aria-label="New chat">
+          <svg viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg>
+        </button>
+        <button class="icon-button" onclick="toggleTheme()"
+                id="themeBtn" title="Toggle theme" aria-label="Toggle theme">
+          <svg viewBox="0 0 24 24"><path d="M20 15.5A8.5 8.5 0 0 1 8.5 4 8.5 8.5 0 1 0 20 15.5Z"/></svg>
+        </button>
       </div>
     </header>
 
@@ -1513,14 +1401,14 @@ button:disabled {
       <div class="messages" id="messages">
         <div class="messages-inner" id="messagesInner">
           <div class="welcome" id="welcome">
-            <div class="welcome-emblem">♞</div>
-            <h1>Welcome to Checkmaîtré<span>X</span> AI</h1>
+            <div class="welcome-emblem" id="welcomeLogo">
+              <svg viewBox="0 0 24 24"><path d="m12 3 1.8 5.2L19 10l-5.2 1.8L12 17l-1.8-5.2L5 10l5.2-1.8L12 3Z"/><path d="m19 16 .8 2.2L22 19l-2.2.8L19 22l-.8-2.2L16 19l2.2-.8L19 16Z"/></svg>
+            </div>
+            <h1><span id="greetingText">Ask away, there!</span></h1>
             <p class="welcome-subtitle">
-              Your chess learning companion. Explore openings, understand strategies,
-              study positions, and improve your game one move at a time.
+              Your CheckmaîtréX AI companion is ready.
+              Ask questions, explore chess ideas, and learn something new.
             </p>
-            <div class="welcome-label">Start a conversation</div>
-            <div class="suggestion-grid" id="suggestionGrid"></div>
           </div>
         </div>
       </div>
@@ -1535,60 +1423,52 @@ button:disabled {
           <div class="composer" id="composer">
             <div class="composer-side">
               <div class="plus-wrap">
-                <button
-                  class="composer-icon"
-                  id="plusButton"
-                  onclick="togglePlusMenu()"
-                  title="Add attachment"
-                  aria-label="Add attachment"
-                >＋</button>
+                <button class="composer-icon" id="plusButton"
+                        onclick="togglePlusMenu()"
+                        title="Add attachment" aria-label="Add attachment">
+                  <svg viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg>
+                </button>
 
                 <div class="plus-menu" id="plusMenu">
                   <button class="plus-option" onclick="chooseAttachment('camera')">
-                    <span>▣</span><span>Camera</span>
+                    <svg viewBox="0 0 24 24"><path d="M4 7h3l2-3h6l2 3h3a2 2 0 0 1 2 2v10H2V9a2 2 0 0 1 2-2Z"/><circle cx="12" cy="13" r="3"/></svg>
+                    Camera
                   </button>
                   <button class="plus-option" onclick="chooseAttachment('photos')">
-                    <span>▧</span><span>Photos</span>
+                    <svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="3"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="m21 15-5-5L5 21"/></svg>
+                    Photos
                   </button>
                   <button class="plus-option" onclick="chooseAttachment('files')">
-                    <span>▤</span><span>Files</span>
+                    <svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8Z"/><path d="M14 2v6h6M8 13h8M8 17h8"/></svg>
+                    Files
                   </button>
                 </div>
               </div>
             </div>
 
-            <textarea
-              class="message-input"
-              id="input"
-              rows="1"
-              placeholder="Message CheckmaîtréX AI..."
-              aria-label="Message CheckmaîtréX AI"
-            ></textarea>
+            <textarea class="message-input" id="input" rows="1"
+                      placeholder="Message CheckmaîtréX AI..."
+                      aria-label="Message CheckmaîtréX AI"></textarea>
 
             <div class="composer-side">
-              <button
-                class="composer-icon"
-                id="micButton"
-                onclick="toggleDictation()"
-                title="Voice input"
-                aria-label="Voice input"
-              >♩</button>
+              <button class="composer-icon" id="micButton"
+                      onclick="startDictation()"
+                      title="Voice input" aria-label="Voice input">
+                <svg viewBox="0 0 24 24"><rect x="9" y="2" width="6" height="13" rx="3"/><path d="M5 11a7 7 0 0 0 14 0M12 18v4m-4 0h8"/></svg>
+              </button>
 
-              <button
-                class="voice-mode-button"
-                id="voiceModeButton"
-                onclick="startVoiceMode()"
-                title="Start voice mode"
-              ><span>◉</span> Voice</button>
+              <button class="voice-mode-button" id="voiceModeButton"
+                      onclick="startVoiceMode()"
+                      title="Start voice conversation">
+                <svg viewBox="0 0 24 24"><path d="M12 3a3 3 0 0 0-3 3v5a3 3 0 0 0 6 0V6a3 3 0 0 0-3-3Z"/><path d="M5 10v1a7 7 0 0 0 14 0v-1M12 18v4m-4 0h8"/></svg>
+                <span>Voice Mode</span>
+              </button>
 
-              <button
-                class="composer-send"
-                id="sendBtn"
-                onclick="sendMessage()"
-                title="Send message"
-                aria-label="Send message"
-                style="display:none"
-              >↑</button>
+              <button class="composer-send" id="sendBtn"
+                      onclick="sendMessage()" title="Send message"
+                      aria-label="Send message" style="display:none">
+                ↑
+              </button>
             </div>
           </div>
 
@@ -1599,27 +1479,53 @@ button:disabled {
       </div>
     </section>
 
-    <!-- FLOATING VOICE PANEL -->
-    <section class="voice-panel" id="voicePanel" aria-label="Voice mode">
-      <button class="voice-close" onclick="endVoiceMode()" title="Close voice mode">×</button>
+    <!-- VOICE INPUT / VOICE MODE PANEL -->
+    <div class="voice-backdrop" id="voiceBackdrop"
+         onclick="closeVoicePanel()"></div>
 
-      <div class="voice-orb">♞</div>
+    <section class="voice-panel" id="voicePanel" aria-label="Voice controls">
+      <button class="voice-close" onclick="closeVoicePanel()"
+              aria-label="Close voice panel">
+        <svg viewBox="0 0 24 24"><path d="M18 6 6 18M6 6l12 12"/></svg>
+      </button>
 
-      <h2>CheckmaîtréX Voice</h2>
-      <p class="voice-status" id="voiceStatus">Preparing voice mode...</p>
+      <div class="voice-orb" id="voiceOrb">
+        <svg viewBox="0 0 24 24" id="voiceOrbIcon">
+          <rect x="9" y="2" width="6" height="13" rx="3"/>
+          <path d="M5 11a7 7 0 0 0 14 0M12 18v4m-4 0h8"/>
+        </svg>
+      </div>
+
+      <h2 id="voiceTitle">Voice Input</h2>
+      <p class="voice-status" id="voiceStatus">Preparing microphone...</p>
 
       <div class="voice-wave" aria-hidden="true">
-        <span></span><span></span><span></span><span></span><span></span>
-        <span></span><span></span><span></span><span></span><span></span>
-        <span></span><span></span><span></span>
+        <span></span><span></span><span></span><span></span>
+        <span></span><span></span><span></span><span></span>
+        <span></span><span></span><span></span><span></span>
+        <span></span>
       </div>
 
-      <div class="voice-controls">
-        <button class="voice-control" id="voiceMicButton" onclick="toggleVoiceMic()" title="Mute microphone">♩</button>
-        <button class="voice-control" id="voiceSpeakerButton" onclick="toggleVoiceSpeaker()" title="Mute speaker">◖</button>
+      <div class="voice-controls" id="voiceControls" style="display:none">
+        <button class="voice-control" id="voiceMicButton"
+                onclick="toggleVoiceMic()" title="Mute microphone">
+          <svg viewBox="0 0 24 24"><rect x="9" y="2" width="6" height="13" rx="3"/><path d="M5 11a7 7 0 0 0 14 0M12 18v4m-4 0h8"/></svg>
+        </button>
+        <button class="voice-control" id="voiceSpeakerButton"
+                onclick="toggleVoiceSpeaker()" title="Mute speaker">
+          <svg viewBox="0 0 24 24"><path d="M4 10v4h4l5 4V6l-5 4H4Z"/><path d="M17 9a5 5 0 0 1 0 6m3-9a9 9 0 0 1 0 12"/></svg>
+        </button>
       </div>
 
-      <button class="voice-end" onclick="endVoiceMode()">End Voice</button>
+      <button class="voice-use" id="voiceUseButton"
+              onclick="useDictationText()" style="display:none">
+        Use this text
+      </button>
+
+      <button class="voice-end" id="voiceEndButton"
+              onclick="endVoiceMode()" style="display:none">
+        End Voice
+      </button>
     </section>
 
     <div class="notice" id="notice" role="status"></div>
@@ -1627,23 +1533,33 @@ button:disabled {
 </div>
 
 <!-- FILE INPUTS -->
-<input class="hidden-file-input" id="cameraInput" type="file" accept="image/*" capture="environment">
-<input class="hidden-file-input" id="photosInput" type="file" accept="image/*" multiple>
+<input class="hidden-file-input" id="cameraInput" type="file"
+       accept="image/*" capture="environment">
+<input class="hidden-file-input" id="photosInput" type="file"
+       accept="image/*" multiple>
 <input class="hidden-file-input" id="filesInput" type="file" multiple>
+
+<!-- Supabase Google-login session -->
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="supabase-client.js"></script>
 
 <script>
 "use strict";
 
 /* =========================================
-   CHECKMAÎTRÉX AI CONFIGURATION
+   CONFIGURATION
 ========================================= */
 
 const API_URL = "https://checkmaitrex-ai.elianssotero11.workers.dev";
 const STREAM_URL = API_URL + "/stream";
-const SUGGESTIONS_URL = API_URL + "/suggestions";
 
 const STORAGE_KEY = "checkmaitrex_conversations";
 const THEME_KEY = "checkmaitrex_theme";
+
+const MODEL = {
+  name:"CheckmaîtréX AI",
+  icon:"sparkles"
+};
 
 let conversations = [];
 let currentConvId = null;
@@ -1653,16 +1569,17 @@ let pendingRetryText = "";
 let selectedAttachments = [];
 let noticeTimer = null;
 
-let speechRecognition = null;
 let dictationRecognition = null;
+let speechRecognition = null;
+
 let voiceModeActive = false;
 let voiceMicMuted = false;
 let voiceSpeakerMuted = false;
 let voiceRecognitionBusy = false;
+let dictationText = "";
 
 const SpeechRecognitionAPI =
   window.SpeechRecognition || window.webkitSpeechRecognition;
-
 
 /* =========================================
    HELPERS
@@ -1674,11 +1591,11 @@ function $(id) {
 
 function escapeHtml(value) {
   return String(value ?? "")
-    .replace(/&/g, "&amp;")
-    .replace(/</g, "&lt;")
-    .replace(/>/g, "&gt;")
-    .replace(/"/g, "&quot;")
-    .replace(/'/g, "&#039;");
+    .replace(/&/g,"&amp;")
+    .replace(/</g,"&lt;")
+    .replace(/>/g,"&gt;")
+    .replace(/"/g,"&quot;")
+    .replace(/'/g,"&#039;");
 }
 
 function showNotice(message) {
@@ -1689,7 +1606,7 @@ function showNotice(message) {
   clearTimeout(noticeTimer);
   noticeTimer = setTimeout(() => {
     notice.classList.remove("show");
-  }, 3000);
+  },3000);
 }
 
 function scrollToBottom() {
@@ -1705,9 +1622,9 @@ function safeLocalStorageGet(key) {
   }
 }
 
-function safeLocalStorageSet(key, value) {
+function safeLocalStorageSet(key,value) {
   try {
-    localStorage.setItem(key, value);
+    localStorage.setItem(key,value);
     return true;
   } catch {
     showNotice("Browser storage is unavailable or full.");
@@ -1715,26 +1632,122 @@ function safeLocalStorageSet(key, value) {
   }
 }
 
+/* =========================================
+   GOOGLE / SUPABASE USER GREETING
+========================================= */
+
+function getFirstName(user) {
+  if (!user) return "";
+
+  const metadata = user.user_metadata || {};
+
+  const possibleNames = [
+    metadata.full_name,
+    metadata.name,
+    metadata.display_name,
+    metadata.given_name,
+    user.full_name,
+    user.name
+  ];
+
+  let name = possibleNames.find(value =>
+    typeof value === "string" && value.trim()
+  );
+
+  if (!name && user.email) {
+    name = String(user.email).split("@")[0];
+  }
+
+  if (!name) return "";
+
+  return String(name).trim().split(/\s+/)[0];
+}
+
+function updateGreeting(user) {
+  const firstName = getFirstName(user);
+  $("greetingText").textContent =
+    "Ask away, " + (firstName || "there") + "!";
+}
+
+async function loadLoggedInName() {
+  const client = window.clubSupabase;
+
+  if (!client || !client.auth) {
+    updateGreeting(null);
+    return;
+  }
+
+  try {
+    const {data,error} = await client.auth.getUser();
+
+    if (!error && data && data.user) {
+      updateGreeting(data.user);
+    }
+  } catch (error) {
+    console.warn("Could not read the signed-in user.");
+  }
+
+  if (client.auth.onAuthStateChange) {
+    client.auth.onAuthStateChange((_event,session) => {
+      updateGreeting(session ? session.user : null);
+    });
+  }
+}
+
+/* =========================================
+   MODEL BRANDING
+========================================= */
+
+const SPARKLE_LOGO = `
+<svg viewBox="0 0 24 24" aria-hidden="true">
+  <path d="m12 3 1.8 5.2L19 10l-5.2 1.8L12 17l-1.8-5.2L5 10l5.2-1.8L12 3Z"/>
+  <path d="m19 16 .8 2.2L22 19l-2.2.8L19 22l-.8-2.2L16 19l2.2-.8L19 16Z"/>
+</svg>`;
+
+function applyModelBranding() {
+  $("currentModelName").textContent = MODEL.name;
+  $("headerModelLogo").innerHTML = SPARKLE_LOGO;
+  $("welcomeLogo").innerHTML = SPARKLE_LOGO;
+  document.title = MODEL.name + " — Chess Assistant";
+}
+
+function toggleModelMenu() {
+  const menu = $("modelMenu");
+  const isOpen = menu.classList.toggle("open");
+  $("modelButton").setAttribute("aria-expanded",String(isOpen));
+}
+
+function closeModelMenu() {
+  $("modelMenu").classList.remove("open");
+  $("modelButton").setAttribute("aria-expanded","false");
+}
 
 /* =========================================
    THEME
-   Keep compatibility with settings.html
+   Compatible with settings.html
 ========================================= */
 
 function initTheme() {
   const saved = safeLocalStorageGet(THEME_KEY) || "dark";
   const theme = saved === "light" ? "light" : "dark";
 
-  document.documentElement.setAttribute("data-theme", theme);
+  document.documentElement.setAttribute("data-theme",theme);
   updateThemeButtons(theme);
 }
 
 function updateThemeButtons(theme) {
-  const icon = theme === "dark" ? "☾" : "☀";
-  $("themeBtn").textContent = icon;
-  $("sidebarThemeIcon").textContent = icon;
+  const dark = theme === "dark";
+
+  $("themeBtn").innerHTML = dark
+    ? '<svg viewBox="0 0 24 24"><path d="M20 15.5A8.5 8.5 0 0 1 8.5 4 8.5 8.5 0 1 0 20 15.5Z"/></svg>'
+    : '<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="4"/><path d="M12 2v2m0 16v2M4.9 4.9l1.4 1.4m11.4 11.4 1.4 1.4M2 12h2m16 0h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg>';
+
+  $("sidebarThemeIcon").innerHTML = dark
+    ? '<path d="M20 15.5A8.5 8.5 0 0 1 8.5 4 8.5 8.5 0 1 0 20 15.5Z"/>'
+    : '<circle cx="12" cy="12" r="4"/><path d="M12 2v2m0 16v2M4.9 4.9l1.4 1.4m11.4 11.4 1.4 1.4M2 12h2m16 0h2"/>';
+
   $("sidebarThemeText").textContent =
-    theme === "dark" ? "Light appearance" : "Dark appearance";
+    dark ? "Light appearance" : "Dark appearance";
 }
 
 function toggleTheme() {
@@ -1743,58 +1756,27 @@ function toggleTheme() {
 
   const next = current === "dark" ? "light" : "dark";
 
-  document.documentElement.setAttribute("data-theme", next);
-  safeLocalStorageSet(THEME_KEY, next);
+  document.documentElement.setAttribute("data-theme",next);
+  safeLocalStorageSet(THEME_KEY,next);
   updateThemeButtons(next);
 }
-
-
-/* =========================================
-   MODEL SELECTOR
-========================================= */
-
-function toggleModelMenu() {
-  const menu = $("modelMenu");
-  const isOpen = menu.classList.toggle("open");
-
-  $("modelButton").setAttribute("aria-expanded", String(isOpen));
-}
-
-function closeModelMenu() {
-  $("modelMenu").classList.remove("open");
-  $("modelButton").setAttribute("aria-expanded", "false");
-}
-
-function selectModel(modelName) {
-  // Only the currently connected backend model is selectable.
-  if (modelName !== "CheckmaîtréX AI") return;
-
-  $("currentModelName").textContent = modelName;
-  closeModelMenu();
-  showNotice("CheckmaîtréX AI is selected.");
-}
-
 
 /* =========================================
    SIDEBAR
 ========================================= */
 
 function toggleSidebar(force) {
-  const sidebar = $("sidebar");
-  const backdrop = $("sidebarBackdrop");
+  const shouldOpen = typeof force === "boolean"
+    ? force
+    : !$("sidebar").classList.contains("open");
 
-  const shouldOpen =
-    typeof force === "boolean"
-      ? force
-      : !sidebar.classList.contains("open");
-
-  sidebar.classList.toggle("open", shouldOpen);
-  backdrop.classList.toggle("show", shouldOpen);
+  $("sidebar").classList.toggle("open",shouldOpen);
+  $("sidebarBackdrop").classList.toggle("show",shouldOpen);
 }
 
 function focusChatSearch() {
   toggleSidebar(true);
-  setTimeout(() => $("chatSearch").focus(), 100);
+  setTimeout(() => $("chatSearch").focus(),100);
 }
 
 function openSettings() {
@@ -1802,11 +1784,10 @@ function openSettings() {
 }
 
 function openProfile() {
-  // The repository's account/profile destination is not assumed here.
   showNotice("Your CCC profile connection can be added here.");
 }
 
-document.addEventListener("click", function(event) {
+document.addEventListener("click",event => {
   if (!$("modelMenu").contains(event.target) &&
       !$("modelButton").contains(event.target)) {
     closeModelMenu();
@@ -1818,20 +1799,20 @@ document.addEventListener("click", function(event) {
   }
 });
 
-document.addEventListener("keydown", function(event) {
+document.addEventListener("keydown",event => {
   if (event.key === "Escape") {
     toggleSidebar(false);
     closeModelMenu();
     closePlusMenu();
 
     if (voiceModeActive) endVoiceMode();
+    else closeVoicePanel();
   }
 });
 
-
 /* =========================================
    CONVERSATION STORAGE
-   Keep existing conversation data format
+   Existing storage format is preserved.
 ========================================= */
 
 function loadConversations() {
@@ -1853,7 +1834,7 @@ function loadConversations() {
 }
 
 function saveConversations() {
-  safeLocalStorageSet(STORAGE_KEY, JSON.stringify(conversations));
+  safeLocalStorageSet(STORAGE_KEY,JSON.stringify(conversations));
 }
 
 function getCurrentConv() {
@@ -1872,10 +1853,10 @@ function getOrCreateConv() {
   currentConvId = Date.now().toString();
 
   conv = {
-    id: currentConvId,
-    title: "New chat",
-    messages: [],
-    created: Date.now()
+    id:currentConvId,
+    title:"New chat",
+    messages:[],
+    created:Date.now()
   };
 
   conversations.unshift(conv);
@@ -1890,12 +1871,12 @@ function newChat() {
   currentConvId = null;
   clearError();
   clearAttachments();
-  showWelcome();
-  renderConvList();
 
   $("input").value = "";
   resizeInput();
 
+  showWelcome();
+  renderConvList();
   toggleSidebar(false);
   $("input").focus();
 }
@@ -1923,11 +1904,14 @@ function renameConv(id) {
   const conv = conversations.find(c => String(c.id) === String(id));
   if (!conv) return;
 
-  const newTitle = prompt("Rename conversation:", conv.title || "New chat");
+  const newTitle = prompt(
+    "Rename conversation:",
+    conv.title || "New chat"
+  );
 
   if (newTitle === null) return;
 
-  const cleanTitle = newTitle.trim().slice(0, 70);
+  const cleanTitle = newTitle.trim().slice(0,70);
 
   if (!cleanTitle) {
     showNotice("Conversation title cannot be empty.");
@@ -1969,11 +1953,14 @@ function loadConv(id) {
   clearError();
   clearAttachments();
 
+  $("input").value = "";
+  resizeInput();
+
   const inner = $("messagesInner");
   inner.innerHTML = "";
 
   conv.messages.forEach(message => {
-    addMessage(message.role, message.content, false);
+    addMessage(message.role,message.content,false);
   });
 
   renderConvList();
@@ -2036,30 +2023,27 @@ function renderConvList() {
   });
 }
 
-$("chatSearch").addEventListener("input", renderConvList);
-
+$("chatSearch").addEventListener("input",renderConvList);
 
 /* =========================================
-   WELCOME SCREEN AND SUGGESTIONS
+   WELCOME
+   No suggestions and no suggestions endpoint.
 ========================================= */
 
 function showWelcome() {
-  const inner = $("messagesInner");
-
-  inner.innerHTML = `
+  $("messagesInner").innerHTML = `
     <div class="welcome" id="welcome">
-      <div class="welcome-emblem">♞</div>
-      <h1>Welcome to Checkmaîtré<span>X</span> AI</h1>
+      <div class="welcome-emblem" id="welcomeLogo">${SPARKLE_LOGO}</div>
+      <h1><span id="greetingText">Ask away, there!</span></h1>
       <p class="welcome-subtitle">
-        Your chess learning companion. Explore openings, understand strategies,
-        study positions, and improve your game one move at a time.
+        Your CheckmaîtréX AI companion is ready.
+        Ask questions, explore chess ideas, and learn something new.
       </p>
-      <div class="welcome-label">Start a conversation</div>
-      <div class="suggestion-grid" id="suggestionGrid"></div>
     </div>
   `;
 
-  loadSuggestions();
+  applyModelBranding();
+  loadLoggedInName();
 }
 
 function hideWelcome() {
@@ -2067,84 +2051,17 @@ function hideWelcome() {
   if (welcome) welcome.remove();
 }
 
-async function loadSuggestions() {
-  const grid = $("suggestionGrid");
-  if (!grid) return;
-
-  const fallback = [
-    { label: "Learn a chess opening", text: "Teach me a useful chess opening.", icon: "♞" },
-    { label: "Solve a chess puzzle", text: "Give me a chess puzzle and explain the solution.", icon: "♟" },
-    { label: "Improve my endgame", text: "Teach me important endgame principles.", icon: "♔" },
-    { label: "Understand chess strategy", text: "Explain important chess strategy concepts.", icon: "♜" }
-  ];
-
-  function renderPrompts(prompts) {
-    const target = $("suggestionGrid");
-    if (!target) return;
-
-    target.innerHTML = "";
-
-    prompts.forEach(prompt => {
-      const chip = document.createElement("button");
-      chip.className = "suggestion-chip";
-
-      const icon = document.createElement("span");
-      icon.className = "chip-icon";
-      icon.textContent = prompt.icon || "♞";
-
-      const label = document.createElement("span");
-      label.className = "chip-text";
-      label.textContent = prompt.label || prompt.text || "Ask about chess";
-
-      chip.appendChild(icon);
-      chip.appendChild(label);
-
-      chip.onclick = () => {
-        $("input").value = prompt.text || prompt.label || "";
-        resizeInput();
-        sendMessage();
-      };
-
-      target.appendChild(chip);
-    });
-  }
-
-  renderPrompts(fallback);
-
-  try {
-    const response = await fetch(SUGGESTIONS_URL);
-
-    if (!response.ok) return;
-
-    const data = await response.json();
-
-    if (data.success && Array.isArray(data.prompts) && data.prompts.length) {
-      const prompts = data.prompts.map(prompt => ({
-        label: String(prompt.label || prompt.text || ""),
-        text: String(prompt.text || prompt.label || ""),
-        icon: prompt.icon || "♞"
-      }));
-
-      renderPrompts(prompts);
-    }
-  } catch (error) {
-    console.warn("Could not load remote suggestions:", error);
-  }
-}
-
-
 /* =========================================
    MESSAGE FORMATTING
 ========================================= */
 
 function formatContent(value) {
   let text = escapeHtml(value);
-
-  // Extract code blocks before processing other markdown.
   const codeBlocks = [];
 
-  text = text.replace(/```(?:[a-zA-Z0-9_-]+)?\s*([\s\S]*?)```/g,
-    function(match, code) {
+  text = text.replace(
+    /```(?:[a-zA-Z0-9_-]+)?\s*([\s\S]*?)```/g,
+    function(match,code) {
       const token = "%%CODEBLOCK" + codeBlocks.length + "%%";
       codeBlocks.push(
         "<pre><code>" + code.trim() + "</code></pre>"
@@ -2153,52 +2070,49 @@ function formatContent(value) {
     }
   );
 
-  // Inline code.
-  text = text.replace(/`([^`]+)`/g, "<code>$1</code>");
+  text = text.replace(/`([^`]+)`/g,"<code>$1</code>");
+  text = text.replace(/^### (.+)$/gm,"<h3>$1</h3>");
+  text = text.replace(/^## (.+)$/gm,"<h2>$1</h2>");
+  text = text.replace(/^# (.+)$/gm,"<h1>$1</h1>");
+  text = text.replace(/\*\*(.+?)\*\*/g,"<strong>$1</strong>");
+  text = text.replace(/\*(.+?)\*/g,"<em>$1</em>");
+  text = text.replace(/^&gt; (.+)$/gm,"<blockquote>$1</blockquote>");
+  text = text.replace(/^(?:- |\* )(.+)$/gm,"<li>$1</li>");
+  text = text.replace(/(?:<li>.*<\/li>\n?)+/g,
+    match => "<ul>" + match + "</ul>");
+  text = text.replace(/\n/g,"<br>");
 
-  // Headings.
-  text = text.replace(/^### (.+)$/gm, "<h3>$1</h3>");
-  text = text.replace(/^## (.+)$/gm, "<h2>$1</h2>");
-  text = text.replace(/^# (.+)$/gm, "<h1>$1</h1>");
-
-  // Bold and italic.
-  text = text.replace(/\*\*(.+?)\*\*/g, "<strong>$1</strong>");
-  text = text.replace(/\*(.+?)\*/g, "<em>$1</em>");
-
-  // Blockquotes.
-  text = text.replace(/^&gt; (.+)$/gm, "<blockquote>$1</blockquote>");
-
-  // Simple unordered lists.
-  text = text.replace(/^(?:- |\* )(.+)$/gm, "<li>$1</li>");
-  text = text.replace(/(?:<li>.*<\/li>\n?)+/g, match => "<ul>" + match + "</ul>");
-
-  // Line breaks.
-  text = text.replace(/\n/g, "<br>");
-
-  // Restore code blocks.
-  codeBlocks.forEach((block, index) => {
-    text = text.replace("%%CODEBLOCK" + index + "%%", block);
+  codeBlocks.forEach((block,index) => {
+    text = text.replace("%%CODEBLOCK" + index + "%%",block);
   });
 
   return text;
 }
 
-
 /* =========================================
-   MESSAGE DISPLAY AND STORAGE
+   MESSAGE DISPLAY
 ========================================= */
 
-function addMessage(role, content, save = true) {
+function getAssistantIcon() {
+  return SPARKLE_LOGO;
+}
+
+function addMessage(role,content,save=true) {
   hideWelcome();
 
   const inner = $("messagesInner");
-
   const message = document.createElement("article");
   message.className = "msg " + role;
 
   const avatar = document.createElement("div");
   avatar.className = "msg-avatar";
-  avatar.textContent = role === "user" ? "♙" : "♞";
+
+  if (role === "user") {
+    avatar.innerHTML =
+      '<svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/></svg>';
+  } else {
+    avatar.innerHTML = getAssistantIcon();
+  }
 
   const contentDiv = document.createElement("div");
   contentDiv.className = "msg-content";
@@ -2207,8 +2121,8 @@ function addMessage(role, content, save = true) {
   message.appendChild(avatar);
   message.appendChild(contentDiv);
 
-  if (role === "assistant") {
-    addCopyAction(contentDiv, content);
+  if (role === "assistant" && content) {
+    addCopyAction(contentDiv,content);
   }
 
   inner.appendChild(message);
@@ -2217,14 +2131,12 @@ function addMessage(role, content, save = true) {
   if (save) {
     const conv = getOrCreateConv();
 
-    conv.messages.push({
-      role,
-      content
-    });
+    conv.messages.push({role,content});
 
-    if (role === "user" && conv.messages.filter(m => m.role === "user").length === 1) {
+    if (role === "user" &&
+        conv.messages.filter(m => m.role === "user").length === 1) {
       conv.title =
-        content.substring(0, 42) +
+        content.substring(0,42) +
         (content.length > 42 ? "..." : "");
     }
 
@@ -2235,7 +2147,7 @@ function addMessage(role, content, save = true) {
   return contentDiv;
 }
 
-function addCopyAction(contentDiv, text) {
+function addCopyAction(contentDiv,text) {
   const actions = document.createElement("div");
   actions.className = "msg-actions";
 
@@ -2247,7 +2159,7 @@ function addCopyAction(contentDiv, text) {
     try {
       await navigator.clipboard.writeText(text);
       copyButton.textContent = "Copied!";
-      setTimeout(() => copyButton.textContent = "Copy", 1800);
+      setTimeout(() => copyButton.textContent = "Copy",1800);
     } catch {
       showNotice("Could not copy. Please select the text manually.");
     }
@@ -2257,12 +2169,11 @@ function addCopyAction(contentDiv, text) {
   contentDiv.appendChild(actions);
 }
 
-
 /* =========================================
    ERROR HANDLING
 ========================================= */
 
-function showError(message, retry) {
+function showError(message,retry) {
   const container = $("errorContainer");
   container.innerHTML = "";
 
@@ -2271,7 +2182,6 @@ function showError(message, retry) {
 
   const text = document.createElement("span");
   text.textContent = message || "Something went wrong.";
-
   banner.appendChild(text);
 
   if (retry) {
@@ -2288,7 +2198,6 @@ function clearError() {
   $("errorContainer").innerHTML = "";
 }
 
-
 /* =========================================
    THINKING INDICATOR
 ========================================= */
@@ -2300,7 +2209,7 @@ function showTyping() {
 
   const avatar = document.createElement("div");
   avatar.className = "msg-avatar";
-  avatar.textContent = "♞";
+  avatar.innerHTML = getAssistantIcon();
 
   const content = document.createElement("div");
   content.className = "msg-content";
@@ -2321,10 +2230,9 @@ function removeTyping() {
   $("typing-msg")?.remove();
 }
 
-
 /* =========================================
-   SEND MESSAGE AND STREAM RESPONSE
-   Keeps existing /stream request contract
+   SEND MESSAGE / STREAM RESPONSE
+   Existing /stream contract is preserved.
 ========================================= */
 
 async function sendMessage() {
@@ -2335,7 +2243,7 @@ async function sendMessage() {
 
   if (!messageText) {
     if (selectedAttachments.length) {
-      showNotice("Attachments are preview-only until the AI backend supports file uploads.");
+      showNotice("Attachments are preview-only until the AI backend supports uploads.");
     }
     return;
   }
@@ -2345,38 +2253,35 @@ async function sendMessage() {
 
   input.value = "";
   resizeInput();
-
   clearAttachments();
 
-  addMessage("user", messageText);
+  addMessage("user",messageText);
 
   isGenerating = true;
-  updateSendButton();
+  updateComposerButtons();
   showTyping();
 
   const conv = getCurrentConv() || getOrCreateConv();
 
-  // Preserve the existing conversation history format.
   const history = conv.messages
-    .slice(-9, -1)
+    .slice(0,-1)
+    .slice(-9)
     .map(message => ({
-      role: message.role,
-      content: message.content
+      role:message.role,
+      content:message.content
     }));
 
   try {
     abortController = new AbortController();
 
-    const response = await fetch(STREAM_URL, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json"
-      },
-      body: JSON.stringify({
-        message: messageText,
+    const response = await fetch(STREAM_URL,{
+      method:"POST",
+      headers:{"Content-Type":"application/json"},
+      body:JSON.stringify({
+        message:messageText,
         history
       }),
-      signal: abortController.signal
+      signal:abortController.signal
     });
 
     if (!response.ok) {
@@ -2390,19 +2295,18 @@ async function sendMessage() {
 
     removeTyping();
 
-    const contentDiv = addMessage("assistant", "", false);
-
+    const contentDiv = addMessage("assistant","",false);
     let fullText = "";
+
     const reader = response.body.getReader();
     const decoder = new TextDecoder();
-
     let buffer = "";
 
     async function processSSELine(line) {
-      if (!line.startsWith("data: ")) return;
+      if (!line.startsWith("data:")) return;
 
-      const jsonString = line.slice(6).trim();
-      if (!jsonString) return;
+      const jsonString = line.slice(5).trim();
+      if (!jsonString || jsonString === "[DONE]") return;
 
       let data;
 
@@ -2425,10 +2329,9 @@ async function sendMessage() {
 
     while (true) {
       const result = await reader.read();
-
       if (result.done) break;
 
-      buffer += decoder.decode(result.value, { stream: true });
+      buffer += decoder.decode(result.value,{stream:true});
 
       const lines = buffer.split("\n");
       buffer = lines.pop() || "";
@@ -2446,20 +2349,20 @@ async function sendMessage() {
 
     if (fullText.trim()) {
       conv.messages.push({
-        role: "assistant",
-        content: fullText
+        role:"assistant",
+        content:fullText
       });
 
       saveConversations();
       renderConvList();
-
-      addCopyAction(contentDiv, fullText);
+      addCopyAction(contentDiv,fullText);
 
       if (voiceModeActive && !voiceSpeakerMuted) {
         speakAssistantResponse(fullText);
       }
     } else {
-      contentDiv.textContent = "The assistant returned an empty response.";
+      contentDiv.textContent =
+        "The assistant returned an empty response.";
     }
 
   } catch (error) {
@@ -2480,25 +2383,24 @@ async function sendMessage() {
   } finally {
     isGenerating = false;
     abortController = null;
-    updateSendButton();
+    updateComposerButtons();
 
     if (voiceModeActive && !voiceMicMuted) {
-      setVoiceStatus("Ready. You can speak now.");
+      setVoiceStatus("Ready. You can speak again.");
       startVoiceRecognition();
     }
   }
 }
 
-
 /* =========================================
-   COMPOSER BEHAVIOR
+   COMPOSER BUTTONS
 ========================================= */
 
 function resizeInput() {
   const input = $("input");
-
   input.style.height = "auto";
-  input.style.height = Math.min(input.scrollHeight, 180) + "px";
+  input.style.height =
+    Math.min(input.scrollHeight,180) + "px";
 
   updateComposerButtons();
 }
@@ -2506,36 +2408,28 @@ function resizeInput() {
 function updateComposerButtons() {
   const hasText = $("input").value.trim().length > 0;
 
+  $("micButton").style.display = "grid";
+  $("micButton").disabled = isGenerating;
+
   if (isGenerating) {
     $("voiceModeButton").style.display = "none";
-    $("micButton").style.display = "none";
     $("sendBtn").style.display = "flex";
+    $("sendBtn").classList.add("stop");
+    $("sendBtn").textContent = "■";
+    $("sendBtn").title = "Stop generating";
+    $("sendBtn").setAttribute("aria-label","Stop generating");
+    $("sendBtn").onclick = stopGeneration;
     return;
   }
 
-  $("micButton").style.display = "grid";
+  $("sendBtn").classList.remove("stop");
+  $("sendBtn").textContent = "↑";
+  $("sendBtn").title = "Send message";
+  $("sendBtn").setAttribute("aria-label","Send message");
+  $("sendBtn").onclick = sendMessage;
+
   $("voiceModeButton").style.display = hasText ? "none" : "flex";
   $("sendBtn").style.display = hasText ? "flex" : "none";
-}
-
-function updateSendButton() {
-  const button = $("sendBtn");
-
-  if (isGenerating) {
-    button.classList.add("stop");
-    button.textContent = "■";
-    button.title = "Stop generating";
-    button.setAttribute("aria-label", "Stop generating");
-    button.onclick = stopGeneration;
-  } else {
-    button.classList.remove("stop");
-    button.textContent = "↑";
-    button.title = "Send message";
-    button.setAttribute("aria-label", "Send message");
-    button.onclick = sendMessage;
-  }
-
-  updateComposerButtons();
 }
 
 function stopGeneration() {
@@ -2544,19 +2438,20 @@ function stopGeneration() {
   }
 }
 
-$("input").addEventListener("input", resizeInput);
+$("input").addEventListener("input",resizeInput);
 
-$("input").addEventListener("keydown", event => {
-  if (event.key === "Enter" && !event.shiftKey && !event.isComposing) {
+$("input").addEventListener("keydown",event => {
+  if (event.key === "Enter" &&
+      !event.shiftKey &&
+      !event.isComposing) {
     event.preventDefault();
     sendMessage();
   }
 });
 
-
 /* =========================================
-   ATTACHMENT MENU
-   Preview only: no upload endpoint exists yet
+   ATTACHMENTS
+   Preview only; no upload endpoint exists.
 ========================================= */
 
 function togglePlusMenu() {
@@ -2582,21 +2477,20 @@ function chooseAttachment(type) {
 
 function handleSelectedFiles(fileList) {
   const files = Array.from(fileList || []);
-
   if (!files.length) return;
 
-  const remaining = Math.max(0, 5 - selectedAttachments.length);
+  const remaining = Math.max(0,5-selectedAttachments.length);
 
   if (!remaining) {
     showNotice("You can preview up to five attachments.");
     return;
   }
 
-  files.slice(0, remaining).forEach(file => {
+  files.slice(0,remaining).forEach(file => {
     selectedAttachments.push({
-      id: Date.now() + Math.random(),
+      id:Date.now() + Math.random(),
       file,
-      url: file.type.startsWith("image/")
+      url:file.type.startsWith("image/")
         ? URL.createObjectURL(file)
         : null
     });
@@ -2628,12 +2522,13 @@ function renderAttachmentPreview() {
       image.alt = "Attachment preview";
       chip.appendChild(image);
     } else {
-      const icon = document.createElement("span");
-      icon.textContent = "▤";
-      chip.appendChild(icon);
+      const fileIcon = document.createElement("span");
+      fileIcon.textContent = "▤";
+      chip.appendChild(fileIcon);
     }
 
     const name = document.createElement("span");
+    name.className = "attachment-name";
     name.textContent = item.file.name;
     name.title = item.file.name;
     chip.appendChild(name);
@@ -2673,88 +2568,140 @@ function clearAttachments() {
   $("filesInput").value = "";
 }
 
-$("cameraInput").addEventListener("change", event => {
+$("cameraInput").addEventListener("change",event => {
   handleSelectedFiles(event.target.files);
 });
 
-$("photosInput").addEventListener("change", event => {
+$("photosInput").addEventListener("change",event => {
   handleSelectedFiles(event.target.files);
 });
 
-$("filesInput").addEventListener("change", event => {
+$("filesInput").addEventListener("change",event => {
   handleSelectedFiles(event.target.files);
 });
-
 
 /* =========================================
-   MICROPHONE DICTATION
-   Uses browser speech recognition
+   SPEECH RECOGNITION
 ========================================= */
 
 function createRecognition() {
   if (!SpeechRecognitionAPI) return null;
 
   const recognition = new SpeechRecognitionAPI();
-  recognition.lang = "en-US";
+  recognition.lang = "en-PH";
   recognition.continuous = false;
   recognition.interimResults = true;
 
   return recognition;
 }
 
-function toggleDictation() {
+/* =========================================
+   MICROPHONE BUTTON: VOICE INPUT
+========================================= */
+
+function startDictation() {
   if (!SpeechRecognitionAPI) {
-    showNotice("Voice input is not supported in this browser.");
+    showNotice("Voice input is not supported by this browser.");
     return;
   }
 
   if (dictationRecognition) {
-    try {
-      dictationRecognition.stop();
-    } catch {}
-    dictationRecognition = null;
-    $("micButton").classList.remove("active");
+    stopDictation();
     return;
   }
+
+  dictationText = "";
+  openVoicePanel("dictation");
 
   dictationRecognition = createRecognition();
 
   dictationRecognition.onstart = () => {
-    $("micButton").classList.add("active");
-    showNotice("Listening...");
+    $("voicePanel").classList.add("listening");
+    setVoiceStatus("Listening. Speak your message.");
   };
 
   dictationRecognition.onresult = event => {
-    let transcript = "";
+    let finalText = "";
+    let interimText = "";
 
-    for (let i = event.resultIndex; i < event.results.length; i++) {
-      transcript += event.results[i][0].transcript;
+    for (let i=event.resultIndex;i<event.results.length;i++) {
+      const result = event.results[i];
+
+      if (result.isFinal) {
+        finalText += result[0].transcript;
+      } else {
+        interimText += result[0].transcript;
+      }
     }
 
-    $("input").value = transcript;
-    resizeInput();
+    if (finalText) {
+      dictationText += finalText + " ";
+    }
+
+    const preview = (dictationText + interimText).trim();
+
+    if (preview) {
+      setVoiceStatus(preview);
+      $("voiceUseButton").style.display = "block";
+    }
   };
 
   dictationRecognition.onerror = event => {
-    showNotice("Microphone issue: " + event.error);
+    setVoiceStatus("Microphone issue: " + event.error);
   };
 
   dictationRecognition.onend = () => {
-    $("micButton").classList.remove("active");
     dictationRecognition = null;
+    $("voicePanel").classList.remove("listening");
+
+    if (dictationText.trim()) {
+      $("voiceUseButton").style.display = "block";
+      setVoiceStatus(dictationText.trim());
+    } else {
+      setVoiceStatus("Microphone stopped. You can try again.");
+    }
   };
 
   try {
     dictationRecognition.start();
   } catch {
     dictationRecognition = null;
-    showNotice("Could not start microphone input.");
+    setVoiceStatus("Could not start microphone. Check permissions.");
   }
 }
 
+function stopDictation() {
+  if (dictationRecognition) {
+    try {
+      dictationRecognition.stop();
+    } catch {}
+    dictationRecognition = null;
+  }
+
+  $("voicePanel").classList.remove("listening");
+}
+
+function useDictationText() {
+  const text = dictationText.trim();
+
+  if (!text) {
+    showNotice("No speech was recognized.");
+    return;
+  }
+
+  $("input").value =
+    ($("input").value.trim()
+      ? $("input").value.trim() + " "
+      : "") + text;
+
+  resizeInput();
+  stopDictation();
+  closeVoicePanel();
+  $("input").focus();
+}
 
 /* =========================================
-   FLOATING VOICE MODE
+   VOICE MODE
    Speech-to-text + AI text response + speech
 ========================================= */
 
@@ -2764,7 +2711,7 @@ function setVoiceStatus(message) {
 
 function startVoiceMode() {
   if (!SpeechRecognitionAPI) {
-    showNotice("Voice mode requires a browser with speech recognition support.");
+    showNotice("Voice mode requires browser speech recognition support.");
     return;
   }
 
@@ -2772,15 +2719,18 @@ function startVoiceMode() {
   voiceMicMuted = false;
   voiceSpeakerMuted = false;
 
-  $("voicePanel").classList.add("open");
-  $("voicePanel").classList.remove("speaking");
-  $("voicePanel").classList.add("listening");
+  openVoicePanel("voice");
+  $("voiceControls").style.display = "flex";
+  $("voiceUseButton").style.display = "none";
+  $("voiceEndButton").style.display = "block";
 
-  $("voiceMicButton").textContent = "♩";
-  $("voiceSpeakerButton").textContent = "◖";
+  $("voiceMicButton").innerHTML =
+    '<svg viewBox="0 0 24 24"><rect x="9" y="2" width="6" height="13" rx="3"/><path d="M5 11a7 7 0 0 0 14 0M12 18v4m-4 0h8"/></svg>';
+
+  $("voiceSpeakerButton").innerHTML =
+    '<svg viewBox="0 0 24 24"><path d="M4 10v4h4l5 4V6l-5 4H4Z"/><path d="M17 9a5 5 0 0 1 0 6m3-9a9 9 0 0 1 0 12"/></svg>';
 
   setVoiceStatus("Listening. Speak your chess question.");
-
   startVoiceRecognition();
 }
 
@@ -2802,9 +2752,7 @@ function startVoiceRecognition() {
     };
 
     speechRecognition.onresult = event => {
-      const transcript =
-        event.results[0][0].transcript.trim();
-
+      const transcript = event.results[0][0].transcript.trim();
       if (!transcript) return;
 
       setVoiceStatus("You said: " + transcript);
@@ -2813,8 +2761,8 @@ function startVoiceRecognition() {
 
       if (!isGenerating) {
         setTimeout(() => {
-          if (voiceModeActive) sendMessage();
-        }, 350);
+          if (voiceModeActive && !isGenerating) sendMessage();
+        },350);
       }
     };
 
@@ -2835,10 +2783,10 @@ function startVoiceRecognition() {
 
     speechRecognition.start();
 
-  } catch (error) {
+  } catch {
     speechRecognition = null;
     voiceRecognitionBusy = false;
-    setVoiceStatus("Could not start microphone. Check browser permissions.");
+    setVoiceStatus("Could not start microphone. Check permissions.");
   }
 }
 
@@ -2862,10 +2810,15 @@ function toggleVoiceMic() {
 
   if (voiceMicMuted) {
     stopVoiceRecognition();
-    $("voiceMicButton").textContent = "♩̸";
+
+    $("voiceMicButton").innerHTML =
+      '<svg viewBox="0 0 24 24"><path d="m3 3 18 18"/><rect x="9" y="2" width="6" height="13" rx="3"/><path d="M5 11a7 7 0 0 0 14 0M12 18v4m-4 0h8"/></svg>';
+
     setVoiceStatus("Microphone muted.");
   } else {
-    $("voiceMicButton").textContent = "♩";
+    $("voiceMicButton").innerHTML =
+      '<svg viewBox="0 0 24 24"><rect x="9" y="2" width="6" height="13" rx="3"/><path d="M5 11a7 7 0 0 0 14 0M12 18v4m-4 0h8"/></svg>';
+
     setVoiceStatus("Microphone enabled.");
     startVoiceRecognition();
   }
@@ -2874,19 +2827,24 @@ function toggleVoiceMic() {
 function toggleVoiceSpeaker() {
   voiceSpeakerMuted = !voiceSpeakerMuted;
 
-  $("voiceSpeakerButton").textContent =
-    voiceSpeakerMuted ? "◖̸" : "◖";
-
   if (voiceSpeakerMuted) {
-    speechSynthesis.cancel();
+    if ("speechSynthesis" in window) speechSynthesis.cancel();
+
+    $("voiceSpeakerButton").innerHTML =
+      '<svg viewBox="0 0 24 24"><path d="M4 10v4h4l5 4V6l-5 4H4Z"/><path d="m17 9 5 6m0-6-5 6"/></svg>';
+
     setVoiceStatus("Speaker muted.");
   } else {
+    $("voiceSpeakerButton").innerHTML =
+      '<svg viewBox="0 0 24 24"><path d="M4 10v4h4l5 4V6l-5 4H4Z"/><path d="M17 9a5 5 0 0 1 0 6m3-9a9 9 0 0 1 0 12"/></svg>';
+
     setVoiceStatus("Speaker enabled.");
   }
 }
 
 function speakAssistantResponse(text) {
   if (!voiceModeActive || voiceSpeakerMuted) return;
+
   if (!("speechSynthesis" in window)) {
     setVoiceStatus("Speech playback is unavailable in this browser.");
     return;
@@ -2932,10 +2890,48 @@ function endVoiceMode() {
     speechSynthesis.cancel();
   }
 
-  $("voicePanel").classList.remove("open", "listening", "speaking");
+  $("voicePanel").classList.remove("listening","speaking");
+  closeVoicePanel();
   setVoiceStatus("Voice mode ended.");
 }
 
+/* =========================================
+   VOICE PANEL CONTROL
+========================================= */
+
+function openVoicePanel(mode) {
+  $("voicePanel").classList.add("open");
+  $("voiceBackdrop").classList.add("open");
+
+  if (mode === "dictation") {
+    $("voiceTitle").textContent = "Voice Input";
+    $("voiceOrbIcon").innerHTML =
+      '<rect x="9" y="2" width="6" height="13" rx="3"/><path d="M5 11a7 7 0 0 0 14 0M12 18v4m-4 0h8"/>';
+
+    $("voiceControls").style.display = "none";
+    $("voiceUseButton").style.display = "none";
+    $("voiceEndButton").style.display = "none";
+    setVoiceStatus("Preparing microphone...");
+  } else {
+    $("voiceTitle").textContent = "CheckmaîtréX Voice";
+    $("voiceOrbIcon").innerHTML =
+      '<path d="M4 10v4h4l5 4V6l-5 4H4Z"/><path d="M17 9a5 5 0 0 1 0 6m3-9a9 9 0 0 1 0 12"/>';
+  }
+}
+
+function closeVoicePanel() {
+  if (dictationRecognition) {
+    stopDictation();
+  }
+
+  $("voicePanel").classList.remove("open","listening","speaking");
+  $("voiceBackdrop").classList.remove("open");
+}
+
+window.addEventListener("beforeunload",() => {
+  if (dictationRecognition) stopDictation();
+  if (voiceModeActive) endVoiceMode();
+});
 
 /* =========================================
    INITIALIZATION
@@ -2943,17 +2939,18 @@ function endVoiceMode() {
 
 function initializeAssistant() {
   initTheme();
+  applyModelBranding();
   loadConversations();
   renderConvList();
-  loadSuggestions();
   updateComposerButtons();
 
   $("input").value = "";
   resizeInput();
+
+  loadLoggedInName();
 }
 
 initializeAssistant();
-
 </script>
 
 <script src="bfcache-fix.js"></script>
