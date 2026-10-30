@@ -2226,3 +2226,317 @@ export function handleLogo() {
 **Batch 2 will contain:** Updated `src/index.js` (36 routes) and updated `src/handlers/admin.js`.
 
 Waiting for your confirmation to proceed to Batch 2.
+## BATCH 2 — Updated index.js (36 routes) and Updated admin.js
+
+FILE: `src/index.js`
+
+```javascript
+/**
+ * CheckmaîtréX AI — Worker Entry Point
+ *
+ * Routes all requests to the appropriate handler. Preserves the original
+ * API contract: /, /stream, /api/posts, /feed.js, /suggestions, /health,
+ * /voice/stt, /voice/tts, /puzzle, /schedule, /opening, /player, /feedback,
+ * /welcome, /logo, /api/members, /api/tournaments, /api/lessons
+ * plus new endpoints: /assistants, /models, /admin/*, /auth/*
+ */
+import { corsHeaders, handlePreflight } from "./utils/cors.js";
+import { errorResponse, generateRequestId } from "./utils/response.js";
+import { handleChat, handleChatStream } from "./handlers/chat.js";
+import { handlePosts, handleFeedJs } from "./handlers/posts.js";
+import {
+  handleSuggestions,
+  handleHealth,
+  handleAssistants,
+  handleModels,
+  handleProviderHealth,
+  handleMonitoring,
+  handleAlerts,
+  handleCircuitBreaker,
+} from "./handlers/misc.js";
+import {
+  handleAdminStatus,
+  handleAdminAssistants,
+  handleAdminModels,
+  handleAdminUsage,
+  handleAdminBudget,
+  handleAdminQuota,
+  handleAdminModelToggle,
+  handleAdminFeedback,
+  handleAdminAnalytics,
+} from "./handlers/admin.js";
+import {
+  handleAuthLogin,
+  handleAuthCallback,
+  handleAuthLogout,
+} from "./handlers/auth.js";
+import { handleVoiceSTT, handleVoiceTTS } from "./handlers/voice.js";
+import {
+  handlePuzzle,
+  handleSchedule,
+  handleOpening,
+  handlePlayer,
+} from "./handlers/chess-data.js";
+import {
+  handlePublicMembers,
+  handlePublicTournaments,
+  handlePublicLessons,
+  handleFeedback,
+  handleWelcome,
+  handleLogo,
+} from "./handlers/public.js";
+import { RateLimiterDO } from "./durable-objects/RateLimiterDO.js";
+
+// Durable Object classes must be exported from the entry point
+export { RateLimiterDO };
+
+export default {
+  async fetch(request, env) {
+    const url = new URL(request.url);
+    const path = url.pathname;
+
+    // CORS preflight
+    const preflight = handlePreflight(request);
+    if (preflight) return preflight;
+
+    // Attach CORS headers to all responses
+    const cors = corsHeaders(request);
+
+    try {
+      const handler = route(path, request.method);
+      if (!handler) {
+        return errorResponse("Not found", 404, cors);
+      }
+      const response = await handler(request, env);
+      // Merge CORS headers into the response
+      for (const [k, v] of Object.entries(cors)) {
+        response.headers.set(k, v);
+      }
+      return response;
+    } catch (err) {
+      const status = err.status || 500;
+      const requestId = generateRequestId();
+      console.error(`[${requestId}] ${request.method} ${path}:`, err.message);
+      return errorResponse(
+        status === 401 || status === 403 ? err.message : "Internal server error",
+        status,
+        cors
+      );
+    }
+  },
+};
+
+function route(path, method) {
+  // Chat
+  if (path === "/" && method === "POST") return handleChat;
+  if (path === "/stream" && method === "POST") return handleChatStream;
+
+  // Posts / feed
+  if (path === "/api/posts" && method === "GET") return handlePosts;
+  if (path === "/feed.js" && method === "GET") return handleFeedJs;
+
+  // Misc
+  if (path === "/suggestions" && method === "GET") return handleSuggestions;
+  if (path === "/health" && method === "GET") return handleHealth;
+  if (path === "/health/providers" && method === "GET") return handleProviderHealth;
+  if (path === "/monitoring" && method === "GET") return handleMonitoring;
+  if (path === "/alerts" && method === "GET") return handleAlerts;
+  if (path === "/circuit-breaker" && method === "GET") return handleCircuitBreaker;
+  if (path === "/assistants" && method === "GET") return handleAssistants;
+  if (path === "/models" && method === "GET") return handleModels;
+
+  // Admin
+  if (path === "/admin/status" && method === "GET") return handleAdminStatus;
+  if (path === "/admin/assistants" && method === "GET") return handleAdminAssistants;
+  if (path === "/admin/models" && method === "GET") return handleAdminModels;
+  if (path === "/admin/usage" && method === "GET") return handleAdminUsage;
+  if (path === "/admin/budget" && method === "GET") return handleAdminBudget;
+  if (path === "/admin/quota" && method === "GET") return handleAdminQuota;
+  if (path === "/admin/model" && method === "POST") return handleAdminModelToggle;
+
+  // Auth (OAuth)
+  if (path === "/auth/login" && method === "GET") return handleAuthLogin;
+  if (path === "/auth/callback" && method === "GET") return handleAuthCallback;
+  if (path === "/auth/logout" && method === "GET") return handleAuthLogout;
+
+  // Voice (Deepgram via Workers AI)
+  if (path === "/voice/stt" && method === "POST") return handleVoiceSTT;
+  if (path === "/voice/tts" && method === "POST") return handleVoiceTTS;
+
+  // Chess data (KV-backed)
+  if (path === "/puzzle") return handlePuzzle;
+  if (path === "/schedule") return handleSchedule;
+  if (path === "/opening") return handleOpening;
+  if (path === "/player") return handlePlayer;
+
+  // Public club data (D1-backed)
+  if (path === "/api/members" && method === "GET") return handlePublicMembers;
+  if (path === "/api/tournaments" && method === "GET") return handlePublicTournaments;
+  if (path === "/api/lessons" && method === "GET") return handlePublicLessons;
+
+  // Feedback (D1-backed)
+  if (path === "/feedback" && method === "POST") return handleFeedback;
+
+  // Static responses
+  if (path === "/welcome" && method === "GET") return handleWelcome;
+  if (path === "/logo" && method === "GET") return handleLogo;
+
+  // Admin — feedback & analytics (owner only)
+  if (path === "/admin/feedback" && method === "GET") return handleAdminFeedback;
+  if (path === "/admin/analytics" && method === "GET") return handleAdminAnalytics;
+
+  return null;
+}
+```
+
+FILE: `src/handlers/admin.js`
+
+```javascript
+import { authenticate, requireOwner } from "../auth/auth.js";
+import { orchestrator } from "../orchestrator.js";
+import { registry } from "../registry/modelRegistry.js";
+import { listAssistants } from "../config/assistants.js";
+import { getUsageSummary, checkBudget, checkQuota } from "../services/usage.js";
+import { jsonResponse, errorResponse } from "../utils/response.js";
+
+/**
+ * Admin API — all endpoints require owner authentication (X-Owner-Key).
+ *
+ * GET  /admin/status    — system status + usage
+ * GET  /admin/assistants — assistant configs
+ * GET  /admin/models    — model registry
+ * GET  /admin/usage      — usage stats
+ * POST /admin/model      — toggle model verified status (owner only)
+ */
+
+async function guard(request, env) {
+  const auth = await authenticate(request, env);
+  requireOwner(auth);
+  return auth;
+}
+
+export async function handleAdminStatus(request, env) {
+  await guard(request, env);
+  return jsonResponse({
+    status: "operational",
+    usage: orchestrator.getUsage(),
+    gemini: !!env.GEMINI_API_KEY,
+    workersAI: !!env.AI,
+    d1: !!env.DB,
+    kv: !!env.SOCIAL_DATA,
+    timestamp: new Date().toISOString(),
+    success: true,
+  });
+}
+
+export async function handleAdminAssistants(request, env) {
+  await guard(request, env);
+  return jsonResponse({ assistants: listAssistants(), success: true });
+}
+
+export async function handleAdminModels(request, env) {
+  await guard(request, env);
+  return jsonResponse({ models: registry.list(), success: true });
+}
+
+export async function handleAdminUsage(request, env) {
+  await guard(request, env);
+  const url = new URL(request.url);
+  const groupBy = url.searchParams.get("groupBy") || "assistant";
+  const summary = await getUsageSummary(env.DB, { groupBy });
+  return jsonResponse({ ...summary, usage: orchestrator.getUsage() });
+}
+
+export async function handleAdminBudget(request, env) {
+  await guard(request, env);
+  const url = new URL(request.url);
+  const budget = parseInt(url.searchParams.get("budget") || "1000000", 10);
+  const budgetStatus = await checkBudget(env.DB, budget);
+  return jsonResponse({ ...budgetStatus, success: true });
+}
+
+export async function handleAdminQuota(request, env) {
+  await guard(request, env);
+  const url = new URL(request.url);
+  const sessionId = url.searchParams.get("sessionId") || "unknown";
+  const limit = parseInt(url.searchParams.get("limit") || "100", 10);
+  const quota = await checkQuota(env.DB, { sessionId, limit });
+  return jsonResponse({ ...quota, success: true });
+}
+
+export async function handleAdminModelToggle(request, env) {
+  await guard(request, env);
+  try {
+    const body = await request.json();
+    const model = registry.get(body.modelId);
+    if (!model) return errorResponse("Model not found", 404);
+    model.verified = !!body.verified;
+    return jsonResponse({ model, success: true });
+  } catch {
+    return errorResponse("Invalid request", 400);
+  }
+}
+
+/**
+ * GET /admin/feedback — list all feedback submissions (owner only).
+ * Ported from the original monolithic worker.
+ */
+export async function handleAdminFeedback(request, env) {
+  await guard(request, env);
+  try {
+    const r = await env.DB.prepare(
+      "SELECT * FROM feedback ORDER BY created DESC LIMIT 100"
+    ).all();
+    return jsonResponse({ feedback: r.results, success: true });
+  } catch (e) {
+    return errorResponse("Failed to fetch feedback: " + e.message, 500);
+  }
+}
+
+/**
+ * GET /admin/analytics — chat analytics summary (owner only).
+ * Ported from the original monolithic worker.
+ */
+export async function handleAdminAnalytics(request, env) {
+  await guard(request, env);
+  try {
+    const [totalReq, totalTokens, byAssistant] = await Promise.all([
+      env.DB.prepare("SELECT COUNT(*) as count FROM usage_log").first(),
+      env.DB.prepare(
+        "SELECT SUM(input_tokens + output_tokens) as total FROM usage_log"
+      ).first(),
+      env.DB.prepare(
+        "SELECT assistant_id, COUNT(*) as requests, SUM(input_tokens + output_tokens) as tokens FROM usage_log GROUP BY assistant_id"
+      ).all(),
+    ]);
+    return jsonResponse({
+      totalRequests: totalReq?.count || 0,
+      totalTokens: totalTokens?.total || 0,
+      byAssistant: byAssistant.results,
+      usage: orchestrator.getUsage(),
+      success: true,
+    });
+  } catch (e) {
+    return errorResponse("Failed to fetch analytics: " + e.message, 500);
+  }
+}
+```
+
+---
+
+### BATCH 2 — Delivery Tracking
+
+| # | File | Status |
+|---|------|--------|
+| 4 | `src/index.js` | ✅ Sent |
+| 5 | `src/handlers/admin.js` | ✅ Sent |
+
+- **Batch:** 2
+- **Files included:** 2
+- **Filenames delivered:** index.js, admin.js
+- **Remaining files:** 49
+- **Content truncated:** No — both files shown in full
+
+**Batch 3 will contain:** `src/orchestrator.js`, `src/config/assistants.js`, `src/config/constants.js`
+
+Waiting for your confirmation to proceed to Batch 3.
