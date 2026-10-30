@@ -2540,3 +2540,428 @@ export async function handleAdminAnalytics(request, env) {
 **Batch 3 will contain:** `src/orchestrator.js`, `src/config/assistants.js`, `src/config/constants.js`
 
 Waiting for your confirmation to proceed to Batch 3.
+## BATCH 3 — orchestrator.js, config/assistants.js, config/constants.js
+
+FILE: `src/orchestrator.js`
+
+```javascript
+import { router } from "./router/modelRouter.js";
+import { PROVIDERS } from "./registry/modelRegistry.js";
+import { GeminiProvider } from "./providers/gemini.js";
+import { WorkersAIProvider } from "./providers/workersai.js";
+import { getAssistant } from "./config/assistants.js";
+import { getClubKnowledgeBlock, getOwnerKnowledgeBlock, parseOwnerCommand, handleOwnerCommand } from "./services/knowledge.js";
+import { getPostsContext } from "./services/posts.js";
+import { getCloudEval, formatCloudEvalContext, extractFen } from "./services/chess.js";
+import { historyToContents } from "./services/memory.js";
+import { logUsage } from "./services/usage.js";
+import { MAX_OUTPUT_TOKENS } from "./config/constants.js";
+
+const providers = {
+  [PROVIDERS.GEMINI]: new GeminiProvider(),
+  [PROVIDERS.WORKERSAI]: new WorkersAIProvider(),
+};
+
+/**
+ * Central AI Orchestrator.
+ *
+ * Pipeline:
+ *  1. Authenticate (done in handler)
+ *  2. Identify assistant
+ *  3. Check permissions (done in handler)
+ *  4. Classify task / required capabilities
+ *  5. Retrieve context + memory
+ *  6. Select model (router)
+ *  7. Execute (with fallback)
+ *  8. Validate response
+ *  9. Track usage
+ * 10. Record diagnostics
+ * 11. Return consistent response
+ */
+export class Orchestrator {
+  constructor() {
+    this.usage = { requests: 0, tokens: 0, errors: 0, fallbacks: 0 };
+  }
+
+  /**
+   * Process a chat request (non-streaming).
+   */
+  async process({ assistantId, message, history, auth, env, sessionId, requestId }) {
+    const assistant = getAssistant(assistantId);
+
+    // Owner commands take priority
+    const cmd = parseOwnerCommand(message);
+    if (cmd) {
+      if (!auth.isOwner) {
+        return { answer: "Owner commands require authentication.", engine: "system", requestId };
+      }
+      const result = await handleOwnerCommand(cmd.command, cmd.arg, env);
+      return { answer: result, engine: "owner-command", requestId };
+    }
+
+    // Build context
+    const systemPrompt = await this._buildSystemPrompt(assistant, auth, env, message);
+
+    // Build contents
+    const contents = [
+      ...historyToContents(history),
+      { role: "user", parts: [{ text: message }] },
+    ];
+
+    // Route to model
+    const { chain } = await router.route({
+      assistantConfig: assistant,
+      capabilities: assistant.capabilities,
+      allowPaid: false,
+    });
+
+    const params = {
+      contents,
+      systemInstruction: systemPrompt,
+      generationConfig: { maxOutputTokens: MAX_OUTPUT_TOKENS, temperature: 0.7 },
+    };
+
+    // Execute with fallback
+    let lastError = null;
+    for (const model of chain) {
+      const provider = providers[model.provider];
+      if (!provider) continue;
+      try {
+        const result = await provider.generate({ ...params, modelId: model.id }, env);
+        this.usage.requests++;
+        if (result.usage) this.usage.tokens += result.usage.totalTokenCount || 0;
+        await logUsage({
+          requestId, sessionId, assistantId,
+          modelId: model.id, provider: model.provider,
+          inputTokens: result.usage?.promptTokenCount || 0,
+          outputTokens: result.usage?.candidatesTokenCount || 0,
+          success: true, fallback: model !== chain[0],
+        }, env.DB);
+        return {
+          answer: result.text || "I could not generate a response.",
+          engine: `${model.provider}:${model.id}`,
+          requestId,
+        };
+      } catch (err) {
+        lastError = err;
+        router.markUnhealthy(model.id);
+        this.usage.fallbacks++;
+      }
+    }
+
+    this.usage.errors++;
+    return {
+      answer: "I'm having trouble responding right now. Please try again.",
+      engine: "error",
+      requestId,
+      error: lastError?.message,
+    };
+  }
+
+  /**
+   * Process a chat request (streaming via SSE).
+   * @returns {AsyncGenerator} SSE-formatted chunks
+   */
+  async *processStream({ assistantId, message, history, auth, env, sessionId, requestId }) {
+    const assistant = getAssistant(assistantId);
+
+    // Owner commands are not streamed
+    const cmd = parseOwnerCommand(message);
+    if (cmd) {
+      if (!auth.isOwner) {
+        yield `event: engine\ndata: system\n\nevent: text\ndata: Owner commands require authentication.\n\nevent: done\ndata: ${requestId}\n\n`;
+        return;
+      }
+      const result = await handleOwnerCommand(cmd.command, cmd.arg, env);
+      yield `event: engine\ndata: owner-command\n\nevent: text\ndata: ${this._sseEscape(result)}\n\nevent: done\ndata: ${requestId}\n\n`;
+      return;
+    }
+
+    const systemPrompt = await this._buildSystemPrompt(assistant, auth, env, message);
+    const contents = [
+      ...historyToContents(history),
+      { role: "user", parts: [{ text: message }] },
+    ];
+    const { chain } = await router.route({
+      assistantConfig: assistant,
+      capabilities: assistant.capabilities,
+      allowPaid: false,
+    });
+
+    const params = {
+      contents,
+      systemInstruction: systemPrompt,
+      generationConfig: { maxOutputTokens: MAX_OUTPUT_TOKENS, temperature: 0.7 },
+    };
+
+    let succeeded = false;
+    let lastError = null;
+    for (const model of chain) {
+      const provider = providers[model.provider];
+      if (!provider) continue;
+      try {
+        yield `event: engine\ndata: ${model.provider}:${model.id}\n\n`;
+        for await (const chunk of provider.stream({ ...params, modelId: model.id }, env)) {
+          if (chunk.type === "text" && chunk.text) {
+            yield `event: text\ndata: ${this._sseEscape(chunk.text)}\n\n`;
+          }
+        }
+        succeeded = true;
+        this.usage.requests++;
+        break;
+      } catch (err) {
+        lastError = err;
+        router.markUnhealthy(model.id);
+        this.usage.fallbacks++;
+      }
+    }
+
+    if (!succeeded) {
+      this.usage.errors++;
+      yield `event: text\ndata: I'm having trouble responding right now.\n\n`;
+    }
+    yield `event: done\ndata: ${requestId}\n\n`;
+  }
+
+  /**
+   * Build the full system prompt with all context blocks.
+   */
+  async _buildSystemPrompt(assistant, auth, env, message) {
+    let prompt = assistant.systemPrompt;
+    prompt += "\n" + getClubKnowledgeBlock();
+    prompt += await getPostsContext(env.SOCIAL_DATA);
+    prompt += await getOwnerKnowledgeBlock(auth.isOwner, env);
+
+    // Chess eval context
+    if (assistant.features.chess) {
+      const fen = extractFen(message);
+      if (fen) {
+        const evalData = await getCloudEval(fen);
+        const evalContext = formatCloudEvalContext(evalData);
+        if (evalContext) prompt += "\n\n" + evalContext;
+      }
+    }
+    return prompt;
+  }
+
+  _sseEscape(text) {
+    return text.replace(/\n/g, "\\n").replace(/\r/g, "");
+  }
+
+  getUsage() {
+    return { ...this.usage };
+  }
+}
+
+export const orchestrator = new Orchestrator();
+```
+
+FILE: `src/config/assistants.js`
+
+```javascript
+import {
+  CHECKMAITREX_SYSTEM,
+  MAITRAI_SYSTEM,
+  MAITREX_AI_SYSTEM,
+  CCC_AI_SYSTEM,
+} from "../prompts/systemPrompts.js";
+
+/**
+ * Four AI Assistants
+ *
+ * Each assistant has a unique system prompt, personality, specialization,
+ * preferred model/provider, capability tier, and feature permissions.
+ * They share infrastructure (orchestrator, providers, registry) but keep
+ * independent identities.
+ */
+
+export const ASSISTANTS = {
+  "checkmaitrex-ai": {
+    id: "checkmaitrex-ai",
+    name: "CheckmaîtréX AI",
+    tier: 100,
+    systemPrompt: CHECKMAITREX_SYSTEM,
+    preferredModel: "gemini-2.5-flash",
+    preferredProvider: "gemini",
+    capabilities: ["chat", "stream", "vision", "reasoning"],
+    features: {
+      chess: true,
+      coaching: true,
+      knowledge: true,
+      ownerCommands: true,
+      posts: true,
+      voice: false,
+      image: true,
+    },
+    description: "Advanced intelligence and chess.",
+  },
+  "maitrai": {
+    id: "maitrai",
+    name: "MaîtrAI",
+    tier: 80,
+    systemPrompt: MAITRAI_SYSTEM,
+    preferredModel: "gemini-2.5-flash",
+    preferredProvider: "gemini",
+    capabilities: ["chat", "stream", "reasoning"],
+    features: {
+      chess: true,
+      coaching: true,
+      knowledge: true,
+      ownerCommands: false,
+      posts: true,
+      voice: false,
+      image: false,
+    },
+    description: "Coaching and learning.",
+  },
+  "maitrex-ai": {
+    id: "maitrex-ai",
+    name: "MaîtréX-AI",
+    tier: 60,
+    systemPrompt: MAITREX_AI_SYSTEM,
+    preferredModel: "gemini-2.5-flash",
+    preferredProvider: "gemini",
+    capabilities: ["chat", "stream"],
+    features: {
+      chess: false,
+      coaching: false,
+      knowledge: true,
+      ownerCommands: false,
+      posts: true,
+      voice: false,
+      image: false,
+    },
+    description: "General assistance.",
+  },
+  "ccc-ai": {
+    id: "ccc-ai",
+    name: "CCC-AI",
+    tier: 30,
+    systemPrompt: CCC_AI_SYSTEM,
+    preferredModel: "gemini-2.5-flash",
+    preferredProvider: "gemini",
+    capabilities: ["chat", "stream"],
+    features: {
+      chess: false,
+      coaching: false,
+      knowledge: true,
+      ownerCommands: false,
+      posts: true,
+      voice: false,
+      image: false,
+    },
+    description: "CheckmaîtréX Chess Club assistance.",
+  },
+};
+
+export const DEFAULT_ASSISTANT_ID = "checkmaitrex-ai";
+
+export function getAssistant(id) {
+  return ASSISTANTS[id] || ASSISTANTS[DEFAULT_ASSISTANT_ID];
+}
+
+export function listAssistants() {
+  return Object.values(ASSISTANTS);
+}
+```
+
+FILE: `src/config/constants.js`
+
+```javascript
+/**
+ * CheckmaîtréX AI — Central Constants
+ *
+ * Preserved from the original monolithic worker. All tunable limits live here
+ * so they can be adjusted without touching handler logic.
+ */
+
+// --- Origins / CORS ---------------------------------------------------------
+export const ALLOWED_ORIGINS = new Set([
+  "https://checkmaitrex.pages.dev",
+  "https://checkmaitrexchessclub.pages.dev",
+]);
+
+// --- Gemini provider --------------------------------------------------------
+export const GEMINI_ENDPOINT_BASE =
+  "https://generativelanguage.googleapis.com/v1beta/models/";
+export const DEFAULT_MODEL = "gemini-2.5-flash";
+export const FALLBACK_MODEL = "gemini-2.5-flash";
+
+// --- Request limits ---------------------------------------------------------
+export const MAX_MESSAGE_LENGTH = 1000;
+export const MAX_BODY_BYTES = 24000;
+export const MAX_VOICE_BODY_BYTES = 5000000;
+export const MAX_IMAGE_BODY_BYTES = 10000000;
+export const MAX_PGN_LENGTH = 50000;
+export const MAX_HISTORY_ITEMS = 8;
+export const MAX_HISTORY_ITEM_LENGTH = 1500;
+export const MAX_OUTPUT_TOKENS = 2048;
+
+// --- Timeouts ---------------------------------------------------------------
+export const AI_TIMEOUT_MS = 25000;
+export const AI_STREAM_TIMEOUT_MS = 60000;
+export const CLOUD_EVAL_TIMEOUT_MS = 5000;
+
+// --- Rate limiting (per-IP, in-memory fallback) -----------------------------
+// NOTE: in-memory limits are per-isolate only. Durable enforcement requires
+// Durable Objects or D1-backed counters (planned, see ARCHITECTURE.md).
+export const RATE_WINDOW_MS = 60000;
+export const MAX_REQUESTS_PER_WINDOW = 12;
+
+// --- Facebook posts context -------------------------------------------------
+export const MAX_POSTS_IN_CONTEXT = 10;
+export const MAX_POST_MESSAGE_IN_CONTEXT = 300;
+export const KV_KEY = "facebook_posts";
+
+// --- KV key names (single namespace — to be separated, see migration plan) --
+export const SESSION_PREFIX = "session:";
+export const SESSION_DURATION = 86400;
+export const PUZZLE_KEY = "chess_puzzles";
+export const ANALYTICS_KEY = "chat_analytics";
+export const FEEDBACK_KEY = "chat_feedback";
+export const CONVERSATION_PREFIX = "conv:";
+export const CONVERSATION_LIST_KEY = "conv_list";
+export const MAX_CONVERSATIONS = 50;
+export const PERSONA_KEY = "ai_persona";
+export const SCHEDULE_KEY = "scheduled_announcements";
+export const USAGE_KEY = "gemini_usage";
+export const CACHE_PREFIX = "cache:";
+export const CACHE_TTL = 86400;
+export const OPENINGS_KEY = "chess_openings";
+export const LOGO_KEY = "ai_logo";
+export const DEFAULT_LOGO_URL =
+  "https://res.cloudinary.com/ng3tlwuy/image/upload/f_auto,q_auto/1000145700";
+export const OWNER_KNOWLEDGE_KEY = "owner_knowledge";
+export const MAX_OWNER_KNOWLEDGE_ITEMS = 100;
+export const MAX_OWNER_KNOWLEDGE_ITEM_LENGTH = 800;
+
+// --- Roles ------------------------------------------------------------------
+export const ROLES = {
+  OWNER: "owner",
+  ADMIN: "admin",
+  MODERATOR: "moderator",
+  USER: "user",
+  GUEST: "guest",
+};
+```
+
+---
+
+### BATCH 3 — Delivery Tracking
+
+| # | File | Status |
+|---|------|--------|
+| 6 | `src/orchestrator.js` | ✅ Sent |
+| 7 | `src/config/assistants.js` | ✅ Sent |
+| 8 | `src/config/constants.js` | ✅ Sent |
+
+- **Batch:** 3
+- **Files included:** 3
+- **Filenames delivered:** orchestrator.js, config/assistants.js, config/constants.js
+- **Files delivered so far:** 8 of 56
+- **Remaining files:** 48
+- **Content truncated:** No — all 3 files shown in full
+
+**Batch 4 will contain:** `src/auth/auth.js`, `src/auth/oauth.js`, `src/auth/rbac.js`
+
+Waiting for your confirmation to proceed to Batch 4.
