@@ -1,0 +1,1930 @@
+FILE: `/checkmaitrex-ai/src/migrations/0001_initial.sql`
+
+```sql
+-- CheckmaîtréX AI — Initial D1 Schema (Migration 0001)
+-- Target: checkmaitrex-db (currently empty, 0 tables)
+--
+-- This migration establishes the relational layer for durable data that
+-- currently lives in the single SOCIAL_DATA KV namespace. KV remains in
+-- use for cache and fast config; D1 holds durable, queryable records.
+--
+-- Apply with: wrangler d1 execute checkmaitrex-db --file=src/migrations/0001_initial.sql
+-- (Requires owner approval before applying to production.)
+
+-- ---------------------------------------------------------------------------
+-- Users (future Google OAuth integration)
+-- ---------------------------------------------------------------------------
+CREATE TABLE IF NOT EXISTS users (
+  id TEXT PRIMARY KEY,
+  email TEXT UNIQUE NOT NULL,
+  name TEXT,
+  role TEXT NOT NULL DEFAULT 'guest',
+  created_at TEXT NOT NULL DEFAULT (datetime('now')),
+  last_login TEXT
+);
+
+-- ---------------------------------------------------------------------------
+-- Sessions
+-- ---------------------------------------------------------------------------
+CREATE TABLE IF NOT EXISTS sessions (
+  id TEXT PRIMARY KEY,
+  user_id TEXT REFERENCES users(id),
+  token TEXT UNIQUE NOT NULL,
+  created_at TEXT NOT NULL DEFAULT (datetime('now')),
+  expires_at TEXT NOT NULL,
+  metadata TEXT
+);
+
+-- ---------------------------------------------------------------------------
+-- Conversations (migrated from KV conv: prefix)
+-- ---------------------------------------------------------------------------
+CREATE TABLE IF NOT EXISTS conversations (
+  id TEXT PRIMARY KEY,
+  session_id TEXT NOT NULL,
+  assistant_id TEXT NOT NULL,
+  role TEXT NOT NULL,
+  content TEXT NOT NULL,
+  created_at TEXT NOT NULL DEFAULT (datetime('now'))
+);
+CREATE INDEX IF NOT EXISTS idx_conv_session ON conversations(session_id);
+CREATE INDEX IF NOT EXISTS idx_conv_assistant ON conversations(assistant_id);
+
+-- ---------------------------------------------------------------------------
+-- Usage tracking (per user, per assistant, per model)
+-- ---------------------------------------------------------------------------
+CREATE TABLE IF NOT EXISTS usage_log (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  request_id TEXT NOT NULL,
+  session_id TEXT,
+  assistant_id TEXT NOT NULL,
+  model_id TEXT NOT NULL,
+  provider TEXT NOT NULL,
+  input_tokens INTEGER DEFAULT 0,
+  output_tokens INTEGER DEFAULT 0,
+  cost_estimate REAL DEFAULT 0,
+  success INTEGER NOT NULL DEFAULT 0,
+  fallback INTEGER NOT NULL DEFAULT 0,
+  created_at TEXT NOT NULL DEFAULT (datetime('now'))
+);
+CREATE INDEX IF NOT EXISTS idx_usage_assistant ON usage_log(assistant_id);
+CREATE INDEX IF NOT EXISTS idx_usage_model ON usage_log(model_id);
+CREATE INDEX IF NOT EXISTS idx_usage_created ON usage_log(created_at);
+
+-- ---------------------------------------------------------------------------
+-- Owner private knowledge (migrated from KV owner_knowledge)
+-- ---------------------------------------------------------------------------
+CREATE TABLE IF NOT EXISTS owner_knowledge (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  content TEXT NOT NULL,
+  category TEXT,
+  created_at TEXT NOT NULL DEFAULT (datetime('now')),
+  updated_at TEXT NOT NULL DEFAULT (datetime('now'))
+);
+
+-- ---------------------------------------------------------------------------
+-- Model health log (for circuit breaker / failover decisions)
+-- ---------------------------------------------------------------------------
+CREATE TABLE IF NOT EXISTS model_health (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  model_id TEXT NOT NULL,
+  provider TEXT NOT NULL,
+  status TEXT NOT NULL,
+  latency_ms INTEGER,
+  error TEXT,
+  created_at TEXT NOT NULL DEFAULT (datetime('now'))
+);
+CREATE INDEX IF NOT EXISTS idx_health_model ON model_health(model_id);
+
+-- ---------------------------------------------------------------------------
+-- Feedback (migrated from KV chat_feedback)
+-- ---------------------------------------------------------------------------
+CREATE TABLE IF NOT EXISTS feedback (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  session_id TEXT,
+  message TEXT,
+  rating INTEGER,
+  created_at TEXT NOT NULL DEFAULT (datetime('now'))
+);
+
+-- ---------------------------------------------------------------------------
+-- Analytics events (migrated from KV chat_analytics)
+-- ---------------------------------------------------------------------------
+CREATE TABLE IF NOT EXISTS analytics_events (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  session_id TEXT,
+  event_type TEXT NOT NULL,
+  assistant_id TEXT,
+  metadata TEXT,
+  created_at TEXT NOT NULL DEFAULT (datetime('now'))
+);
+CREATE INDEX IF NOT EXISTS idx_analytics_type ON analytics_events(event_type);
+CREATE INDEX IF NOT EXISTS idx_analytics_created ON analytics_events(created_at);
+```
+
+FILE: `/checkmaitrex-ai/src/providers/base.js`
+
+```javascript
+/**
+ * Provider adapter base interface.
+ *
+ * Every provider adapter implements this contract so the orchestrator and
+ * model router can treat them uniformly.
+ */
+export class BaseProvider {
+  /** @param {string} providerId e.g. "gemini", "workersai" */
+  constructor(providerId) {
+    this.providerId = providerId;
+  }
+
+  /**
+   * Generate a completion (non-streaming).
+   * @param {object} params
+   * @param {string} params.modelId      - provider-specific model ID
+   * @param {Array}  params.contents     - conversation turns [{role, parts:[{text}]}]
+   * @param {string} params.systemInstruction
+   * @param {object} params.generationConfig - {maxOutputTokens, temperature, ...}
+   * @param {object} env                - Worker env (for secrets/bindings)
+   * @param {AbortSignal} [params.signal]
+   * @returns {Promise<{text:string, usage?:object, raw:object}>}
+   */
+  async generate(/* params, env */) {
+    throw new Error(`${this.providerId}.generate() not implemented`);
+  }
+
+  /**
+   * Generate a streaming completion.
+   * @returns {AsyncGenerator<{type:string, text?:string, usage?:object}>}
+   *   Yields {type:"text", text} chunks and a final {type:"usage", usage}.
+   */
+  async *stream(/* params, env */) {
+    throw new Error(`${this.providerId}.stream() not implemented`);
+  }
+
+  /**
+   * Lightweight health check — returns {ok:boolean, latencyMs?:number}.
+   * Default: assume ok. Override for real checks.
+   */
+  async healthCheck(/* env */) {
+    return { ok: true };
+  }
+}
+```
+
+FILE: `/checkmaitrex-ai/src/providers/gemini.js`
+
+```javascript
+import { BaseProvider } from "./base.js";
+import {
+  GEMINI_ENDPOINT_BASE,
+  AI_TIMEOUT_MS,
+  AI_STREAM_TIMEOUT_MS,
+  MAX_OUTPUT_TOKENS,
+} from "../config/constants.js";
+
+/**
+ * Google Gemini provider adapter.
+ * Preserves the original worker's Gemini integration logic.
+ */
+export class GeminiProvider extends BaseProvider {
+  constructor() {
+    super("gemini");
+  }
+
+  _apiKey(env) {
+    const k = env.GEMINI_API_KEY;
+    if (!k) throw new Error("GEMINI_API_KEY secret is not set");
+    return k;
+  }
+
+  _model(params, env) {
+    return env.GEMINI_MODEL || params.modelId;
+  }
+
+  _buildBody(params) {
+    const body = {
+      contents: params.contents,
+      generationConfig: {
+        maxOutputTokens: params.generationConfig?.maxOutputTokens || MAX_OUTPUT_TOKENS,
+        temperature: params.generationConfig?.temperature ?? 0.7,
+      },
+    };
+    if (params.systemInstruction) {
+      body.systemInstruction = { parts: [{ text: params.systemInstruction }] };
+    }
+    return body;
+  }
+
+  async generate(params, env, signal) {
+    const apiKey = this._apiKey(env);
+    const model = this._model(params, env);
+    const url = `${GEMINI_ENDPOINT_BASE}${model}:generateContent?key=${apiKey}`;
+    const body = this._buildBody(params);
+    const ctrl = new AbortController();
+    const timeout = setTimeout(() => ctrl.abort(), AI_TIMEOUT_MS);
+    try {
+      const res = await fetch(url, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(body),
+        signal: signal || ctrl.signal,
+      });
+      if (!res.ok) {
+        const errText = await res.text().catch(() => "");
+        throw new Error(`Gemini HTTP ${res.status}: ${errText.slice(0, 200)}`);
+      }
+      const data = await res.json();
+      const text = data?.candidates?.[0]?.content?.parts?.map((p) => p.text).join("") || "";
+      const usage = data?.usageMetadata || null;
+      return { text, usage, raw: data };
+    } finally {
+      clearTimeout(timeout);
+    }
+  }
+
+  async *stream(params, env, signal) {
+    const apiKey = this._apiKey(env);
+    const model = this._model(params, env);
+    const url = `${GEMINI_ENDPOINT_BASE}${model}:streamGenerateContent?key=${apiKey}&alt=sse`;
+    const body = this._buildBody(params);
+    const ctrl = new AbortController();
+    const timeout = setTimeout(() => ctrl.abort(), AI_STREAM_TIMEOUT_MS);
+    try {
+      const res = await fetch(url, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(body),
+        signal: signal || ctrl.signal,
+      });
+      if (!res.ok || !res.body) {
+        const errText = await res.text().catch(() => "");
+        throw new Error(`Gemini stream HTTP ${res.status}: ${errText.slice(0, 200)}`);
+      }
+      const reader = res.body.getReader();
+      const decoder = new TextDecoder();
+      let buffer = "";
+      let usage = null;
+      while (true) {
+        const { done, value } = await reader.read();
+        if (done) break;
+        buffer += decoder.decode(value, { stream: true });
+        const lines = buffer.split("\n");
+        buffer = lines.pop() || "";
+        for (const line of lines) {
+          const trimmed = line.trim();
+          if (!trimmed.startsWith("data:")) continue;
+          const payload = trimmed.slice(5).trim();
+          if (!payload) continue;
+          try {
+            const chunk = JSON.parse(payload);
+            const parts = chunk?.candidates?.[0]?.content?.parts;
+            if (parts) {
+              for (const p of parts) {
+                if (p.text) yield { type: "text", text: p.text };
+              }
+            }
+            if (chunk?.usageMetadata) usage = chunk.usageMetadata;
+          } catch {
+            // skip malformed chunk
+          }
+        }
+      }
+      if (usage) yield { type: "usage", usage };
+    } finally {
+      clearTimeout(timeout);
+    }
+  }
+
+  async healthCheck(env) {
+    if (!env.GEMINI_API_KEY) return { ok: false };
+    return { ok: true };
+  }
+}
+```
+
+FILE: `/checkmaitrex-ai/src/providers/workersai.js`
+
+```javascript
+import { BaseProvider } from "./base.js";
+
+/**
+ * Cloudflare Workers AI provider adapter.
+ * Uses the `AI` binding (Workers AI catalog).
+ */
+export class WorkersAIProvider extends BaseProvider {
+  constructor() {
+    super("workersai");
+  }
+
+  _binding(env) {
+    if (!env.AI) throw new Error("Workers AI binding (AI) is not configured");
+    return env.AI;
+  }
+
+  async generate(params, env, signal) {
+    const ai = this._binding(env);
+    const model = params.modelId;
+    const messages = this._toMessages(params);
+    const input = { messages };
+    if (params.generationConfig?.maxOutputTokens) {
+      input.max_tokens = params.generationConfig.maxOutputTokens;
+    }
+    if (params.generationConfig?.temperature != null) {
+      input.temperature = params.generationConfig.temperature;
+    }
+    const res = await ai.run(model, input);
+    const text = res?.response || res?.result?.response || "";
+    const usage = res?.usage || null;
+    return { text, usage, raw: res };
+  }
+
+  async *stream(params, env, signal) {
+    const ai = this._binding(env);
+    const model = params.modelId;
+    const messages = this._toMessages(params);
+    const input = { messages, stream: true };
+    if (params.generationConfig?.maxOutputTokens) {
+      input.max_tokens = params.generationConfig.maxOutputTokens;
+    }
+    let usage = null;
+    const res = await ai.run(model, input);
+    if (res && typeof res[Symbol.asyncIterator] === "function") {
+      for await (const chunk of res) {
+        const t = chunk?.response || chunk?.delta?.content || "";
+        if (t) yield { type: "text", text: t };
+        if (chunk?.usage) usage = chunk.usage;
+      }
+    } else {
+      const t = res?.response || "";
+      if (t) yield { type: "text", text: t };
+      if (res?.usage) usage = res.usage;
+    }
+    if (usage) yield { type: "usage", usage };
+  }
+
+  _toMessages(params) {
+    const msgs = [];
+    if (params.systemInstruction) {
+      msgs.push({ role: "system", content: params.systemInstruction });
+    }
+    for (const turn of params.contents) {
+      const text = (turn.parts || []).map((p) => p.text || "").join("");
+      msgs.push({ role: turn.role === "model" ? "assistant" : "user", content: text });
+    }
+    return msgs;
+  }
+
+  async healthCheck(env) {
+    return { ok: !!env.AI };
+  }
+}
+```
+
+FILE: `/checkmaitrex-ai/src/registry/modelRegistry.js`
+
+```javascript
+/**
+ * Central Model Registry
+ *
+ * Every model entry declares its provider, capabilities, tier, and limits.
+ * The model router uses this to pick a model for a given task.
+ *
+ * IMPORTANT: Model IDs are declared but NOT verified as accessible. The
+ * provider adapter must handle failures and the router must fall back.
+ * Do not promise a model works until it has been verified at runtime.
+ */
+
+export const PROVIDERS = {
+  GEMINI: "gemini",
+  WORKERSAI: "workersai",
+};
+
+/**
+ * @typedef {Object} ModelEntry
+ * @property {string} id          - provider-specific model ID
+ * @property {string} provider    - provider key from PROVIDERS
+ * @property {string} label       - human-readable name
+ * @property {number} tier       - capability tier (100/80/60/30 scale)
+ * @property {string[]} capabilities - ["chat","stream","vision","structured","reasoning"]
+ * @property {number} maxInputTokens
+ * @property {number} maxOutputTokens
+ * @property {boolean} paid       - whether the provider charges per use
+ * @property {boolean} verified   - confirmed working at least once
+ */
+
+/** @type {ModelEntry[]} */
+export const MODEL_REGISTRY = [
+  // --- Gemini (primary) ---
+  {
+    id: "gemini-2.5-flash",
+    provider: PROVIDERS.GEMINI,
+    label: "Gemini 2.5 Flash",
+    tier: 80,
+    capabilities: ["chat", "stream", "vision", "structured", "reasoning"],
+    maxInputTokens: 1048576,
+    maxOutputTokens: 8192,
+    paid: false,
+    verified: true,
+  },
+  {
+    id: "gemini-2.5-pro",
+    provider: PROVIDERS.GEMINI,
+    label: "Gemini 2.5 Pro",
+    tier: 100,
+    capabilities: ["chat", "stream", "vision", "structured", "reasoning"],
+    maxInputTokens: 2097152,
+    maxOutputTokens: 8192,
+    paid: false,
+    verified: false,
+  },
+  {
+    id: "gemini-2.0-flash",
+    provider: PROVIDERS.GEMINI,
+    label: "Gemini 2.0 Flash",
+    tier: 60,
+    capabilities: ["chat", "stream", "vision"],
+    maxInputTokens: 1048576,
+    maxOutputTokens: 8192,
+    paid: false,
+    verified: false,
+  },
+  {
+    id: "gemini-1.5-flash",
+    provider: PROVIDERS.GEMINI,
+    label: "Gemini 1.5 Flash",
+    tier: 50,
+    capabilities: ["chat", "stream", "vision"],
+    maxInputTokens: 1048576,
+    maxOutputTokens: 8192,
+    paid: false,
+    verified: false,
+  },
+
+  // --- Workers AI (secondary / fallback) ---
+  {
+    id: "@cf/meta/llama-3.3-70b-instruct-fp8-fast",
+    provider: PROVIDERS.WORKERSAI,
+    label: "Llama 3.3 70B (Workers AI)",
+    tier: 70,
+    capabilities: ["chat", "stream"],
+    maxInputTokens: 128000,
+    maxOutputTokens: 2048,
+    paid: false,
+    verified: false,
+  },
+  {
+    id: "@cf/meta/llama-3.1-8b-instruct",
+    provider: PROVIDERS.WORKERSAI,
+    label: "Llama 3.1 8B (Workers AI)",
+    tier: 50,
+    capabilities: ["chat", "stream"],
+    maxInputTokens: 128000,
+    maxOutputTokens: 2048,
+    paid: false,
+    verified: false,
+  },
+  {
+    id: "@cf/qwen/qwq-32b",
+    provider: PROVIDERS.WORKERSAI,
+    label: "Qwen QwQ 32B (Workers AI)",
+    tier: 75,
+    capabilities: ["chat", "stream", "reasoning"],
+    maxInputTokens: 32768,
+    maxOutputTokens: 2048,
+    paid: false,
+    verified: false,
+  },
+  {
+    id: "@cf/mistral/mistral-7b-instruct-v0.2",
+    provider: PROVIDERS.WORKERSAI,
+    label: "Mistral 7B (Workers AI)",
+    tier: 40,
+    capabilities: ["chat", "stream"],
+    maxInputTokens: 32768,
+    maxOutputTokens: 2048,
+    paid: false,
+    verified: false,
+  },
+];
+
+export class ModelRegistry {
+  constructor(models = MODEL_REGISTRY) {
+    this.models = models;
+    this.byId = new Map(models.map((m) => [m.id, m]));
+  }
+
+  get(id) {
+    return this.byId.get(id);
+  }
+
+  list() {
+    return this.models;
+  }
+
+  /**
+   * Find models matching required capabilities, sorted by tier desc.
+   * @param {string[]} capabilities
+   * @param {string} [providerFilter]
+   * @returns {ModelEntry[]}
+   */
+  findByCapabilities(capabilities, providerFilter) {
+    return this.models
+      .filter((m) => {
+        if (providerFilter && m.provider !== providerFilter) return false;
+        return capabilities.every((c) => m.capabilities.includes(c));
+      })
+      .sort((a, b) => b.tier - a.tier);
+  }
+
+  /**
+   * Fallback chain for a given primary model: same provider first, then others.
+   * @param {string} primaryId
+   * @returns {ModelEntry[]}
+   */
+  fallbackChain(primaryId) {
+    const primary = this.get(primaryId);
+    if (!primary) return this.models.slice().sort((a, b) => b.tier - a.tier);
+    const sameProvider = this.models
+      .filter((m) => m.provider === primary.provider && m.id !== primary.id)
+      .sort((a, b) => b.tier - a.tier);
+    const otherProviders = this.models
+      .filter((m) => m.provider !== primary.provider)
+      .sort((a, b) => b.tier - a.tier);
+    return [primary, ...sameProvider, ...otherProviders];
+  }
+}
+
+export const registry = new ModelRegistry();
+```
+
+FILE: `/checkmaitrex-ai/src/router/modelRouter.js`
+
+```javascript
+import { registry, PROVIDERS } from "../registry/modelRegistry.js";
+
+/**
+ * Intelligent Model Router
+ *
+ * Selects a model for a request based on:
+ *  - the assistant's preferred provider/model
+ *  - required capabilities (vision, reasoning, structured output)
+ *  - availability (health check result, cached)
+ *  - usage budget (paid-model guard)
+ *
+ * Returns an ordered fallback chain so the orchestrator can try each in turn.
+ */
+export class ModelRouter {
+  constructor() {
+    this.healthCache = new Map(); // modelId -> {ok, ts}
+    this.healthTTL = 60000; // 1 min
+  }
+
+  /**
+   * @param {object} opts
+   * @param {string} opts.assistantId
+   * @param {object} opts.assistantConfig  - {preferredModel, preferredProvider, tier}
+   * @param {string[]} [opts.capabilities]  - required capabilities
+   * @param {boolean} [opts.allowPaid]
+   * @returns {Promise<{chain: ModelEntry[], primary: ModelEntry}>}
+   */
+  async route({ assistantConfig, capabilities = ["chat"], allowPaid = false }) {
+    const preferred = assistantConfig.preferredModel
+      ? registry.get(assistantConfig.preferredModel)
+      : null;
+
+    let chain;
+    if (preferred) {
+      chain = registry.fallbackChain(preferred.id);
+    } else {
+      // No explicit preference: pick by provider priority then tier
+      const byProvider = [
+        ...registry.findByCapabilities(capabilities, PROVIDERS.GEMINI),
+        ...registry.findByCapabilities(capabilities, PROVIDERS.WORKERSAI),
+      ];
+      chain = byProvider;
+    }
+
+    // Filter out paid models unless explicitly allowed
+    if (!allowPaid) {
+      chain = chain.filter((m) => !m.paid);
+    }
+
+    // Filter by required capabilities
+    chain = chain.filter((m) =>
+      capabilities.every((c) => m.capabilities.includes(c))
+    );
+
+    // De-duplicate preserving order
+    const seen = new Set();
+    chain = chain.filter((m) => {
+      if (seen.has(m.id)) return false;
+      seen.add(m.id);
+      return true;
+    });
+
+    if (chain.length === 0) {
+      throw new Error("No model available for the requested capabilities");
+    }
+
+    return { chain, primary: chain[0] };
+  }
+
+  /** Mark a model as unhealthy for the TTL window. */
+  markUnhealthy(modelId) {
+    this.healthCache.set(modelId, { ok: false, ts: Date.now() });
+  }
+
+  /** Check cached health. */
+  isHealthy(modelId) {
+    const entry = this.healthCache.get(modelId);
+    if (!entry) return true;
+    if (Date.now() - entry.ts > this.healthTTL) {
+      this.healthCache.delete(modelId);
+      return true;
+    }
+    return entry.ok;
+  }
+
+  /** Filter a chain to only healthy models. */
+  healthyChain(chain) {
+    return chain.filter((m) => this.isHealthy(m.id));
+  }
+}
+
+export const router = new ModelRouter();
+```
+
+FILE: `/checkmaitrex-ai/src/services/chess.js`
+
+```javascript
+import { CLOUD_EVAL_TIMEOUT_MS } from "../config/constants.js";
+
+/**
+ * Chess Intelligence service.
+ *
+ * Preserves the original worker's Lichess Cloud Eval integration.
+ * Future: external Stockfish service (documented constraint — Workers
+ * cannot run Stockfish WASM reliably within CPU limits).
+ */
+
+/**
+ * Fetch cached Lichess cloud evaluation for a FEN position.
+ * @param {string} fen
+ * @returns {Promise<object|null>} eval data or null
+ */
+export async function getCloudEval(fen) {
+  if (!fen || typeof fen !== "string") return null;
+  const ctrl = new AbortController();
+  const timeout = setTimeout(() => ctrl.abort(), CLOUD_EVAL_TIMEOUT_MS);
+  try {
+    const url = `https://lichess.org/api/cloud-eval?fen=${encodeURIComponent(fen)}`;
+    const res = await fetch(url, { signal: ctrl.signal });
+    if (!res.ok) return null;
+    const data = await res.json();
+    if (!data || !data.pvs || !Array.isArray(data.pvs)) return null;
+    return {
+      depth: data.depth || 0,
+      fen: data.fen || fen,
+      knodes: data.knodes || 0,
+      pvs: data.pvs.map((pv) => ({
+        moves: pv.moves || "",
+        cp: typeof pv.cp === "number" ? pv.cp : null,
+        mate: typeof pv.mate === "number" ? pv.mate : null,
+      })),
+    };
+  } catch {
+    return null;
+  } finally {
+    clearTimeout(timeout);
+  }
+}
+
+/**
+ * Format cloud eval data into a context string for the AI prompt.
+ */
+export function formatCloudEvalContext(evalData) {
+  if (!evalData) return "";
+  const lines = ["CACHED LICHESS CLOUD EVAL DATA (not a fresh calculation):"];
+  lines.push(`Depth: ${evalData.depth}`);
+  lines.push(`Knodes: ${evalData.knodes}`);
+  for (const pv of evalData.pvs) {
+    if (pv.mate != null) {
+      lines.push(`PV: ${pv.moves} | Mate in ${pv.mate}`);
+    } else if (pv.cp != null) {
+      lines.push(`PV: ${pv.moves} | ${pv.cp >= 0 ? "+" : ""}${pv.cp} cp (White perspective)`);
+    }
+  }
+  lines.push("Moves may use UCI notation. Centipawn scores are from White's point of view.");
+  return lines.join("\n");
+}
+
+/**
+ * Extract a FEN string from a user message, if present.
+ */
+export function extractFen(message) {
+  if (!message) return null;
+  const fenRegex = /([rnbqkpRNBQKP1-8]+\/){7}[rnbqkpRNBQKP1-8]+\s+[wb]\s+([KQkqA-Ha-h-]+|{-})\s+(-|[a-h3-8])\s+(\d+)\s+(\d+)/;
+  const match = message.match(fenRegex);
+  return match ? match[0] : null;
+}
+```
+
+FILE: `/checkmaitrex-ai/src/services/conversationMigration.js`
+
+```javascript
+import {
+  CONVERSATION_PREFIX,
+  CONVERSATION_LIST_KEY,
+  MAX_CONVERSATIONS,
+  MAX_HISTORY_ITEMS,
+  MAX_HISTORY_ITEM_LENGTH,
+} from "../config/constants.js";
+
+/**
+ * Conversation Migration Service (KV → D1)
+ *
+ * SAFETY RULES:
+ *   - NEVER deletes KV data
+ *   - Reads from KV, writes to D1
+ *   - Dual-read: try D1 first, fall back to KV
+ *   - Validates data integrity before and after migration
+ *   - Idempotent: running twice does not duplicate records
+ *
+ * Migration is one-way (KV → D1). KV data is preserved as backup.
+ */
+
+/**
+ * Migrate all conversations from KV to D1.
+ * @param {KVNamespace} kv
+ * @param {D1Database} db
+ * @returns {Promise<{migrated:number, skipped:number, errors:string[]}>}
+ */
+export async function migrateConversations(kv, db) {
+  const errors = [];
+  let migrated = 0;
+  let skipped = 0;
+
+  // Get list of conversation session IDs from KV
+  let sessionIds = [];
+  try {
+    const raw = await kv.get(CONVERSATION_LIST_KEY);
+    sessionIds = raw ? JSON.parse(raw) : [];
+  } catch {
+    errors.push("Failed to read conversation list from KV");
+    return { migrated, skipped, errors };
+  }
+
+  for (const sessionId of sessionIds.slice(0, MAX_CONVERSATIONS)) {
+    try {
+      // Read conversation from KV
+      const raw = await kv.get(`${CONVERSATION_PREFIX}${sessionId}`);
+      if (!raw) {
+        skipped++;
+        continue;
+      }
+      const history = JSON.parse(raw);
+      if (!Array.isArray(history)) {
+        skipped++;
+        continue;
+      }
+
+      // Check if already migrated (idempotency)
+      const existing = await db
+        .prepare("SELECT COUNT(*) as cnt FROM conversations WHERE session_id = ?")
+        .bind(sessionId)
+        .first();
+      if (existing && existing.cnt > 0) {
+        skipped++;
+        continue;
+      }
+
+      // Insert each turn into D1
+      for (const turn of history.slice(-MAX_HISTORY_ITEMS)) {
+        const turnId = `${sessionId}-${turn.role}-${Date.now()}-${Math.random().toString(36).slice(2, 6)}`;
+        await db
+          .prepare(
+            "INSERT INTO conversations (id, session_id, assistant_id, role, content) VALUES (?, ?, ?, ?, ?)"
+          )
+          .bind(
+            turnId,
+            sessionId,
+            "checkmaitrex-ai", // default assistant for migrated data
+            turn.role || "user",
+            (turn.text || "").slice(0, MAX_HISTORY_ITEM_LENGTH)
+          )
+          .run();
+      }
+      migrated++;
+    } catch (e) {
+      errors.push(`Failed to migrate session ${sessionId}: ${e.message}`);
+    }
+  }
+
+  return { migrated, skipped, errors };
+}
+
+/**
+ * Dual-read: load conversation history from D1 first, fall back to KV.
+ * @param {string} sessionId
+ * @param {D1Database} db
+ * @param {KVNamespace} kv
+ * @returns {Promise<Array>} history turns [{role, text}]
+ */
+export async function loadHistoryDual(sessionId, db, kv) {
+  // Try D1 first
+  if (db) {
+    try {
+      const result = await db
+        .prepare("SELECT role, content FROM conversations WHERE session_id = ? ORDER BY created_at ASC LIMIT ?")
+        .bind(sessionId, MAX_HISTORY_ITEMS)
+        .all();
+      if (result.results && result.results.length > 0) {
+        return result.results.map((r) => ({ role: r.role, text: r.content }));
+      }
+    } catch {
+      // Fall through to KV
+    }
+  }
+
+  // Fall back to KV
+  if (kv) {
+    try {
+      const raw = await kv.get(`${CONVERSATION_PREFIX}${sessionId}`);
+      if (!raw) return [];
+      const data = JSON.parse(raw);
+      if (!Array.isArray(data)) return [];
+      return data.slice(-MAX_HISTORY_ITEMS);
+    } catch {
+      return [];
+    }
+  }
+
+  return [];
+}
+
+/**
+ * Dual-write: save conversation to D1 (and optionally KV for backward compat).
+ * @param {string} sessionId
+ * @param {Array} history
+ * @param {D1Database} db
+ * @param {KVNamespace} kv
+ * @param {boolean} keepKvBackup - if true, also write to KV (default: true)
+ */
+export async function saveHistoryDual(sessionId, history, db, kv, keepKvBackup = true) {
+  const trimmed = history.slice(-MAX_HISTORY_ITEMS).map((item) => ({
+    role: item.role,
+    text: (item.text || "").slice(0, MAX_HISTORY_ITEM_LENGTH),
+  }));
+
+  // Write to D1
+  if (db) {
+    try {
+      // Delete existing turns for this session (replace)
+      await db.prepare("DELETE FROM conversations WHERE session_id = ?").bind(sessionId).run();
+      for (const turn of trimmed) {
+        const turnId = `${sessionId}-${turn.role}-${Date.now()}-${Math.random().toString(36).slice(2, 6)}`;
+        await db
+          .prepare(
+            "INSERT INTO conversations (id, session_id, assistant_id, role, content) VALUES (?, ?, ?, ?, ?)"
+          )
+          .bind(turnId, sessionId, "checkmaitrex-ai", turn.role, turn.text)
+          .run();
+      }
+    } catch {
+      // non-fatal — KV backup still works
+    }
+  }
+
+  // Also write to KV as backup (if enabled)
+  if (kv && keepKvBackup) {
+    try {
+      await kv.put(`${CONVERSATION_PREFIX}${sessionId}`, JSON.stringify(trimmed));
+    } catch {
+      // non-fatal
+    }
+  }
+}
+
+/**
+ * Verify migration integrity: compare KV record count vs D1 record count.
+ * @returns {Promise<{kvCount:number, d1Count:number, match:boolean}>}
+ */
+export async function verifyMigrationIntegrity(kv, db) {
+  let kvCount = 0;
+  let d1Count = 0;
+
+  try {
+    const raw = await kv.get(CONVERSATION_LIST_KEY);
+    const sessionIds = raw ? JSON.parse(raw) : [];
+    kvCount = sessionIds.length;
+  } catch {
+    // KV unavailable
+  }
+
+  if (db) {
+    try {
+      const result = await db
+        .prepare("SELECT COUNT(DISTINCT session_id) as cnt FROM conversations")
+        .first();
+      d1Count = result ? result.cnt : 0;
+    } catch {
+      // D1 unavailable
+    }
+  }
+
+  return { kvCount, d1Count, match: kvCount === d1Count };
+}
+```
+
+FILE: `/checkmaitrex-ai/src/services/health.js`
+
+```javascript
+import { registry } from "../registry/modelRegistry.js";
+
+/**
+ * Health Monitoring Service
+ *
+ * Provides comprehensive health checks for all system components:
+ * - Provider health (Gemini, Workers AI)
+ * - D1 database connectivity
+ * - KV namespace accessibility
+ * - Durable Object availability
+ * - Rate limiter status
+ *
+ * All checks are non-destructive and do not expose secrets.
+ */
+
+/**
+ * Run a full system health check.
+ * @param {object} env - Worker environment bindings
+ * @returns {Promise<object>} health report
+ */
+export async function systemHealthCheck(env) {
+  const checks = await Promise.allSettled([
+    checkGemini(env),
+    checkWorkersAI(env),
+    checkD1(env),
+    checkKV(env),
+    checkDurableObject(env),
+  ]);
+
+  const labels = ["gemini", "workersAI", "d1", "kv", "rateLimiter"];
+  const results = {};
+  let allHealthy = true;
+
+  for (let i = 0; i < checks.length; i++) {
+    const label = labels[i];
+    if (checks[i].status === "fulfilled") {
+      results[label] = checks[i].value;
+      if (!results[label].ok) allHealthy = false;
+    } else {
+      results[label] = { ok: false, error: checks[i].reason?.message || "check failed" };
+      allHealthy = false;
+    }
+  }
+
+  return {
+    status: allHealthy ? "healthy" : "degraded",
+    timestamp: new Date().toISOString(),
+    checks: results,
+    models: {
+      total: registry.list().length,
+      verified: registry.list().filter((m) => m.verified).length,
+    },
+  };
+}
+
+async function checkGemini(env) {
+  if (!env.GEMINI_API_KEY) return { ok: false, reason: "GEMINI_API_KEY not set" };
+  return { ok: true, configured: true };
+}
+
+async function checkWorkersAI(env) {
+  if (!env.AI) return { ok: false, reason: "AI binding not configured" };
+  return { ok: true, configured: true };
+}
+
+async function checkD1(env) {
+  if (!env.DB) return { ok: false, reason: "DB binding not configured" };
+  try {
+    const result = await env.DB.prepare("SELECT 1 as ok").first();
+    return { ok: result?.ok === 1, configured: true };
+  } catch (e) {
+    return { ok: false, reason: e.message, configured: true };
+  }
+}
+
+async function checkKV(env) {
+  if (!env.SOCIAL_DATA) return { ok: false, reason: "SOCIAL_DATA binding not configured" };
+  try {
+    // Non-destructive read check
+    await env.SOCIAL_DATA.get("facebook_posts");
+    return { ok: true, configured: true };
+  } catch (e) {
+    return { ok: false, reason: e.message, configured: true };
+  }
+}
+
+async function checkDurableObject(env) {
+  if (!env.RATE_LIMITER) return { ok: false, reason: "RATE_LIMITER binding not configured (using in-memory fallback)" };
+  try {
+    const id = env.RATE_LIMITER.idFromName("health-check");
+    const stub = env.RATE_LIMITER.get(id);
+    const res = await stub.fetch(new Request("https://rate-limiter/check", {
+      method: "POST",
+      body: JSON.stringify({ limit: 1, windowMs: 60000 }),
+    }));
+    return { ok: res.ok, configured: true };
+  } catch (e) {
+    return { ok: false, reason: e.message, configured: true };
+  }
+}
+
+/**
+ * Structured error logger — sanitizes sensitive data before logging.
+ * @param {string} requestId
+ * @param {Error} error
+ * @param {object} context
+ */
+export function logError(requestId, error, context = {}) {
+  const safeContext = sanitizeContext(context);
+  console.error(JSON.stringify({
+    requestId,
+    error: error.message,
+    name: error.name,
+    status: error.status || 500,
+    context: safeContext,
+    timestamp: new Date().toISOString(),
+  }));
+}
+
+/**
+ * Remove sensitive data from log context.
+ */
+function sanitizeContext(context) {
+  const sensitive = ["apiKey", "token", "secret", "password", "ownerKey", "sessionToken", "authorization"];
+  const sanitized = {};
+  for (const [key, value] of Object.entries(context)) {
+    if (sensitive.some((s) => key.toLowerCase().includes(s.toLowerCase()))) {
+      sanitized[key] = "[REDACTED]";
+    } else {
+      sanitized[key] = value;
+    }
+  }
+  return sanitized;
+}
+
+/**
+ * Provider health status with fallback chain reporting.
+ * @param {object} env
+ * @returns {Promise<object>} provider status report
+ */
+export async function providerHealthReport(env) {
+  const gemini = await checkGemini(env);
+  const workersAI = await checkWorkersAI(env);
+
+  return {
+    primary: {
+      provider: "gemini",
+      ok: gemini.ok,
+      reason: gemini.reason || null,
+    },
+    secondary: {
+      provider: "workersai",
+      ok: workersAI.ok,
+      reason: workersAI.reason || null,
+    },
+    fallbackAvailable: gemini.ok || workersAI.ok,
+    recommendation: !gemini.ok && !workersAI.ok
+      ? "CRITICAL: No AI providers available"
+      : !gemini.ok
+      ? "WARNING: Primary provider (Gemini) unavailable, using Workers AI fallback"
+      : "OK: Primary provider available",
+  };
+}
+```
+
+FILE: `/checkmaitrex-ai/src/services/knowledge.js`
+
+```javascript
+import {
+  OWNER_KNOWLEDGE_KEY,
+  MAX_OWNER_KNOWLEDGE_ITEMS,
+  MAX_OWNER_KNOWLEDGE_ITEM_LENGTH,
+} from "../config/constants.js";
+import { CLUB_KNOWLEDGE } from "../prompts/systemPrompts.js";
+
+/**
+ * Knowledge Retrieval service.
+ *
+ * - Club knowledge: static, embedded in system prompts (CLUB_KNOWLEDGE).
+ * - Owner private knowledge: stored in KV, only injected when the owner
+ *   is authenticated.
+ *
+ * Owner commands preserved: !learn, !knowledge, !forget, !unlock
+ */
+
+/**
+ * Parse owner commands from a message.
+ * @returns {object|null} {command, arg} or null
+ */
+export function parseOwnerCommand(message) {
+  if (!message || typeof message !== "string") return null;
+  const trimmed = message.trim();
+  const match = trimmed.match(/^!(learn|knowledge|forget|unlock)\b(.*)$/i);
+  if (!match) return null;
+  return {
+    command: match[1].toLowerCase(),
+    arg: match[2].trim(),
+  };
+}
+
+/**
+ * Handle an owner command. Returns a result string.
+ */
+export async function handleOwnerCommand(command, arg, env) {
+  const kv = env.SOCIAL_DATA;
+  switch (command) {
+    case "learn": {
+      if (!arg) return "Usage: !learn <knowledge item>";
+      const items = await getOwnerKnowledge(kv);
+      items.unshift(arg.slice(0, MAX_OWNER_KNOWLEDGE_ITEM_LENGTH));
+      if (items.length > MAX_OWNER_KNOWLEDGE_ITEMS) {
+        items.length = MAX_OWNER_KNOWLEDGE_ITEMS;
+      }
+      await kv.put(OWNER_KNOWLEDGE_KEY, JSON.stringify(items));
+      return "Learned. I will use this when you are authenticated.";
+    }
+    case "knowledge": {
+      const items = await getOwnerKnowledge(kv);
+      if (items.length === 0) return "No private knowledge stored.";
+      return "PRIVATE KNOWLEDGE:\n" + items.map((it, i) => `${i + 1}. ${it}`).join("\n");
+    }
+    case "forget": {
+      if (!arg) {
+        await kv.put(OWNER_KNOWLEDGE_KEY, JSON.stringify([]));
+        return "All private knowledge cleared.";
+      }
+      const items = await getOwnerKnowledge(kv);
+      const filtered = items.filter((it) => !it.includes(arg));
+      await kv.put(OWNER_KNOWLEDGE_KEY, JSON.stringify(filtered));
+      return `Forgot items matching "${arg}".`;
+    }
+    case "unlock":
+      return "Owner authenticated. Private knowledge is now available.";
+    default:
+      return null;
+  }
+}
+
+async function getOwnerKnowledge(kv) {
+  try {
+    const raw = await kv.get(OWNER_KNOWLEDGE_KEY);
+    return raw ? JSON.parse(raw) : [];
+  } catch {
+    return [];
+  }
+}
+
+/**
+ * Build the owner private knowledge context block (only for authenticated owner).
+ */
+export async function getOwnerKnowledgeBlock(isOwner, env) {
+  if (!isOwner) return "";
+  const items = await getOwnerKnowledge(env.SOCIAL_DATA);
+  if (items.length === 0) return "";
+  return (
+    "\n\nPRIVATE KNOWLEDGE (owner only, confidential):\n" +
+    items.map((it) => `- ${it}`).join("\n")
+  );
+}
+
+/**
+ * The static club knowledge block (always included).
+ */
+export function getClubKnowledgeBlock() {
+  return CLUB_KNOWLEDGE;
+}
+```
+
+FILE: `/checkmaitrex-ai/src/services/memory.js`
+
+```javascript
+import {
+  CONVERSATION_PREFIX,
+  CONVERSATION_LIST_KEY,
+  MAX_CONVERSATIONS,
+  MAX_HISTORY_ITEMS,
+  MAX_HISTORY_ITEM_LENGTH,
+} from "../config/constants.js";
+
+/**
+ * Memory / Conversation Manager.
+ *
+ * Preserves the original worker's KV-backed conversation storage.
+ * Future migration: D1 `conversations` table (see DATABASE_SCHEMA.md).
+ * Currently uses the shared SOCIAL_DATA KV namespace.
+ */
+
+/**
+ * Load recent conversation history for a user session.
+ * @param {string} sessionId
+ * @param {KVNamespace} kv
+ * @returns {Promise<Array>} history turns [{role, text}]
+ */
+export async function loadHistory(sessionId, kv) {
+  if (!sessionId) return [];
+  try {
+    const raw = await kv.get(`${CONVERSATION_PREFIX}${sessionId}`);
+    if (!raw) return [];
+    const data = JSON.parse(raw);
+    if (!Array.isArray(data)) return [];
+    return data.slice(-MAX_HISTORY_ITEMS);
+  } catch {
+    return [];
+  }
+}
+
+/**
+ * Save updated conversation history.
+ * @param {string} sessionId
+ * @param {Array} history  - [{role, text}]
+ * @param {KVNamespace} kv
+ */
+export async function saveHistory(sessionId, history, kv) {
+  if (!sessionId) return;
+  const trimmed = history.slice(-MAX_HISTORY_ITEMS).map((item) => ({
+    role: item.role,
+    text: (item.text || "").slice(0, MAX_HISTORY_ITEM_LENGTH),
+  }));
+  await kv.put(`${CONVERSATION_PREFIX}${sessionId}`, JSON.stringify(trimmed));
+  await updateConversationList(sessionId, kv);
+}
+
+async function updateConversationList(sessionId, kv) {
+  try {
+    const raw = await kv.get(CONVERSATION_LIST_KEY);
+    const list = raw ? JSON.parse(raw) : [];
+    if (!list.includes(sessionId)) {
+      list.unshift(sessionId);
+      if (list.length > MAX_CONVERSATIONS) list.length = MAX_CONVERSATIONS;
+      await kv.put(CONVERSATION_LIST_KEY, JSON.stringify(list));
+    }
+  } catch {
+    // non-fatal
+  }
+}
+
+/**
+ * Convert stored history into Gemini contents format.
+ * @param {Array} history
+ * @returns {Array} contents [{role, parts:[{text}]}]
+ */
+export function historyToContents(history) {
+  return history.map((item) => ({
+    role: item.role === "assistant" || item.role === "model" ? "model" : "user",
+    parts: [{ text: item.text }],
+  }));
+}
+```
+
+FILE: `/checkmaitrex-ai/src/services/monitoring.js`
+
+```javascript
+/**
+ * Monitoring and Alerts Service
+ *
+ * Provides:
+ * - System health monitoring (all components)
+ * - Provider health monitoring with circuit breaker
+ * - Usage alerts (budget thresholds, rate limit warnings)
+ * - Error tracking with structured logging
+ * - Recovery reporting (fallback status, provider recovery)
+ *
+ * All logging sanitizes secrets and private user information.
+ */
+
+import { registry } from "../registry/modelRegistry.js";
+
+/**
+ * Alert severity levels
+ */
+export const ALERT_SEVERITY = {
+  CRITICAL: "critical",
+  WARNING: "warning",
+  INFO: "info",
+  OK: "ok",
+};
+
+/**
+ * In-memory alert store (for dev/testing — production would use D1 or external monitoring)
+ */
+const alertStore = [];
+
+/**
+ * Generate a system monitoring report.
+ * @param {object} env
+ * @returns {Promise<object>}
+ */
+export async function monitoringReport(env) {
+  const checks = await runAllChecks(env);
+  const alerts = generateAlerts(checks);
+
+  return {
+    timestamp: new Date().toISOString(),
+    overallStatus: alerts.some(a => a.severity === ALERT_SEVERITY.CRITICAL) ? "critical"
+      : alerts.some(a => a.severity === ALERT_SEVERITY.WARNING) ? "warning"
+      : "ok",
+    checks,
+    alerts,
+    summary: {
+      totalChecks: Object.keys(checks).length,
+      passed: Object.values(checks).filter(c => c.ok).length,
+      failed: Object.values(checks).filter(c => !c.ok).length,
+      activeAlerts: alerts.filter(a => a.severity !== ALERT_SEVERITY.OK).length,
+    },
+  };
+}
+
+async function runAllChecks(env) {
+  const checks = {};
+
+  // Provider checks
+  checks.gemini = { ok: !!env.GEMINI_API_KEY, component: "provider", detail: env.GEMINI_API_KEY ? "configured" : "missing" };
+  checks.workersAI = { ok: !!env.AI, component: "provider", detail: env.AI ? "configured" : "missing" };
+
+  // Storage checks
+  checks.d1 = await checkD1(env);
+  checks.kv = await checkKV(env);
+
+  // DO check
+  checks.rateLimiter = { ok: !!env.RATE_LIMITER, component: "durable-object", detail: env.RATE_LIMITER ? "configured" : "not deployed (in-memory fallback active)" };
+
+  // Model registry check
+  const verifiedModels = registry.list().filter(m => m.verified).length;
+  checks.modelRegistry = { ok: verifiedModels > 0, component: "registry", detail: `${registry.list().length} models, ${verifiedModels} verified` };
+
+  // Fallback availability
+  checks.fallbackAvailable = {
+    ok: checks.gemini.ok || checks.workersAI.ok,
+    component: "failover",
+    detail: checks.gemini.ok && checks.workersAI.ok ? "both providers available" : "limited fallback",
+  };
+
+  return checks;
+}
+
+async function checkD1(env) {
+  if (!env.DB) return { ok: false, component: "d1", detail: "not configured" };
+  try {
+    await env.DB.prepare("SELECT 1").first();
+    return { ok: true, component: "d1", detail: "connected" };
+  } catch (e) {
+    return { ok: false, component: "d1", detail: e.message };
+  }
+}
+
+async function checkKV(env) {
+  if (!env.SOCIAL_DATA) return { ok: false, component: "kv", detail: "not configured" };
+  try {
+    await env.SOCIAL_DATA.get("facebook_posts");
+    return { ok: true, component: "kv", detail: "accessible" };
+  } catch (e) {
+    return { ok: false, component: "kv", detail: e.message };
+  }
+}
+
+/**
+ * Generate alerts from check results.
+ */
+function generateAlerts(checks) {
+  const alerts = [];
+
+  for (const [name, check] of Object.entries(checks)) {
+    if (!check.ok) {
+      const severity = (name === "gemini" && checks.workersAI?.ok) || (name === "workersAI" && checks.gemini?.ok)
+        ? ALERT_SEVERITY.WARNING
+        : ALERT_SEVERITY.CRITICAL;
+
+      alerts.push({
+        component: name,
+        severity,
+        message: `${check.component} ${name}: ${check.detail}`,
+        timestamp: new Date().toISOString(),
+      });
+    } else {
+      alerts.push({
+        component: name,
+        severity: ALERT_SEVERITY.OK,
+        message: `${name}: ${check.detail}`,
+        timestamp: new Date().toISOString(),
+      });
+    }
+  }
+
+  return alerts;
+}
+
+/**
+ * Record an alert (for persistence in D1 or external monitoring).
+ */
+export function recordAlert(severity, component, message) {
+  const alert = {
+    severity,
+    component,
+    message: sanitizeMessage(message),
+    timestamp: new Date().toISOString(),
+  };
+  alertStore.push(alert);
+  if (alertStore.length > 100) alertStore.shift();
+  console.log(JSON.stringify({ type: "alert", ...alert }));
+  return alert;
+}
+
+/**
+ * Get recent alerts.
+ */
+export function getRecentAlerts(limit = 20) {
+  return alertStore.slice(-limit);
+}
+
+/**
+ * Sanitize message to remove secrets and private info.
+ */
+function sanitizeMessage(message) {
+  if (typeof message !== "string") return String(message);
+  // Remove potential API keys, tokens, secrets
+  return message
+    .replace(/sk-[a-zA-Z0-9]+/g, "[REDACTED]")
+    .replace(/AIza[a-zA-Z0-9_-]+/g, "[REDACTED]")
+    .replace(/Bearer\s+[a-zA-Z0-9._-]+/g, "Bearer [REDACTED]")
+    .replace(/[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}/g, "[EMAIL]");
+}
+
+/**
+ * Circuit breaker for provider health.
+ * Tracks failures and opens circuit after threshold.
+ */
+export class CircuitBreaker {
+  constructor(threshold = 3, resetTimeoutMs = 60000) {
+    this.threshold = threshold;
+    this.resetTimeoutMs = resetTimeoutMs;
+    this.failures = new Map(); // provider -> { count, lastFailure, open }
+  }
+
+  recordFailure(provider) {
+    const state = this.failures.get(provider) || { count: 0, lastFailure: 0, open: false };
+    state.count++;
+    state.lastFailure = Date.now();
+    if (state.count >= this.threshold) {
+      state.open = true;
+      recordAlert(ALERT_SEVERITY.WARNING, provider, `Circuit breaker opened for ${provider} after ${state.count} failures`);
+    }
+    this.failures.set(provider, state);
+  }
+
+  recordSuccess(provider) {
+    const state = this.failures.get(provider);
+    if (state) {
+      state.count = 0;
+      state.open = false;
+    }
+  }
+
+  isOpen(provider) {
+    const state = this.failures.get(provider);
+    if (!state || !state.open) return false;
+    // Check if reset timeout has passed
+    if (Date.now() - state.lastFailure > this.resetTimeoutMs) {
+      state.open = false;
+      state.count = 0;
+      return false;
+    }
+    return true;
+  }
+
+  getStatus(provider) {
+    const state = this.failures.get(provider) || { count: 0, open: false };
+    return { provider, failures: state.count, open: state.open || false };
+  }
+
+  getAllStatus() {
+    const providers = ["gemini", "workersai"];
+    return providers.map(p => this.getStatus(p));
+  }
+}
+
+export const circuitBreaker = new CircuitBreaker();
+```
+
+FILE: `/checkmaitrex-ai/src/services/posts.js`
+
+```javascript
+import {
+  KV_KEY,
+  MAX_POSTS_IN_CONTEXT,
+  MAX_POST_MESSAGE_IN_CONTEXT,
+  CACHE_TTL,
+  CACHE_PREFIX,
+} from "../config/constants.js";
+
+/**
+ * Facebook Posts service.
+ *
+ * Preserves the original worker's Facebook posts context injection.
+ * Posts are synced by the `checkmaitrex-activities-sync` Worker into the
+ * SOCIAL_DATA KV namespace under the key "facebook_posts".
+ */
+
+/**
+ * Load recent posts from KV and format them as context for the AI prompt.
+ * @param {KVNamespace} kv
+ * @returns {Promise<string>} context block (may be empty)
+ */
+export async function getPostsContext(kv) {
+  try {
+    const raw = await kv.get(KV_KEY);
+    if (!raw) return "";
+    const parsed = JSON.parse(raw);
+    // Handle both formats: bare array OR { posts: [...] } object
+    const posts = Array.isArray(parsed) ? parsed : (parsed.posts || []);
+    if (!Array.isArray(posts) || posts.length === 0) return "";
+    const recent = posts.slice(0, MAX_POSTS_IN_CONTEXT);
+    const lines = ["\n\nRECENT FACEBOOK POSTS (from official page, synced periodically):"];
+    for (const post of recent) {
+      const message = (post.message || post.text || "")
+        .slice(0, MAX_POST_MESSAGE_IN_CONTEXT)
+        .replace(/\s+/g, " ")
+        .trim();
+      const link = post.permalink_url || post.link || "";
+      const created = post.created_time ? post.created_time.slice(0, 10) : "";
+      if (message || link) {
+        lines.push(`- [${created}] ${message}${link ? " Link: " + link : ""}`);
+      }
+    }
+    return lines.join("\n");
+  } catch {
+    return "";
+  }
+}
+
+/**
+ * Get raw posts for the API endpoint (with caching).
+ */
+export async function getPosts(kv, request) {
+  const cacheKey = `${CACHE_PREFIX}posts_api`;
+  try {
+    const cached = await kv.get(cacheKey, "json");
+    if (cached) return cached;
+  } catch {
+    // continue
+  }
+  try {
+    const raw = await kv.get(KV_KEY);
+    const parsed = raw ? JSON.parse(raw) : [];
+    // Handle both formats: bare array OR { posts: [...] } object
+    const posts = Array.isArray(parsed) ? parsed : (parsed.posts || []);
+    const result = Array.isArray(posts) ? posts : [];
+    await kv.put(cacheKey, JSON.stringify(result), { expirationTtl: 300 });
+    return result;
+  } catch {
+    return [];
+  }
+}
+
+/**
+ * Generate the embeddable feed.js content for the club website.
+ */
+export async function getFeedScript(kv, origin) {
+  const posts = await getPosts(kv, null);
+  const safe = JSON.stringify(posts.slice(0, 20));
+  return `window.CHECKMAITREX_POSTS = ${safe};`;
+}
+```
+
+FILE: `/checkmaitrex-ai/src/services/rateLimit.js`
+
+```javascript
+import { RATE_WINDOW_MS, MAX_REQUESTS_PER_WINDOW, ROLES } from "../config/constants.js";
+
+/**
+ * Rate Limiting Service
+ *
+ * Uses Durable Objects for durable, distributed rate limiting.
+ * Falls back to in-memory Map if the DO binding is unavailable
+ * (preserving the original behavior as a safety net).
+ *
+ * Limits:
+ *   - Guest: 12 requests / 60s (default)
+ *   - Owner: 60 requests / 60s (higher limit)
+ *   - Per-assistant: independent buckets
+ */
+
+// In-memory fallback (per-isolate, not durable)
+const memoryLimits = new Map();
+
+/**
+ * Check rate limit for a request.
+ * @param {object} opts
+ * @param {string} opts.ip - client IP
+ * @param {string} opts.role - user role
+ * @param {string} opts.assistantId - requested assistant
+ * @param {DurableObjectNamespace} [opts.rateLimiter] - DO binding
+ * @returns {Promise<{allowed:boolean, count:number, limit:number}>}
+ */
+export async function checkRateLimit({ ip, role, assistantId, rateLimiter }) {
+  const isOwner = role === ROLES.OWNER;
+  const limit = isOwner ? 60 : MAX_REQUESTS_PER_WINDOW;
+  const windowMs = RATE_WINDOW_MS;
+  const bucketKey = `${ip || "unknown"}:${assistantId || "guest"}`;
+
+  // Try Durable Object first (durable, distributed)
+  if (rateLimiter) {
+    try {
+      const doId = rateLimiter.idFromName(bucketKey);
+      const stub = rateLimiter.get(doId);
+      const res = await stub.fetch(new Request("https://rate-limiter/check", {
+        method: "POST",
+        body: JSON.stringify({ limit, windowMs }),
+      }));
+      if (res.ok) {
+        return await res.json();
+      }
+    } catch {
+      // Fall through to in-memory fallback
+    }
+  }
+
+  // In-memory fallback (per-isolate only — not durable)
+  const now = Date.now();
+  let entry = memoryLimits.get(bucketKey);
+  if (!entry || now >= entry.resetAt) {
+    entry = { count: 0, resetAt: now + windowMs };
+  }
+  entry.count++;
+  memoryLimits.set(bucketKey, entry);
+  return {
+    allowed: entry.count <= limit,
+    count: entry.count,
+    limit,
+    resetMs: entry.resetAt - now,
+  };
+}
+```
+
+FILE: `/checkmaitrex-ai/src/services/usage.js`
+
+```javascript
+/**
+ * Usage and Cost Tracking Service
+ *
+ * Tracks per-request usage in D1 (usage_log table):
+ *   - per user/session, per assistant, per model, per provider
+ *   - input/output tokens, cost estimate, success/fallback
+ *
+ * Provides aggregation queries for reporting and budget monitoring.
+ * No paid services introduced — cost estimates are based on free-tier limits.
+ */
+
+/**
+ * Log a usage record to D1.
+ * @param {object} params
+ * @param {D1Database} db
+ */
+export async function logUsage(params, db) {
+  if (!db) return;
+  try {
+    await db
+      .prepare(
+        `INSERT INTO usage_log (request_id, session_id, assistant_id, model_id, provider, input_tokens, output_tokens, cost_estimate, success, fallback)
+         VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`
+      )
+      .bind(
+        params.requestId || "",
+        params.sessionId || null,
+        params.assistantId || "checkmaitrex-ai",
+        params.modelId || "unknown",
+        params.provider || "unknown",
+        params.inputTokens || 0,
+        params.outputTokens || 0,
+        params.costEstimate || 0,
+        params.success ? 1 : 0,
+        params.fallback ? 1 : 0
+      )
+      .run();
+  } catch {
+    // non-fatal — usage logging should not break the request
+  }
+}
+
+/**
+ * Get usage summary for a time period.
+ * @param {D1Database} db
+ * @param {object} opts - { startDate, endDate, assistantId, groupBy }
+ * @returns {Promise<object>}
+ */
+export async function getUsageSummary(db, opts = {}) {
+  if (!db) return { error: "D1 not available" };
+  const { startDate, endDate, assistantId, groupBy = "assistant" } = opts;
+
+  let sql = "SELECT";
+  const params = [];
+
+  if (groupBy === "assistant") {
+    sql += " assistant_id, COUNT(*) as requests, SUM(input_tokens) as input_tokens, SUM(output_tokens) as output_tokens, SUM(CASE WHEN success=1 THEN 1 ELSE 0 END) as successes, SUM(CASE WHEN fallback=1 THEN 1 ELSE 0 END) as fallbacks";
+    sql += " FROM usage_log";
+  } else if (groupBy === "model") {
+    sql += " model_id, provider, COUNT(*) as requests, SUM(input_tokens) as input_tokens, SUM(output_tokens) as output_tokens";
+    sql += " FROM usage_log";
+  } else if (groupBy === "day") {
+    sql += " DATE(created_at) as date, COUNT(*) as requests, SUM(input_tokens) as input_tokens, SUM(output_tokens) as output_tokens";
+    sql += " FROM usage_log";
+  } else {
+    sql += " COUNT(*) as total_requests, SUM(input_tokens) as total_input_tokens, SUM(output_tokens) as total_output_tokens, SUM(CASE WHEN success=1 THEN 1 ELSE 0 END) as total_successes, SUM(CASE WHEN fallback=1 THEN 1 ELSE 0 END) as total_fallbacks";
+    sql += " FROM usage_log";
+  }
+
+  const conditions = [];
+  if (startDate) { conditions.push("created_at >= ?"); params.push(startDate); }
+  if (endDate) { conditions.push("created_at <= ?"); params.push(endDate); }
+  if (assistantId) { conditions.push("assistant_id = ?"); params.push(assistantId); }
+  if (conditions.length) sql += " WHERE " + conditions.join(" AND ");
+
+  if (groupBy !== "total") {
+    if (groupBy === "day") sql += " GROUP BY DATE(created_at) ORDER BY date DESC";
+    else sql += " GROUP BY " + (groupBy === "assistant" ? "assistant_id" : "model_id, provider") + " ORDER BY requests DESC";
+  }
+
+  try {
+    let stmt = db.prepare(sql);
+    if (params.length) stmt = stmt.bind(...params);
+    const result = await stmt.all();
+    return { success: true, data: result.results, groupBy };
+  } catch (e) {
+    return { success: false, error: e.message };
+  }
+}
+
+/**
+ * Check if a usage quota has been exceeded.
+ * @param {D1Database} db
+ * @param {object} opts - { sessionId, role, limit }
+ * @returns {Promise<{exceeded:boolean, count:number, limit:number}>}
+ */
+export async function checkQuota(db, opts = {}) {
+  if (!db) return { exceeded: false, count: 0, limit: Infinity };
+  const { sessionId, role, limit = 100 } = opts;
+  try {
+    const today = new Date().toISOString().slice(0, 10);
+    const result = await db
+      .prepare("SELECT COUNT(*) as cnt FROM usage_log WHERE session_id = ? AND DATE(created_at) = ?")
+      .bind(sessionId || "unknown", today)
+      .first();
+    const count = result?.cnt || 0;
+    return { exceeded: count >= limit, count, limit };
+  } catch {
+    return { exceeded: false, count: 0, limit };
+  }
+}
+
+/**
+ * Budget monitor — checks daily token usage against a threshold.
+ * @param {D1Database} db
+ * @param {number} dailyTokenBudget
+ * @returns {Promise<{used:number, budget:number, exceeded:boolean, percentage:number}>}
+ */
+export async function checkBudget(db, dailyTokenBudget = 1000000) {
+  if (!db) return { used: 0, budget: dailyTokenBudget, exceeded: false, percentage: 0 };
+  try {
+    const today = new Date().toISOString().slice(0, 10);
+    const result = await db
+      .prepare("SELECT COALESCE(SUM(input_tokens + output_tokens), 0) as used FROM usage_log WHERE DATE(created_at) = ?")
+      .bind(today)
+      .first();
+    const used = result?.used || 0;
+    return {
+      used,
+      budget: dailyTokenBudget,
+      exceeded: used >= dailyTokenBudget,
+      percentage: Math.round((used / dailyTokenBudget) * 100),
+    };
+  } catch {
+    return { used: 0, budget: dailyTokenBudget, exceeded: false, percentage: 0 };
+  }
+}
+```
+
+FILE: `/checkmaitrex-ai/src/utils/cors.js`
+
+```javascript
+import { ALLOWED_ORIGINS } from "../config/constants.js";
+
+/**
+ * CORS utilities.
+ * IMPORTANT: CORS is NOT authentication. It only controls browser access.
+ * All sensitive operations are validated server-side regardless of origin.
+ */
+
+export function corsHeaders(request) {
+  const origin = request.headers.get("Origin") || "";
+  const allowed = ALLOWED_ORIGINS.has(origin) ? origin : "";
+  return {
+    "Access-Control-Allow-Origin": allowed,
+    "Access-Control-Allow-Methods": "GET, POST, OPTIONS",
+    "Access-Control-Allow-Headers": "Content-Type, X-Owner-Key, X-Assistant",
+    "Access-Control-Max-Age": "86400",
+    "Vary": "Origin",
+  };
+}
+
+export function handlePreflight(request) {
+  if (request.method === "OPTIONS") {
+    return new Response(null, { status: 204, headers: corsHeaders(request) });
+  }
+  return null;
+}
+```
+
+FILE: `/checkmaitrex-ai/src/utils/response.js`
+
+```javascript
+/**
+ * Response helpers for consistent API output.
+ */
+
+export function jsonResponse(data, status = 200, extraHeaders = {}) {
+  return new Response(JSON.stringify(data), {
+    status,
+    headers: {
+      "Content-Type": "application/json",
+      ...extraHeaders,
+    },
+  });
+}
+
+export function errorResponse(message, status = 400, extraHeaders = {}) {
+  return jsonResponse({ error: message, success: false }, status, extraHeaders);
+}
+
+export function generateRequestId() {
+  return "req_" + Date.now().toString(36) + Math.random().toString(36).slice(2, 8);
+}
+```
+
+FILE: `/checkmaitrex-ai/src/utils/validation.js`
+
+```javascript
+import {
+  MAX_MESSAGE_LENGTH,
+  MAX_BODY_BYTES,
+  MAX_HISTORY_ITEMS,
+  MAX_HISTORY_ITEM_LENGTH,
+} from "../config/constants.js";
+
+/**
+ * Input validation utilities.
+ */
+
+export function validateChatInput(body) {
+  const errors = [];
+  if (!body || typeof body !== "object") {
+    return ["Invalid request body"];
+  }
+  const message = body.message || body.text || "";
+  if (!message || typeof message !== "string") {
+    errors.push("Message is required");
+  } else if (message.length > MAX_MESSAGE_LENGTH) {
+    errors.push(`Message exceeds ${MAX_MESSAGE_LENGTH} characters`);
+  }
+  if (body.history) {
+    if (!Array.isArray(body.history)) {
+      errors.push("History must be an array");
+    } else if (body.history.length > MAX_HISTORY_ITEMS) {
+      errors.push(`History exceeds ${MAX_HISTORY_ITEMS} items`);
+    } else {
+      for (const item of body.history) {
+        if (typeof item.text === "string" && item.text.length > MAX_HISTORY_ITEM_LENGTH) {
+          errors.push(`History item exceeds ${MAX_HISTORY_ITEM_LENGTH} characters`);
+          break;
+        }
+      }
+    }
+  }
+  return errors;
+}
+
+export function checkBodySize(request) {
+  const contentLength = parseInt(request.headers.get("Content-Length") || "0", 10);
+  return contentLength <= MAX_BODY_BYTES;
+}
+
+export function sanitizeText(text) {
+  if (typeof text !== "string") return "";
+  return text.slice(0, MAX_MESSAGE_LENGTH * 2);
+}
+```
+
+**Completed this batch:** migrations/0001_initial.sql, providers/base.js, providers/gemini.js, providers/workersai.js, registry/modelRegistry.js, router/modelRouter.js, services/chess.js, services/conversationMigration.js, services/health.js, services/knowledge.js, services/memory.js, services/monitoring.js, services/posts.js, services/rateLimit.js, services/usage.js, utils/cors.js, utils/response.js, utils/validation.js (18 files)
+
+**Remaining:** tests/ (6 files), docs/ (5 files), dashboard/ai-management-proposed.html, RECOVERY_MANIFEST.md, source-viewer.html, base64 files (17), tests/orchestrator.test.js
+
+I'm at my tool round limit for this response. Please say "continue" and I'll deliver the remaining files: tests, docs, RECOVERY_MANIFEST.md, and the base64 file verification.
