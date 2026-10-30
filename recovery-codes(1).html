@@ -1928,3 +1928,301 @@ export function sanitizeText(text) {
 **Remaining:** tests/ (6 files), docs/ (5 files), dashboard/ai-management-proposed.html, RECOVERY_MANIFEST.md, source-viewer.html, base64 files (17), tests/orchestrator.test.js
 
 I'm at my tool round limit for this response. Please say "continue" and I'll deliver the remaining files: tests, docs, RECOVERY_MANIFEST.md, and the base64 file verification.
+---
+
+FILE: `src/handlers/voice.js`
+
+```javascript
+/**
+ * Voice handlers — Speech-to-Text (STT) and Text-to-Speech (TTS).
+ *
+ * Ported faithfully from the original monolithic worker (/src/handlers.js).
+ * Uses Cloudflare Workers AI bindings:
+ *   - STT: @cf/deepgram/nova-3
+ *   - TTS: @cf/deepgram/aura-1
+ */
+import { jsonResponse, errorResponse } from "../utils/response.js";
+import { MAX_VOICE_BODY_BYTES } from "../config/constants.js";
+
+function sanitize(str, maxLen = 500) {
+  if (typeof str !== "string") return "";
+  return str.slice(0, maxLen).replace(/[<>]/g, "");
+}
+
+export async function handleVoiceSTT(request, env) {
+  const ct = request.headers.get("Content-Type") || "";
+  let audioData;
+  if (ct.includes("multipart/form-data")) {
+    const fd = await request.formData();
+    const f = fd.get("audio");
+    if (!f) return errorResponse("No audio file provided", 400);
+    audioData = await f.arrayBuffer();
+  } else {
+    audioData = await request.arrayBuffer();
+  }
+  if (audioData.byteLength > MAX_VOICE_BODY_BYTES)
+    return errorResponse("Audio too large", 413);
+  try {
+    const r = await env.AI.run("@cf/deepgram/nova-3", {
+      audio: [...new Uint8Array(audioData)],
+    });
+    return jsonResponse({ text: r.text || "", model: "deepgram-nova-3" });
+  } catch (e) {
+    return errorResponse("Speech recognition failed: " + e.message, 500);
+  }
+}
+
+export async function handleVoiceTTS(request, env) {
+  let body;
+  try {
+    body = await request.json();
+  } catch {
+    return errorResponse("Invalid JSON", 400);
+  }
+  const text = sanitize(body.text || "", 1000);
+  if (!text) return errorResponse("Text is required", 400);
+  try {
+    const r = await env.AI.run("@cf/deepgram/aura-1", { text });
+    if (r && r.audio) {
+      return new Response(r.audio, {
+        headers: { "Content-Type": "audio/mpeg" },
+      });
+    }
+    return errorResponse("TTS failed", 500);
+  } catch (e) {
+    return errorResponse("TTS failed: " + e.message, 500);
+  }
+}
+```
+
+FILE: `src/handlers/chess-data.js`
+
+```javascript
+/**
+ * Chess data handlers — puzzle, schedule, opening, player.
+ *
+ * Ported faithfully from the original monolithic worker (/src/handlers.js).
+ * Uses KV (SOCIAL_DATA) for storage. GET returns data; POST adds entries.
+ */
+import { jsonResponse, errorResponse } from "../utils/response.js";
+
+async function getKV(env, key, def = null) {
+  try {
+    const d = await env.SOCIAL_DATA.get(key, "json");
+    return d ?? def;
+  } catch {
+    return def;
+  }
+}
+
+async function setKV(env, key, val) {
+  try {
+    await env.SOCIAL_DATA.put(key, JSON.stringify(val));
+  } catch {}
+}
+
+export async function handlePuzzle(request, env) {
+  if (request.method === "GET") {
+    const p = await getKV(env, "puzzles", []);
+    if (!p.length)
+      return jsonResponse({
+        puzzle: {
+          fen: "r1bqkbnr/pppp1ppp/2n5/4p3/2B1P3/5N2/PPPP1PPP/RNBQK2R b KQkq - 3 3",
+          solution: "Nf6",
+          difficulty: "easy",
+          hint: "Develop your knight to attack the e4 pawn",
+        },
+      });
+    return jsonResponse({ puzzle: p[Math.floor(Math.random() * p.length)] });
+  }
+  let body;
+  try {
+    body = await request.json();
+  } catch {
+    return errorResponse("Invalid JSON", 400);
+  }
+  const p = await getKV(env, "puzzles", []);
+  p.push({
+    fen: body.fen,
+    solution: body.solution,
+    difficulty: body.difficulty || "medium",
+    hint: body.hint || "",
+  });
+  await setKV(env, "puzzles", p);
+  return jsonResponse({ success: true, count: p.length });
+}
+
+export async function handleSchedule(request, env) {
+  if (request.method === "GET")
+    return jsonResponse({ schedule: await getKV(env, "schedule", []) });
+  let body;
+  try {
+    body = await request.json();
+  } catch {
+    return errorResponse("Invalid JSON", 400);
+  }
+  const s = await getKV(env, "schedule", []);
+  s.push({
+    title: body.title,
+    date: body.date,
+    time: body.time || "",
+    location: body.location || "",
+    description: body.description || "",
+  });
+  await setKV(env, "schedule", s);
+  return jsonResponse({ success: true, count: s.length });
+}
+
+export async function handleOpening(request, env) {
+  if (request.method === "GET")
+    return jsonResponse({ openings: await getKV(env, "openings", []) });
+  let body;
+  try {
+    body = await request.json();
+  } catch {
+    return errorResponse("Invalid JSON", 400);
+  }
+  const o = await getKV(env, "openings", []);
+  o.push({
+    name: body.name,
+    moves: body.moves,
+    description: body.description || "",
+  });
+  await setKV(env, "openings", o);
+  return jsonResponse({ success: true, count: o.length });
+}
+
+export async function handlePlayer(request, env) {
+  if (request.method === "GET")
+    return jsonResponse({ players: await getKV(env, "players", []) });
+  let body;
+  try {
+    body = await request.json();
+  } catch {
+    return errorResponse("Invalid JSON", 400);
+  }
+  const p = await getKV(env, "players", []);
+  p.push({
+    name: body.name,
+    rating: body.rating || 0,
+    title: body.title || "",
+    bio: body.bio || "",
+  });
+  await setKV(env, "players", p);
+  return jsonResponse({ success: true, count: p.length });
+}
+```
+
+FILE: `src/handlers/public.js`
+
+```javascript
+/**
+ * Public data handlers — members, tournaments, lessons, feedback, welcome, logo.
+ *
+ * Ported faithfully from the original monolithic worker (/src/handlers.js).
+ * Public endpoints (members/tournaments/lessons) read from D1.
+ * Feedback writes to D1. Welcome/logo are static responses.
+ */
+import { jsonResponse, errorResponse } from "../utils/response.js";
+
+function sanitize(str, maxLen = 500) {
+  if (typeof str !== "string") return "";
+  return str.slice(0, maxLen).replace(/[<>]/g, "");
+}
+
+const WELCOME_TEXT =
+  "Magandang araw! Ako ang CheckmaîtréX AI, ang AI assistant ng CheckmaîtréX Chess Club. Magtanong ka tungkol sa chess — openings, tactics, endgames, puzzles, o kaya ay tournament schedules ng club. Handa akong tumulong! ♟️";
+
+export async function handlePublicMembers(env) {
+  try {
+    const r = await env.DB.prepare(
+      "SELECT name, rating, joined_date FROM members ORDER BY rating DESC"
+    ).all();
+    return jsonResponse({ members: r.results });
+  } catch {
+    return jsonResponse({ members: [] });
+  }
+}
+
+export async function handlePublicTournaments(env) {
+  try {
+    const r = await env.DB.prepare(
+      "SELECT name, date, location, description FROM tournaments ORDER BY date DESC"
+    ).all();
+    return jsonResponse({ tournaments: r.results });
+  } catch {
+    return jsonResponse({ tournaments: [] });
+  }
+}
+
+export async function handlePublicLessons(env) {
+  try {
+    const r = await env.DB.prepare(
+      "SELECT title, content, difficulty FROM lessons ORDER BY created DESC"
+    ).all();
+    return jsonResponse({ lessons: r.results });
+  } catch {
+    return jsonResponse({ lessons: [] });
+  }
+}
+
+export async function handleFeedback(request, env) {
+  let body;
+  try {
+    body = await request.json();
+  } catch {
+    return errorResponse("Invalid JSON", 400);
+  }
+  const message = sanitize(body.message || "", 2000);
+  const rating = body.rating || 0;
+  if (!message) return errorResponse("Feedback message is required", 400);
+  try {
+    await env.DB.prepare(
+      "INSERT INTO feedback (message, response, rating, created) VALUES (?, ?, ?, datetime('now'))"
+    )
+      .bind(message, body.response || "", rating)
+      .run();
+    return jsonResponse({
+      success: true,
+      message: "Salamat sa iyong feedback!",
+    });
+  } catch (e) {
+    return errorResponse("Failed to save feedback: " + e.message, 500);
+  }
+}
+
+export function handleWelcome() {
+  return jsonResponse({ text: WELCOME_TEXT });
+}
+
+export function handleLogo() {
+  const svg =
+    "<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>\u265f</text></svg>";
+  return new Response(svg, {
+    headers: {
+      "Content-Type": "image/svg+xml",
+      "Cache-Control": "public, max-age=86400",
+    },
+  });
+}
+```
+
+---
+
+### BATCH 1 — Delivery Tracking
+
+| # | File | Status |
+|---|------|--------|
+| 1 | `src/handlers/voice.js` | ✅ Sent |
+| 2 | `src/handlers/chess-data.js` | ✅ Sent |
+| 3 | `src/handlers/public.js` | ✅ Sent |
+
+- **Batch:** 1
+- **Files included:** 3
+- **Filenames delivered:** voice.js, chess-data.js, public.js
+- **Remaining files:** 51
+- **Content truncated:** No — all 3 files shown in full
+
+**Batch 2 will contain:** Updated `src/index.js` (36 routes) and updated `src/handlers/admin.js`.
+
+Waiting for your confirmation to proceed to Batch 2.
