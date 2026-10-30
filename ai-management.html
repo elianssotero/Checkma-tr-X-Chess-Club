@@ -1,0 +1,559 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#0b0b0d">
+  <title>CheckmaîtréX AI Management</title>
+  <link rel="stylesheet" href="css/ai-management.css">
+</head>
+<body>
+
+  <div id="access-screen" class="access-screen">
+    <div class="access-card">
+      <div class="brand-mark">♛</div>
+      <h1>CheckmaîtréX</h1>
+      <p>AI Management</p>
+      <div class="loader"></div>
+      <span id="access-message">Verifying administrator access...</span>
+    </div>
+  </div>
+
+  <div id="app" class="app hidden">
+
+    <aside class="sidebar" id="sidebar">
+      <div class="sidebar-brand">
+        <div class="brand-mark small">♛</div>
+        <div>
+          <h2>CheckmaîtréX</h2>
+          <span>AI MANAGEMENT</span>
+        </div>
+      </div>
+
+      <div class="sidebar-label">AI CONTROL CENTER</div>
+
+      <nav class="side-nav">
+        <button class="nav-item active" data-page="overview">
+          <span class="nav-icon">▦</span>
+          <span>AI Overview</span>
+        </button>
+
+        <button class="nav-item" data-page="chat">
+          <span class="nav-icon">◉</span>
+          <span>AI Chat & Testing</span>
+        </button>
+
+        <button class="nav-item" data-page="configuration">
+          <span class="nav-icon">⚙</span>
+          <span>AI Configuration</span>
+        </button>
+
+        <button class="nav-item" data-page="knowledge">
+          <span class="nav-icon">▤</span>
+          <span>AI Knowledge</span>
+        </button>
+
+        <button class="nav-item" data-page="permissions">
+          <span class="nav-icon">♙</span>
+          <span>AI Permissions</span>
+        </button>
+
+        <button class="nav-item" data-page="analytics">
+          <span class="nav-icon">▥</span>
+          <span>AI Analytics & Logs</span>
+        </button>
+      </nav>
+
+      <div class="sidebar-bottom">
+        <div class="admin-profile">
+          <div class="admin-avatar">A</div>
+          <div class="admin-info">
+            <strong>Administrator</strong>
+            <span>Authorized workspace</span>
+          </div>
+        </div>
+
+        <a class="back-link" href="admin-dashboard.html">
+          ← Back to Admin Dashboard
+        </a>
+      </div>
+    </aside>
+
+    <main class="main-content">
+
+      <header class="topbar">
+        <button id="menu-toggle" class="menu-toggle" aria-label="Toggle menu">☰</button>
+
+        <div class="breadcrumb">
+          <span>Admin Dashboard</span>
+          <span class="breadcrumb-separator">/</span>
+          <strong>AI Management</strong>
+        </div>
+
+        <div class="topbar-right">
+          <span class="environment-label">FRONT-END PREVIEW</span>
+          <div class="top-avatar">A</div>
+        </div>
+      </header>
+
+      <div class="content-wrapper">
+
+        <!-- OVERVIEW -->
+        <section class="page-section active" id="page-overview">
+          <div class="page-heading">
+            <div>
+              <span class="eyebrow">CONTROL CENTER</span>
+              <h1>AI Overview</h1>
+              <p>Monitor and manage your CheckmaîtréX AI system.</p>
+            </div>
+            <span class="status-pill warning">Preview Mode</span>
+          </div>
+
+          <div class="welcome-panel">
+            <div>
+              <span class="eyebrow">CHECKMAÎTRÉX INTELLIGENCE</span>
+              <h2>AI Management Center</h2>
+              <p>
+                Your central workspace for AI configuration, knowledge,
+                testing, permissions and monitoring.
+              </p>
+            </div>
+            <div class="welcome-symbol">♛</div>
+          </div>
+
+          <div class="stats-grid">
+            <article class="stat-card">
+              <span class="stat-label">AI Connection</span>
+              <strong class="stat-value">Not Connected</strong>
+              <span class="stat-note">Worker integration pending</span>
+            </article>
+
+            <article class="stat-card">
+              <span class="stat-label">Configuration</span>
+              <strong class="stat-value">Preview</strong>
+              <span class="stat-note">No live settings saved</span>
+            </article>
+
+            <article class="stat-card">
+              <span class="stat-label">Knowledge Entries</span>
+              <strong class="stat-value" id="overview-knowledge">0</strong>
+              <span class="stat-note">Current browser session</span>
+            </article>
+
+            <article class="stat-card">
+              <span class="stat-label">Activity Records</span>
+              <strong class="stat-value" id="overview-logs">0</strong>
+              <span class="stat-note">Preview activity only</span>
+            </article>
+          </div>
+
+          <div class="two-column">
+            <article class="panel">
+              <div class="panel-heading">
+                <div>
+                  <h3>Management Shortcuts</h3>
+                  <p>Open an AI management section.</p>
+                </div>
+              </div>
+
+              <div class="shortcut-grid">
+                <button class="shortcut" data-go="chat">
+                  <span>◉</span>
+                  <strong>Test AI Chat</strong>
+                  <small>Open testing workspace</small>
+                </button>
+
+                <button class="shortcut" data-go="configuration">
+                  <span>⚙</span>
+                  <strong>Configuration</strong>
+                  <small>Review AI settings</small>
+                </button>
+
+                <button class="shortcut" data-go="knowledge">
+                  <span>▤</span>
+                  <strong>Manage Knowledge</strong>
+                  <small>Organize AI information</small>
+                </button>
+
+                <button class="shortcut" data-go="permissions">
+                  <span>♙</span>
+                  <strong>Permissions</strong>
+                  <small>Review access controls</small>
+                </button>
+              </div>
+            </article>
+
+            <article class="panel">
+              <div class="panel-heading">
+                <div>
+                  <h3>System Readiness</h3>
+                  <p>Integration checklist.</p>
+                </div>
+              </div>
+
+              <div class="readiness-list">
+                <div><span class="readiness-dot done"></span> Front-end workspace created</div>
+                <div><span class="readiness-dot done"></span> Admin access check included</div>
+                <div><span class="readiness-dot pending"></span> Cloudflare Worker connection</div>
+                <div><span class="readiness-dot pending"></span> Server-side AI permissions</div>
+                <div><span class="readiness-dot pending"></span> Persistent database storage</div>
+              </div>
+            </article>
+          </div>
+
+          <article class="panel">
+            <div class="panel-heading">
+              <div>
+                <h3>Recent Activity</h3>
+                <p>Actions performed in this preview session.</p>
+              </div>
+              <button class="text-button" data-go="analytics">View all</button>
+            </div>
+            <div id="overview-activity" class="empty-state">
+              No preview activity yet.
+            </div>
+          </article>
+        </section>
+
+        <!-- CHAT -->
+        <section class="page-section" id="page-chat">
+          <div class="page-heading">
+            <div>
+              <span class="eyebrow">AI WORKSPACE</span>
+              <h1>AI Chat & Testing</h1>
+              <p>Prepare and test the CheckmaîtréX AI experience.</p>
+            </div>
+            <span class="status-pill warning">Demo Only</span>
+          </div>
+
+          <div class="notice">
+            <strong>Preview chat:</strong> This interface is not connected to
+            the Cloudflare Worker yet. Messages are not sent to a live AI.
+          </div>
+
+          <div class="chat-layout">
+            <div class="chat-main panel">
+              <div class="chat-header">
+                <div class="ai-avatar">♛</div>
+                <div>
+                  <strong>CheckmaîtréX AI</strong>
+                  <span>Admin testing workspace</span>
+                </div>
+                <span class="status-pill warning">Offline Preview</span>
+              </div>
+
+              <div id="chat-messages" class="chat-messages">
+                <div class="message assistant-message">
+                  <div class="message-avatar">♛</div>
+                  <div class="message-bubble">
+                    <strong>CheckmaîtréX AI</strong>
+                    <p>
+                      Welcome to the AI testing workspace. This is a
+                      front-end preview. Worker connection is not active yet.
+                    </p>
+                  </div>
+                </div>
+              </div>
+
+              <form id="chat-form" class="chat-form">
+                <input
+                  id="chat-input"
+                  type="text"
+                  placeholder="Write a test message..."
+                  maxlength="1000"
+                  autocomplete="off"
+                >
+                <button type="submit" class="primary-button">Send</button>
+              </form>
+            </div>
+
+            <aside class="panel test-sidebar">
+              <h3>Testing Information</h3>
+              <p class="muted">Current testing environment</p>
+
+              <div class="info-row">
+                <span>AI Provider</span>
+                <strong>Not configured</strong>
+              </div>
+              <div class="info-row">
+                <span>Worker</span>
+                <strong>Not connected</strong>
+              </div>
+              <div class="info-row">
+                <span>Mode</span>
+                <strong>Frontend preview</strong>
+              </div>
+
+              <div class="divider"></div>
+              <h4>Testing Guidelines</h4>
+              <ul class="guidelines">
+                <li>Test general chess questions.</li>
+                <li>Check response clarity.</li>
+                <li>Review club-specific answers.</li>
+                <li>Do not test real admin actions here.</li>
+              </ul>
+            </aside>
+          </div>
+        </section>
+
+        <!-- CONFIGURATION -->
+        <section class="page-section" id="page-configuration">
+          <div class="page-heading">
+            <div>
+              <span class="eyebrow">SYSTEM SETTINGS</span>
+              <h1>AI Configuration</h1>
+              <p>Manage the planned identity and behavior of your AI.</p>
+            </div>
+          </div>
+
+          <div class="notice">
+            These are preview fields only. Saving does not update the Worker
+            or database.
+          </div>
+
+          <form id="configuration-form" class="panel settings-form">
+            <div class="panel-heading">
+              <div>
+                <h3>AI Identity</h3>
+                <p>Basic assistant information.</p>
+              </div>
+            </div>
+
+            <label>
+              AI Name
+              <input id="config-name" type="text" value="CheckmaîtréX AI">
+            </label>
+
+            <label>
+              AI Description
+              <textarea id="config-description" rows="3">Official AI assistant of CheckmaîtréX Chess Club.</textarea>
+            </label>
+
+            <label>
+              Default Language
+              <select id="config-language">
+                <option value="English and Filipino">English & Filipino</option>
+                <option value="English">English</option>
+                <option value="Filipino">Filipino</option>
+              </select>
+            </label>
+
+            <label>
+              Response Style
+              <select id="config-style">
+                <option value="Professional and friendly">Professional & Friendly</option>
+                <option value="Concise and direct">Concise & Direct</option>
+                <option value="Detailed and educational">Detailed & Educational</option>
+              </select>
+            </label>
+
+            <div class="form-actions">
+              <button class="primary-button" type="submit">Save Preview Settings</button>
+              <span id="config-feedback" class="form-feedback"></span>
+            </div>
+          </form>
+        </section>
+
+        <!-- KNOWLEDGE -->
+        <section class="page-section" id="page-knowledge">
+          <div class="page-heading">
+            <div>
+              <span class="eyebrow">AI KNOWLEDGE BASE</span>
+              <h1>AI Knowledge</h1>
+              <p>Organize information intended for the AI assistant.</p>
+            </div>
+          </div>
+
+          <div class="notice">
+            Entries are kept in this page's current memory only. They are not
+            uploaded to the AI or saved permanently.
+          </div>
+
+          <div class="knowledge-layout">
+            <form id="knowledge-form" class="panel">
+              <h3>Add Knowledge Entry</h3>
+
+              <label>
+                Title
+                <input id="knowledge-title" type="text" required maxlength="100"
+                  placeholder="Example: Club Information">
+              </label>
+
+              <label>
+                Category
+                <select id="knowledge-category">
+                  <option value="Club Information">Club Information</option>
+                  <option value="Chess Education">Chess Education</option>
+                  <option value="Membership">Membership</option>
+                  <option value="Tournaments">Tournaments</option>
+                  <option value="AI Instructions">AI Instructions</option>
+                  <option value="Other">Other</option>
+                </select>
+              </label>
+
+              <label>
+                Content
+                <textarea id="knowledge-content" rows="6" required maxlength="5000"
+                  placeholder="Write the information here..."></textarea>
+              </label>
+
+              <button class="primary-button full-width" type="submit">
+                Add Entry
+              </button>
+            </form>
+
+            <div class="panel">
+              <div class="panel-heading">
+                <div>
+                  <h3>Knowledge Entries</h3>
+                  <p id="knowledge-count">0 entries</p>
+                </div>
+              </div>
+              <div id="knowledge-list" class="knowledge-list empty-state">
+                No knowledge entries added.
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- PERMISSIONS -->
+        <section class="page-section" id="page-permissions">
+          <div class="page-heading">
+            <div>
+              <span class="eyebrow">ACCESS CONTROL</span>
+              <h1>AI Permissions</h1>
+              <p>Review the planned security boundaries for AI actions.</p>
+            </div>
+          </div>
+
+          <div class="notice danger-notice">
+            Permission controls shown here are informational only.
+            Actual authorization must be enforced by the Cloudflare Worker
+            and database policies.
+          </div>
+
+          <div class="panel">
+            <div class="panel-heading">
+              <div>
+                <h3>Admin AI Access Rules</h3>
+                <p>Recommended security policy.</p>
+              </div>
+              <span class="status-pill warning">Server setup pending</span>
+            </div>
+
+            <div class="permission-list">
+              <div class="permission-row">
+                <div>
+                  <strong>Admin authentication</strong>
+                  <p>Require a verified administrator session.</p>
+                </div>
+                <span class="status-pill success">Required</span>
+              </div>
+
+              <div class="permission-row">
+                <div>
+                  <strong>Server-side authorization</strong>
+                  <p>Verify the admin role on every protected request.</p>
+                </div>
+                <span class="status-pill success">Required</span>
+              </div>
+
+              <div class="permission-row">
+                <div>
+                  <strong>Confirmation for important actions</strong>
+                  <p>Require explicit confirmation before sensitive changes.</p>
+                </div>
+                <span class="status-pill success">Required</span>
+              </div>
+
+              <div class="permission-row">
+                <div>
+                  <strong>Activity logging</strong>
+                  <p>Record who performed each protected action.</p>
+                </div>
+                <span class="status-pill success">Required</span>
+              </div>
+
+              <div class="permission-row">
+                <div>
+                  <strong>Secrets in frontend</strong>
+                  <p>Never expose private API keys or service-role keys.</p>
+                </div>
+                <span class="status-pill danger">Prohibited</span>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- ANALYTICS -->
+        <section class="page-section" id="page-analytics">
+          <div class="page-heading">
+            <div>
+              <span class="eyebrow">MONITORING</span>
+              <h1>AI Analytics & Logs</h1>
+              <p>Review activity generated during this preview session.</p>
+            </div>
+            <button id="clear-logs" class="secondary-button">Clear Preview Logs</button>
+          </div>
+
+          <div class="notice">
+            These are browser-session preview records, not official security
+            audit logs.
+          </div>
+
+          <div class="stats-grid two-stats">
+            <article class="stat-card">
+              <span class="stat-label">Preview Activities</span>
+              <strong class="stat-value" id="analytics-total">0</strong>
+              <span class="stat-note">This browser session</span>
+            </article>
+
+            <article class="stat-card">
+              <span class="stat-label">Worker Requests</span>
+              <strong class="stat-value">0</strong>
+              <span class="stat-note">No live connection</span>
+            </article>
+          </div>
+
+          <div class="panel">
+            <div class="panel-heading">
+              <div>
+                <h3>Activity Log</h3>
+                <p>Preview actions and timestamps.</p>
+              </div>
+            </div>
+
+            <div class="table-wrapper">
+              <table>
+                <thead>
+                  <tr>
+                    <th>Activity</th>
+                    <th>Section</th>
+                    <th>Time</th>
+                    <th>Environment</th>
+                  </tr>
+                </thead>
+                <tbody id="logs-table">
+                  <tr>
+                    <td colspan="4" class="table-empty">No activity recorded.</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </section>
+
+        <footer class="page-footer">
+          CheckmaîtréX Chess Club · AI Management · Front-end Preview
+        </footer>
+      </div>
+    </main>
+  </div>
+
+  <!-- Supabase client setup used by the existing project -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="supabase-client.js"></script>
+  <script src="js/ai-management.js"></script>
+</body>
+</html>
