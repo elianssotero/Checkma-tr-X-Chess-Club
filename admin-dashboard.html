@@ -1212,7 +1212,6 @@
 
     
 
-function openPage(page) {
   if (page === "membership-management") {
     window.location.href = "membership-user-management.html";
     return;
@@ -1224,6 +1223,7 @@ function openPage(page) {
   }
 
   currentPage = page;
+
 
   const category = categories.find(item =>
     item.options.some(option => option[0] === page)
