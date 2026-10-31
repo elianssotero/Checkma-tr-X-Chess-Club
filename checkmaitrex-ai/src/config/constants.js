@@ -1,0 +1,13 @@
+export const GEMINI_ENDPOINT_BASE = "https://generativelanguage.googleapis.com/v1beta/models/";
+export const MAX_MESSAGE_LENGTH = 8000;
+export const MAX_BODY_BYTES = 15728640;
+export const MAX_HISTORY_ITEMS = 20;
+export const MAX_HISTORY_ITEM_LENGTH = 4000;
+export const AI_TIMEOUT_MS = 30000;
+export const AI_STREAM_TIMEOUT_MS = 60000;
+export const MAX_OUTPUT_TOKENS = 2048;
+export const CLOUD_EVAL_TIMEOUT_MS = 10000;
+export const CONVERSATION_PREFIX = "conv:";
+export const CONVERSATION_LIST_KEY = "conv_list";
+export const MAX_CONVERSATIONS = 50;
+export const DEFAULT_ASSISTANT = "checkmaitrex";
