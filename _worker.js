@@ -1,17 +1,20 @@
 const DEV_BACKEND = "https://checkmaitrex-ai-dev.elianssotero11.workers.dev";
 
 function stripApiPrefix(pathname) {
-  return pathname.startsWith("/api") ? pathname : pathname;
+  if (pathname === "/api") return "/";
+  if (pathname.startsWith("/api/")) return pathname.slice("/api".length) || "/";
+  return pathname;
 }
 
 async function proxyToBackend(request) {
   const url = new URL(request.url);
-  const targetUrl = new URL(url.pathname + url.search, DEV_BACKEND);
+  const targetUrl = new URL(stripApiPrefix(url.pathname) + url.search, DEV_BACKEND);
 
   const headers = new Headers(request.headers);
   headers.set("Host", targetUrl.hostname);
   headers.set("X-Forwarded-Host", url.host);
   headers.set("X-Forwarded-Proto", url.protocol.replace(":", ""));
+  headers.delete("Content-Length");
 
   const init = {
     method: request.method,
