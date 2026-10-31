@@ -1,76 +1,85 @@
 # Recovery Manifest
 
-This manifest records the recovered and assembled project files under `/checkmaitrex-ai/`.
+This manifest is an interim record and was not intended to claim full project completion. It reflects only files that were directly inspected or referenced in the available recovery output, and it preserves the history of prior notes without claiming a complete recovery.
+
+## Current status
+
+- Working branch: `phase8-recovery-integration`
+- Recovery status: `INCOMPLETE`
+- Evidence level: `PARTIAL`
+- Final completion claim: `NOT VERIFIED`
+- Safety: `main` untouched; no production deployment or production resource changes performed
 
 ## Summary
 
 - Branch: `phase8-recovery-integration`
-- Unique file count: 54
-- Recovered from transcripts: 40
-- Newly implemented to complete the modular structure: 14
-- Missing or intentionally unavailable: 0
-- Incomplete or truncated: 0
+- Directly inspected files on branch: 16 (subset only)
+- Files reported in recovery notes but not fully reconciled: 26+ source blocks
+- Files explicitly unverified or missing: 9 investigation targets recorded below
+- Duplicate/version resolution: not finalized
+- Completion claim: not supported by full transcript evidence
 
-## File inventory
+## Evidence-backed file inventory
 
-| Path | Category | Source | Status | Notes |
-|---|---|---|---|---|
-| README.md | root | recovered + assembled | complete | project overview |
-| API_DOCUMENTATION.md | root | recovered + assembled | complete | public/admin route summary |
-| ARCHITECTURE.md | root | recovered + assembled | complete | architecture documentation |
-| MIGRATION_GUIDE.md | root | recovered + assembled | complete | migration guidance |
-| RECOVERY_MANIFEST.md | root | generated | complete | this file |
-| package.json | root | assembled | complete | Node test config |
-| wrangler.toml | root | recovered + assembled | complete | Cloudflare config |
-| .github/workflows/ci.yml | workflow | assembled | complete | CI verification |
-| src/index.js | source | recovered + assembled | complete | Worker entry |
-| src/config/constants.js | config | recovered + assembled | complete | shared constants |
-| src/config/assistants.js | config | recovered + assembled | complete | four assistant roles |
-| src/providers/base.js | providers | recovered | complete | adapter interface |
-| src/providers/gemini.js | providers | recovered | complete | Gemini adapter |
-| src/providers/workersai.js | providers | recovered | complete | Workers AI adapter |
-| src/registry/modelRegistry.js | registry | recovered | complete | model catalog |
-| src/router/modelRouter.js | router | recovered | complete | capability-based routing |
-| src/orchestrator/index.js | orchestrator | assembled | complete | orchestration flow |
-| src/assistants/index.js | assistants | assembled | complete | assistant registry |
-| src/auth/auth.js | auth | recovered + assembled | complete | auth helpers |
-| src/auth/oauth.js | auth | recovered + assembled | complete | OAuth config |
-| src/auth/rbac.js | auth | recovered + assembled | complete | access control |
-| src/handlers/admin.js | handlers | assembled | complete | admin endpoints |
-| src/handlers/auth.js | handlers | assembled | complete | auth endpoints |
-| src/handlers/chat.js | handlers | assembled | complete | chat route |
-| src/handlers/posts.js | handlers | assembled | complete | posts route |
-| src/handlers/misc.js | handlers | assembled | complete | misc endpoints |
-| src/services/chess.js | services | recovered | complete | Lichess cloud eval helper |
-| src/services/conversationMigration.js | services | recovered | complete | KV/D1 migration |
-| src/services/health.js | services | recovered | complete | health checks |
-| src/services/knowledge.js | services | assembled | complete | knowledge service |
-| src/services/memory.js | services | assembled | complete | memory service |
-| src/services/monitoring.js | services | assembled | complete | monitoring |
-| src/services/posts.js | services | assembled | complete | social post service |
-| src/services/rateLimit.js | services | assembled | complete | rate limit helper |
-| src/services/usage.js | services | assembled | complete | usage tracking |
-| src/durable-objects/RateLimiterDO.js | durable-object | assembled | complete | in-memory limiter |
-| src/prompts/systemPrompts.js | prompts | recovered + assembled | complete | system prompts |
-| src/migrations/0001_initial.sql | migration | recovered | complete | D1 schema |
-| src/utils/cors.js | utils | assembled | complete | CORS helper |
-| src/utils/response.js | utils | assembled | complete | response helper |
-| src/utils/validation.js | utils | assembled | complete | validation helpers |
-| src/chess/index.js | chess | assembled | complete | chess helpers |
-| tests/core.test.js | tests | assembled | complete | core assertions |
-| tests/integration.test.js | tests | assembled | complete | integration smoke tests |
-| tests/phase3.test.js | tests | assembled | complete | assistant role tests |
-| tests/phase5.test.js | tests | assembled | complete | chess/provider tests |
-| tests/phase6.test.js | tests | assembled | complete | route and validation tests |
-| docs/DO_DEPLOYMENT_GUIDE.md | docs | assembled | complete | deployment notes |
-| docs/OAUTH_SETUP.md | docs | assembled | complete | OAuth guidance |
-| docs/PRODUCTION_READINESS.md | docs | assembled | complete | readiness notes |
-| docs/SOURCE_ACCESS.md | docs | assembled | complete | source recovery notes |
-| docs/STOCKFISH_EVALUATION.md | docs | assembled | complete | evaluation documentation |
-| dashboard/ai-management-proposed.html | dashboard | assembled | complete | prototype dashboard |
+| Path | Category | Status | Notes |
+|---|---|---|---|
+| `checkmaitrex-ai/README.md` | root | partially verified | present on branch; not a full source recovery |
+| `checkmaitrex-ai/API_DOCUMENTATION.md` | root | partially verified | present on branch; docs not reconciled against full source |
+| `checkmaitrex-ai/ARCHITECTURE.md` | root | partially verified | present on branch; not source-verified |
+| `checkmaitrex-ai/MIGRATION_GUIDE.md` | root | partially verified | present on branch; not source-verified |
+| `checkmaitrex-ai/package.json` | root | partially verified | present on branch; config not fully validated |
+| `checkmaitrex-ai/wrangler.toml` | root | partially verified | present on branch; config is not deployment-verified |
+| `checkmaitrex-ai/src/index.js` | source | directly inspected | readable and present |
+| `checkmaitrex-ai/src/config/constants.js` | config | directly inspected | readable and present |
+| `checkmaitrex-ai/src/config/assistants.js` | config | directly inspected | readable and present |
+| `checkmaitrex-ai/src/providers/base.js` | provider | directly inspected | readable and present |
+| `checkmaitrex-ai/src/providers/gemini.js` | provider | directly inspected | readable and present |
+| `checkmaitrex-ai/src/providers/workersai.js` | provider | directly inspected | readable and present |
+| `checkmaitrex-ai/src/registry/modelRegistry.js` | registry | directly inspected | readable and present |
+| `checkmaitrex-ai/src/router/modelRouter.js` | router | directly inspected | readable and present |
+| `checkmaitrex-ai/src/services/chess.js` | service | directly inspected | readable and present |
+| `checkmaitrex-ai/src/services/conversationMigration.js` | service | directly inspected | readable and present |
+| `checkmaitrex-ai/src/services/health.js` | service | directly inspected | readable and present |
+| `checkmaitrex-ai/src/utils/cors.js` | util | directly inspected | readable and present |
+| `checkmaitrex-ai/src/utils/response.js` | util | directly inspected | readable and present |
+| `checkmaitrex-ai/src/utils/validation.js` | util | directly inspected | readable and present |
+| `checkmaitrex-ai/tests/core.test.js` | test | directly inspected | present |
+| `checkmaitrex-ai/tests/integration.test.js` | test | directly inspected | present |
 
-## Notes
+## Investigation targets not conclusively verified
 
-- This directory is a development-only integration branch and intentionally does not overwrite the legacy root files.
-- Historical source files remain in the original repository and were not deleted or modified.
-- Any missing source not visible in the supplied recovery artifacts is recorded as absent rather than fabricated.
+The following paths are cited in the recovery discussion but remain unverified in the current accessible output:
+
+- `checkmaitrex-ai/src/handlers/chat.js`
+- `checkmaitrex-ai/src/handlers/posts.js`
+- `checkmaitrex-ai/src/handlers/misc.js`
+- `checkmaitrex-ai/src/handlers/auth.js`
+- `checkmaitrex-ai/src/auth/auth.js`
+- `checkmaitrex-ai/src/auth/oauth.js`
+- `checkmaitrex-ai/src/auth/rbac.js`
+- `checkmaitrex-ai/src/prompts/systemPrompts.js`
+- `checkmaitrex-ai/src/durable-objects/RateLimiterDO.js`
+
+These are not marked as complete or recovered. Their status remains: `UNVERIFIED / MISSING OR INCOMPLETE`.
+
+## Source-block reconciliation status
+
+The recovery files mention multiple source blocks and file inventories, including:
+
+- `recovery-codes(1).html` with a 26-block inventory
+- `recovery-codes.html` with a separate 33-block inventory
+
+These were not fully reconciled in the current tool output. Until that is done, no final count or final completion claim is supported.
+
+## Architecture note
+
+The current branch contains a split modular structure under `checkmaitrex-ai/src/`, while the earlier monolithic recovery notes reference `checkmaitrex-ai-worker.js` and `part2.js` through `part5.js`. This is a real unresolved architecture conflict and remains unresolved.
+
+## Final manifest status
+
+This manifest should be treated as an interim evidence record, not as proof of a complete project recovery.
+
+- Verified direct file reads: subset only
+- Final full recovery status: not proven
+- Final project completion status: not proven
+- Final project readiness: not proven
