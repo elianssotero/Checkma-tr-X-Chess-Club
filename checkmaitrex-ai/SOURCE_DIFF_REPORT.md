@@ -11,7 +11,7 @@ This report reflects the independent GitHub audit findings for the recovery tran
 - `recovery-codes(1).html`: 26 readable fenced source blocks extracted
 - `recovery-codes.html`: 207,374 characters
 - `recovery-codes.html`: 33 FILE markers found
-- `recovery-codes.html`: mixed transcript / source dump with inconsistent code boundaries; not all 33 markers are proven complete verified source files
+- `recovery-codes.html`: mixed transcript/source dump with inconsistent code boundaries; not all 33 markers are proven complete verified source files
 
 ### Comparison method
 
@@ -22,7 +22,7 @@ Exact-text comparison was performed after normalizing line endings, trailing whi
 - 26/26 readable fenced source blocks extracted from `recovery-codes(1).html`
 - 14 current branch files exist but are non-identical to those extracted source blocks
 - 0 exact text matches found between extracted source blocks and branch files
-- 12 source-available paths are missing from the development branch but have readable source blocks in the recovery transcript
+- 12 source-available paths are missing from the development branch but have readable source blocks
 - Recovery status remains: `INCOMPLETE / NOT VERIFIED`
 
 ## 14 existing but non-identical files
