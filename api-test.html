@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>CheckmaîtréX API Test</title>
+  <style>
+    body {
+      background: #0b0b0d;
+      color: #f1f1f1;
+      font-family: Arial, sans-serif;
+      padding: 20px;
+    }
+    button {
+      background: #d9b45b;
+      padding: 12px 18px;
+      border: 0;
+      border-radius: 8px;
+      font-weight: bold;
+    }
+    pre {
+      background: #19191d;
+      padding: 14px;
+      white-space: pre-wrap;
+      overflow-wrap: anywhere;
+      border-radius: 8px;
+    }
+  </style>
+</head>
+<body>
+  <h2>CheckmaîtréX Dev API Test</h2>
+  <p>Testing the dev Worker chat endpoint.</p>
+  <button id="test">Test API Connection</button>
+  <pre id="result">Waiting for test...</pre>
+
+  <script>
+    const DEV_URL =
+      "https://checkmaitrex-ai-dev.elianssotero11.workers.dev";
+
+    document.getElementById("test").onclick = async () => {
+      const output = document.getElementById("result");
+      output.textContent = "Sending request...";
+
+      try {
+        const response = await fetch(DEV_URL + "/api/chat", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify({
+            assistant: "checkmaitrex-ai",
+            message: "Hello! Please reply with a short greeting.",
+            sessionId: "api-test-session"
+          })
+        });
+
+        const raw = await response.text();
+
+        output.textContent =
+          "HTTP STATUS: " + response.status +
+          "\n\nRESPONSE:\n" + raw;
+
+      } catch (error) {
+        output.textContent =
+          "CONNECTION ERROR:\n" + error.message;
+      }
+    };
+  </script>
+</body>
+</html>
