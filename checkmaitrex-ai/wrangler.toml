@@ -1,0 +1,23 @@
+name = "checkmaitrex-ai"
+main = "src/index.js"
+compatibility_date = "2026-10-18"
+compatibility_flags = ["nodejs_compat"]
+
+[vars]
+ENVIRONMENT = "development"
+AI_MODEL = "gemini-2.5-flash"
+
+[[d1_databases]]
+binding = "DB"
+database_name = "checkmaitrex-db"
+database_id = "local-dev"
+
+[[kv_namespaces]]
+binding = "SOCIAL_DATA"
+ id = "local-social-data"
+
+[ai]
+binding = "AI"
+
+[build]
+command = ""
