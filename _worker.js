@@ -1,84 +1,30 @@
-const DEV_BACKEND = "https://checkmaitrex-ai-dev.elianssotero11.workers.dev";
-
-function stripApiPrefix(pathname) {
-  if (pathname === "/api") return "/";
-  if (pathname.startsWith("/api/")) return pathname.slice("/api".length) || "/";
-  return pathname;
-}
-
-async function proxyToBackend(request) {
-  const url = new URL(request.url);
-  const targetUrl = new URL(stripApiPrefix(url.pathname) + url.search, DEV_BACKEND);
-
-  const headers = new Headers(request.headers);
-  headers.set("Host", targetUrl.hostname);
-  headers.set("X-Forwarded-Host", url.host);
-  headers.set("X-Forwarded-Proto", url.protocol.replace(":", ""));
-  headers.delete("Content-Length");
-
-  const init = {
-    method: request.method,
-    headers,
-    redirect: "manual"
-  };
-
-  if (request.method !== "GET" && request.method !== "HEAD") {
-    init.body = request.body;
-  }
-
-  try {
-    const upstreamResponse = await fetch(targetUrl, init);
-    const responseHeaders = new Headers(upstreamResponse.headers);
-    responseHeaders.set("Access-Control-Allow-Origin", "*");
-    responseHeaders.set("Access-Control-Allow-Methods", "GET, POST, PUT, PATCH, DELETE, OPTIONS");
-    responseHeaders.set("Access-Control-Allow-Headers", "Content-Type, Authorization, X-Requested-With");
-    responseHeaders.set("Access-Control-Max-Age", "86400");
-
-    return new Response(upstreamResponse.body, {
-      status: upstreamResponse.status,
-      statusText: upstreamResponse.statusText,
-      headers: responseHeaders
-    });
-  } catch (error) {
-    return new Response(
-      JSON.stringify({
-        success: false,
-        error: "Upstream AI backend is unavailable right now."
-      }),
-      {
-        status: 502,
-        headers: {
-          "Content-Type": "application/json; charset=utf-8",
-          "Cache-Control": "no-store"
-        }
-      }
-    );
-  }
-}
-
 export default {
   async fetch(request, env) {
     const url = new URL(request.url);
 
-    if (url.pathname.startsWith("/api/")) {
-      return proxyToBackend(request);
+    // API requests → proxy to the standalone Worker (checkmaitrex-ai)
+    if (url.pathname.startsWith('/api/') || url.pathname === '/health') {
+      const target = 'https://checkmaitrex-ai.elianssotero11.workers.dev' + url.pathname + url.search;
+      const headers = new Headers(request.headers);
+      headers.delete('host');
+      const init = { method: request.method, headers };
+      if (request.method !== 'GET' && request.method !== 'HEAD') {
+        init.body = await request.arrayBuffer();
+      }
+      try {
+        const resp = await fetch(target, init);
+        const newHeaders = new Headers(resp.headers);
+        newHeaders.set('Access-Control-Allow-Origin', '*');
+        return new Response(resp.body, { status: resp.status, headers: newHeaders });
+      } catch (e) {
+        return new Response(JSON.stringify({ error: 'AI service unavailable', detail: e.message }), {
+          status: 502,
+          headers: { 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*' }
+        });
+      }
     }
 
-    if (request.method === "OPTIONS") {
-      return new Response(null, {
-        status: 204,
-        headers: {
-          "Access-Control-Allow-Origin": "*",
-          "Access-Control-Allow-Methods": "GET, POST, PUT, PATCH, DELETE, OPTIONS",
-          "Access-Control-Allow-Headers": "Content-Type, Authorization"
-        }
-      });
-    }
-
-    if (env.ASSETS) {
-      return env.ASSETS.fetch(request);
-    }
-
-    return new Response("Not found", { status: 404 });
+    // Everything else → serve static files (HTML, CSS, JS, images)
+    return env.ASSETS.fetch(request);
   }
 };
